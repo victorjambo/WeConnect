@@ -2,6 +2,10 @@
   font-family: Roboto;
 }
 
+nav {
+  margin-bottom: 15px;
+}
+
 .container {
   height: 100%;
 }
