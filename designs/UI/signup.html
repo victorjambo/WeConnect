@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>WeConnect :: Signup</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link rel="stylesheet" href="./styles.css">    
+    <link rel="stylesheet" href=".assets/css/styles.css">    
     <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,400i" rel="stylesheet">    
   </head>
 
@@ -35,9 +35,22 @@
         </div>
       </div>
     </nav>
+    
+    <div class="container">
 
-
-
+      <div class="register">
+        <form id="signup" method="post" action="">
+          <h1>User Registration</h1>
+          <input type="text" placeholder="Full Name" autofocus="autofocus" class="input pass"/>
+          <input type="text" placeholder="Username" class="input pass"/>
+          <input name="email" type="email" placeholder="Email Address" class="input pass"/>
+          <input name="password" type="password" placeholder="Password" class="input pass"/>
+          <input name="confirmpassword" type="password" placeholder="Confirm Password" class="input pass"/>
+          <input type="submit" value="Sign up" class="submit-btn"/>
+        </form>
+      </div>
+      
+    </div>
     
 
 
