@@ -7,8 +7,11 @@ html, body {
   width: 100%;
 }
 
+body {
+  background-color: rgba(236, 235, 235, 0.58);
+}
+
 .container {
-  display: flex;
   height: 100%;
 }
 
@@ -31,7 +34,11 @@ ul {
 }
 
 .push {
-  margin-top: 140px;
+  margin-top: 40px;
+}
+
+.push-profile {
+  margin-top: 70px;
 }
 
 
@@ -73,6 +80,7 @@ input.form-control {
   width: 100%;
   z-index: 3;
   font-family: 'Roboto';
+  color: black;
 }
 
 .navbar-custom div {
@@ -80,6 +88,7 @@ input.form-control {
 }
 
 .navbar-custom .navbar-brand {
+  color: black;
   font-weight: 800;
   font-family: 'Roboto';
 }
@@ -93,6 +102,7 @@ input.form-control {
   font-weight: 800;
   letter-spacing: 1px;
   font-family: 'Roboto';
+  color: black;
 }
 
 .navbar-custom .nav li a:hover {
@@ -132,20 +142,8 @@ input.form-control {
     color: #0085A1;
   }
 }
+
 @media only screen and (min-width: 1170px) {
-  .navbar-custom {
-    -webkit-transition: background-color 0.3s;
-    -moz-transition: background-color 0.3s;
-    transition: background-color 0.3s;
-    /* Force Hardware Acceleration in WebKit */
-    -webkit-transform: translate3d(0, 0, 0);
-    -moz-transform: translate3d(0, 0, 0);
-    -ms-transform: translate3d(0, 0, 0);
-    -o-transform: translate3d(0, 0, 0);
-    transform: translate3d(0, 0, 0);
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
-  }
   .navbar-custom.is-fixed {
     /* when the user scrolls down, we hide the header right above the viewport */
     position: fixed;
@@ -178,6 +176,11 @@ input.form-control {
     -o-transform: translate3d(0, 100%, 0);
     transform: translate3d(0, 100%, 0);
   }
+}
+
+.navbar-override {
+  background: rgba(0, 0, 0, 0.27058823529411763)!important;
+  color: white!important;
 }
 
 
@@ -237,6 +240,7 @@ input.form-control {
   margin-top: 0;
   font-size: 50px;
 }
+
 .intro-header .site-heading .subheading,
 .intro-header .page-heading .subheading {
   font-size: 24px;
@@ -320,6 +324,10 @@ input.form-control {
 .cell-body > p {
   height: 130px;
   margin-top: 10px;
+}
+
+.cell-body h2 {
+  margin-top: -5px;
 }
 
 .btn.btn-default {
@@ -414,4 +422,45 @@ h1 {
 
 .submit-btn:focus {
   outline: none;
+}
+
+
+/*****
+*
+* Profile
+*
+*****/
+
+.bucket {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  margin: 0 0 16px 0;
+  padding: 20px;
+  background-color: white;
+  border-radius: 2px;
+  -webkit-box-shadow: 0 1px 1px 1px rgba(127,127,127,0.3);
+  box-shadow: 0 1px 1px 1px rgba(127,127,127,0.3);
+}
+
+.overview {
+  line-height: 1em;
+  font-size: 15px;
+}
+
+.overview-info{
+  padding-bottom: 12px;
+  width: 50%;
+}
+
+
+/******
+*
+* Form group
+*
+*******/
+.form-control {
+  border-color: #66afe9;
+  outline: 0;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102,175,233,.6);
+  box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102,175,233,.6);
 }
