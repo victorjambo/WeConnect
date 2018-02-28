@@ -38,7 +38,7 @@ ul {
 ******/
 
 .input-group-btn > .btn.btn-default {
-  background-image: url('./images/icon-search-white.svg');
+  background-image: url('../images/icon-search-white.svg');
   background-repeat: no-repeat;
   background-position: center center;
   background-color: #5070e3;
