@@ -30,6 +30,10 @@ ul {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
+.push {
+  margin-top: 140px;
+}
+
 
 /*****
 *
@@ -69,7 +73,6 @@ input.form-control {
   width: 100%;
   z-index: 3;
   font-family: 'Roboto';
-  color: rgba(37, 51, 70, .9);
 }
 
 .navbar-custom div {
@@ -79,21 +82,17 @@ input.form-control {
 .navbar-custom .navbar-brand {
   font-weight: 800;
   font-family: 'Roboto';
-  color: rgba(37, 51, 70, .9);
 }
 .navbar-custom .navbar-header .navbar-toggle {
-  color: #777777;
   font-weight: 800;
   font-size: 12px;
   font-family: 'Roboto';
-  color: rgba(37, 51, 70, .9);
 }
 .navbar-custom .nav li a {
   font-size: 15px;
   font-weight: 800;
   letter-spacing: 1px;
   font-family: 'Roboto';
-  color: rgba(37, 51, 70, .9);
 }
 
 .navbar-custom .nav li a:hover {
@@ -111,16 +110,14 @@ input.form-control {
     border-bottom: 1px solid transparent;
   }
   .navbar-custom .navbar-brand {
-    color: white;
     padding: 20px;
     font-size: 21px;
   }
   .navbar-custom .navbar-brand:hover,
   .navbar-custom .navbar-brand:focus {
-    color: rgba(255, 255, 255, 0.8);
+    color: black; /*** change this ****/
   }
   .navbar-custom .nav li a {
-    color: white;
     padding: 20px;
   }
   .navbar-custom .nav li a:hover,
@@ -351,12 +348,20 @@ a.btn.btn-default > span {
   font-weight: bold;
 }
 
-.register {
+.registration {
   padding: 10px;
   margin: 50px auto;
   width: 340px;
   background-color: #fff;
   box-shadow: 0 1px 5px rgba(0, 0, 0, 0.25);
+}
+
+.login {
+  height: 320px;
+}
+
+.signup {
+  height: 520px;
 }
 
 h1 {
