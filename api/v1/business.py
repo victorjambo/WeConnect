@@ -4,6 +4,7 @@ this way we can safely use decorator app.route()
 from flask_jsonpify import jsonify
 from flask import request
 from v1 import app, businesses
+from utils import find_business_by_id
 
 
 @app.route('/api/businesses', methods=['GET'])
@@ -31,7 +32,10 @@ def create_business():
 @app.route('/api/businesses/<businessId>', methods=['GET'])
 def read_business(businessId):
     """Reads Business given a business id"""
-    pass
+    response = find_business_by_id(businessId)
+    if response:
+        return jsonify(response), 200
+    return jsonify({'warning': 'Business Not Found'}), 404
 
 
 @app.route('/api/businesses/<businessId>', methods=['PUT'])
@@ -39,7 +43,15 @@ def update_business(businessId):
     """Updates a business given a business ID
     confirms if current user is owner of business
     """
-    pass
+    data = request.get_json()
+    response = find_business_by_id(businessId)
+    if response:
+        response['name'] = data['name']
+        response['category'] = data['category']
+        response['location'] = data['location']
+        response['bio'] = data['bio']
+        return jsonify({'msg': 'successfully updated'}), 202
+    return jsonify({'msg': 'Could not update'}), 404
 
 
 @app.route('/api/businesses/<businessId>', methods=['DELETE'])
