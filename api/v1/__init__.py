@@ -10,9 +10,14 @@ Why do this; it reduces lines of code within a single file
 and its an easy read
 """
 from flask import Flask
+from data import business, review
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'supersecret'
 
 users = []
-businesses = []
-reviews = []
+businesses = business()
+reviews = review()
+
+import v1.user
+import v1.business

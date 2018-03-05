@@ -1,7 +1,13 @@
 """Importing app from __init__
 this way we can safely use decorator route()
 """
-from v1 import app
+import jwt
+import datetime
+from v1 import app, users
+from flask_jsonpify import jsonify
+from passlib.hash import sha256_crypt
+from flask import request, session, make_response
+from utils import check_if_name_taken
 
 
 @app.route('/api/auth/register', methods=['POST'])
@@ -9,7 +15,21 @@ def signup():
     """Creates a user
     first checks if username already exists
     """
-    pass
+    data = request.get_json()
+    if not data['password'] or not data['username']:
+        return jsonify({'warning': 'password must be present'}), 204
+
+    if check_if_name_taken(data['username']):
+        return jsonify({'warning': 'username taken'}), 409
+
+    data['password'] = sha256_crypt.encrypt(str(data['password']))
+    data['id'] = str(len(users) + 1)
+    users.append(data)
+
+    if users[-1] == data:
+        return jsonify({'msg': 'successfully created'}), 201
+
+    return jsonify({'warning': 'Could not register user'}), 401
 
 
 @app.route('/api/auth/login', methods=['POST'])
