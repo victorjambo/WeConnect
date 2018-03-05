@@ -71,3 +71,24 @@ def login():
         return jsonify({'token': token.decode('UTF-8')}), 200
 
 
+@app.route('/api/auth/reset-password', methods=['PUT'])
+def reset_password():
+    """Update user password
+    User should be logged in first to update
+    """
+    current_user = '1'
+    data = request.get_json()
+    response = find_user_by_id(current_user)
+    if data['password']:
+        response['password'] = sha256_crypt.encrypt(str(data['password']))
+        return jsonify({'msg': 'password updated'}), 200
+    return jsonify({'warning': 'password cannot be empty'}), 403
+
+
+@app.route('/api/auth/logout', methods=['DELETE'])
+def logout():
+    """Destroy user session"""
+    session.clear()
+    return jsonify({'msg': 'logged out'}), 200
+
+
