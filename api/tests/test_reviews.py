@@ -3,7 +3,7 @@ import unittest
 from v1 import app
 
 
-class TestUser(unittest.TestCase):
+class TestReview(unittest.TestCase):
     def setUp(self):
         self.app = app.test_client()
 

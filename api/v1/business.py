@@ -18,7 +18,14 @@ def create_business():
     Takes current_user ID and update data
     test if actually saved
     """
-    pass
+    current_user = '1'
+    data = request.get_json()
+    data['user_id'] = current_user
+    data['id'] = str(len(businesses) + 1)
+    businesses.append(data)
+    if businesses[-1] == data:
+        return jsonify({"msg": "business created"}), 201
+    return jsonify({"msg": "Could not create new business"}), 401
 
 
 @app.route('/api/businesses/<businessId>', methods=['GET'])

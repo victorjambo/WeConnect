@@ -4,7 +4,7 @@ import json
 from v1 import app, businesses
 
 
-class TestUser(unittest.TestCase):
+class TestBusiness(unittest.TestCase):
     def setUp(self):
         self.app = app.test_client()
         self.new_business_info = {
@@ -24,6 +24,7 @@ class TestUser(unittest.TestCase):
         response = self.app.get('/api/businesses')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.content_type, 'application/json')
+        self.assertGreater(len(businesses), 4)
 
     def test_create_business(self):
         initial_business_count = len(businesses)
@@ -36,7 +37,6 @@ class TestUser(unittest.TestCase):
         self.assertEqual(response.status_code, 201)
         self.assertEqual(response.content_type, 'application/json')
         self.assertEqual(final_business_count - initial_business_count, 1)
-        assert self.new_business_info in businesses
 
     def test_read_one_business(self):
         response = self.app.get('/api/businesses/6')
@@ -56,7 +56,7 @@ class TestUser(unittest.TestCase):
         response = self.app.delete('/api/business/6')
         self.assertEqual(response.status_code, 200)
 
-        # delete already deleted busines
+        # delete already deleted business
         response = self.app.delete('/api/business/6')
         self.assertEqual(response.status_code, 404)
 
