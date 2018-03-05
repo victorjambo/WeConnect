@@ -1,13 +1,15 @@
 """Importing app from __init__
 this way we can safely use decorator app.route()
 """
-from v1 import app
+from flask_jsonpify import jsonify
+from flask import request
+from v1 import app, businesses
 
 
 @app.route('/api/businesses', methods=['GET'])
 def read_all_businesses():
     """Reads all Businesses"""
-    pass
+    return jsonify(businesses), 200
 
 
 @app.route('/api/businesses', methods=['POST'])
