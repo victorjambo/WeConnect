@@ -1,7 +1,7 @@
 import os
 import unittest
 import json
-from src import app, businesses
+from v1 import app, businesses
 
 
 class TestUser(unittest.TestCase):

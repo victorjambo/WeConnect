@@ -7,7 +7,8 @@ from v1 import app, users
 from flask_jsonpify import jsonify
 from passlib.hash import sha256_crypt
 from flask import request, session, make_response
-from utils import check_if_name_taken
+from utils import check_if_name_taken, find_user_by_name
+from utils import find_user_by_id, find_business_by_user
 
 
 @app.route('/api/auth/register', methods=['POST'])
@@ -37,39 +38,36 @@ def login():
     """creates new user session and token
     confirms if username and password match
     """
-    pass
+    auth = request.get_json()
+    user = find_user_by_name(auth['username'])
+    password = user['password'] if user else None
+    candidate_password = auth['password']
+
+    if not password or not auth['username'] or not auth['password']:
+        """At this point user does not exist
+        or either username or password are not provided
+        """
+        return make_response(
+            "Incorrect username or password",
+            401,
+            {
+                "WWW-Authenticate": "Basic realm='Login Required'"
+            }
+        )
+
+    if sha256_crypt.verify(candidate_password, password):
+        """Sha256 decodes and compares passwords
+        then creates a token that expires in 30 min
+        """
+        session['logged_in'] = True
+        session['username'] = auth['username']
+        exp_time = datetime.datetime.utcnow() + datetime.timedelta(minutes=120)
+        token = jwt.encode(
+            {
+                'id': user['id'],
+                'exp': exp_time
+            }, app.config['SECRET_KEY']
+        )
+        return jsonify({'token': token.decode('UTF-8')}), 200
 
 
-@app.route('/api/auth/reset-password', methods=['PUT'])
-def reset_password():
-    """Update user password
-    User should be logged in first to update
-    """
-    pass
-
-
-@app.route('/api/auth/logout', methods=['DELETE'])
-def logout():
-    """Destroy user session"""
-    pass
-
-
-@app.route('/api/users', methods=['GET'])
-def read_all_users():
-    """Reads all users
-    """
-    pass
-
-
-@app.route('/api/user/<user_id>', methods=['GET'])
-def read_user(user_id):
-    """Reads user given an ID
-    if user is not provided then user current user ID
-    """
-    pass
-
-
-@app.route('/api/user/<user_id>/businesses', methods=['GET'])
-def read_user_businesses(user_id):
-    """Read all businesses owned by this user"""
-    pass

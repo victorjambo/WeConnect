@@ -1,6 +1,6 @@
 import  os
 import unittest
-from src import app
+from v1 import app
 
 
 class TestUser(unittest.TestCase):
