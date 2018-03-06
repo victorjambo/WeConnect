@@ -2,7 +2,7 @@ language: python
 python:
   - "3.5"
 # command to install dependencies
-before_install:
+before_script:
   - cd $TRAVIS_BUILD_DIR/api
 install:
   - "pip install -r requirements.txt"
@@ -15,3 +15,22 @@ branches:
   - ft-api-endpoints
 after_success:
   - coveralls
+ignore:
+  - venv/*
+  - ctypes/*
+  - html/*
+  - crypt.py
+  - decimal.py
+  - encodings
+  - hmac.py
+  - mimetypes.py
+  - stringprep.py
+  - uuid.py
+  - http/*
+  - numbers.py
+  - click/*
+  - flask/*
+  - itsdangerous.py
+  - jinja2/*
+  - markupsafe/*
+  - werkzeug/*
