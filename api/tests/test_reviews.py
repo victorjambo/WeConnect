@@ -8,11 +8,8 @@ class TestReview(unittest.TestCase):
     def setUp(self):
         self.app = app.test_client()
         self.new_review = {
-            "id": "5",
             "title": "Friday 13th",
             "desc": "biz 1 user 1 id 5",
-            "business_id": "1",
-            "user_id": "1"
         }
 
     def test_create_review(self):
@@ -20,7 +17,7 @@ class TestReview(unittest.TestCase):
         """
         initial_count = len(reviews)
         response = self.app.post(
-            '/api/businesses',
+            '/api/businesses/1/reviews',
             data=json.dumps(self.new_review),
             content_type='application/json'
         )
@@ -32,34 +29,21 @@ class TestReview(unittest.TestCase):
     def test_read_reviews(self):
         """Get reviews for business
         """
-        resp = self.app.get('/api/businesses')
+        resp = self.app.get('/api/businesses/1/reviews')
         self.assertEqual(resp.status_code, 200)
+        self.assertGreater(len(reviews), 0)
 
-    def test_update_review(self):
-        """Update business infor
-        """
-        update_review = {
-            "id": "5",
-            "title": "Some thing new",
-            "desc": "biz 1 user 1 id 5",
-            "business_id": "1",
-            "user_id": "1"
-        }
-        resp = self.app.put(
-            '/api/business/5/reviews',
-            data=json.dumps(update_review),
-            content_type='application/json'
-        )
-        self.assertEqual(resp.status_code, 202)
+        response = self.app.get('/api/businesses/reviews')
+        self.assertEqual(response.status_code, 200)
 
-    def test_delete_business(self):
+    def test_delete_review(self):
         """Test deleting business twice
         """
-        response = self.app.delete('/api/business/5/reviews')
+        response = self.app.delete('/api/businesses/1/reviews/1')
         self.assertEqual(response.status_code, 200)
 
         # delete already deleted review
-        response = self.app.delete('/api/business/5/reviews')
+        response = self.app.delete('/api/businesses/1/reviews/1')
         self.assertEqual(response.status_code, 404)
 
 

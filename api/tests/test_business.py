@@ -74,10 +74,6 @@ class TestBusiness(unittest.TestCase):
         )
         return response
 
-    # def tearDown(self):
-    #     """"""
-    #     businesses.clear()
-
 
 if __name__ == '__main__':
     unittest.main()

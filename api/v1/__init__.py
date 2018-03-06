@@ -22,3 +22,4 @@ reviews = review()
 
 import v1.user
 import v1.business
+import v1.review

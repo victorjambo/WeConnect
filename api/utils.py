@@ -1,4 +1,4 @@
-from v1 import users, businesses
+from v1 import users, businesses, reviews
 
 """ User functions """
 
@@ -36,7 +36,26 @@ def check_if_name_taken(name):
 
 
 def find_business_by_id(businessId):
-    """find current user record"""
+    """find business record"""
     for business in businesses:
         if business['id'] == businessId:
             return business
+
+
+""" reviews functions """
+
+
+def find_reviews_by_business_id(businessId):
+    """find review record"""
+    all_reviews = []
+    for review in reviews:
+        if review['business_id'] == businessId:
+            all_reviews.append(review)
+    return all_reviews
+
+
+def find_review_by_id(reviewId):
+    """find review record"""
+    for review in reviews:
+        if review['id'] == reviewId:
+            return review
