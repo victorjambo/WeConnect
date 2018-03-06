@@ -20,23 +20,18 @@ class TestBusiness(unittest.TestCase):
             "bio": "if you like it crown it"
         }
 
-    def test_business_list(self):
+    def test_read_all_businesses(self):
         """Test if can access endpoint for all businesses
         """
         response = self.app.get('/api/businesses')
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.content_type, 'application/json')
-        self.assertGreater(len(businesses), 4)
+        self.assertGreater(len(businesses), 0)
 
     def test_create_business(self):
         """Test if can register new business
         """
         initial_business_count = len(businesses)
-        response = self.app.post(
-            '/api/businesses',
-            data=json.dumps(self.new_business_info),
-            content_type='application/json'
-        )
+        response = self.create_business()
         final_business_count = len(businesses)
         self.assertEqual(response.status_code, 201)
         self.assertEqual(response.content_type, 'application/json')
@@ -45,7 +40,7 @@ class TestBusiness(unittest.TestCase):
     def test_read_one_business(self):
         """Test route for single business
         """
-        response = self.app.get('/api/businesses/6')
+        response = self.app.get('/api/businesses/1')
         self.assertEqual(response.status_code, 200)
 
     def test_read_no_business(self):
@@ -56,19 +51,31 @@ class TestBusiness(unittest.TestCase):
         """Test Update business info
         """
         resp = self.app.put(
-            '/api/business/6',
+            '/api/business/1',
             data=json.dumps(self.update_business_info),
             content_type='application/json'
         )
         self.assertEqual(resp.status_code, 202)
 
     def test_delete_business(self):
-        response = self.app.delete('/api/business/5')
+        response = self.app.delete('/api/business/1')
         self.assertEqual(response.status_code, 200)
 
-        # delete already deleted business
-        response = self.app.delete('/api/business/5')
+    def test_delete_empty_business(self):
+        response = self.app.delete('/api/business/1')
         self.assertEqual(response.status_code, 404)
+
+    def create_business(self):
+        response = self.app.post(
+            '/api/businesses',
+            data=json.dumps(self.new_business_info),
+            content_type='application/json'
+        )
+        return response
+
+    # def tearDown(self):
+    #     """"""
+    #     businesses.clear()
 
 
 if __name__ == '__main__':

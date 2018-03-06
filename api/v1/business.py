@@ -59,4 +59,8 @@ def delete_business(businessId):
     """Deletes a business
     confirms if current user is owner of business
     """
-    pass
+    response = find_business_by_id(businessId)
+    if response:
+        businesses.remove(response)
+        return jsonify({'msg': 'Deleted'}), 200
+    return jsonify({'warning': 'Business Not Found'}), 404

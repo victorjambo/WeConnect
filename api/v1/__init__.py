@@ -9,11 +9,12 @@ Its important to import the modules after the application object is created.
 Why do this; it reduces lines of code within a single file
 and its an easy read
 """
+import os
 from flask import Flask
 from data import business, review
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'supersecret'
+app.config['SECRET_KEY'] = os.getenv('SECRET')
 
 users = []
 businesses = business()
