@@ -37,32 +37,33 @@ class TestBusiness(unittest.TestCase):
         self.assertEqual(response.content_type, 'application/json')
         self.assertEqual(final_business_count - initial_business_count, 1)
 
-    def test_read_one_business(self):
-        """Test route for single business
+    def test_cannot_read_one_business(self):
+        """Test route for single business that doesn't exist
         """
-        response = self.app.get('/api/businesses/1')
-        self.assertEqual(response.status_code, 200)
+        self.create_business()
+        response = self.app.get('/api/businesses/45')
+        self.assertEqual(response.status_code, 404)
 
     def test_read_no_business(self):
         response = self.app.get('/api/businesses/60')
         self.assertEqual(response.status_code, 404)
 
-    def test_update_business(self):
-        """Test Update business info
+    def test_cannot_update_business(self):
+        """Test Update business info for non existing business
         """
         resp = self.app.put(
-            '/api/business/1',
+            '/api/businesses/45',
             data=json.dumps(self.update_business_info),
             content_type='application/json'
         )
-        self.assertEqual(resp.status_code, 202)
+        self.assertEqual(resp.status_code, 404)
 
     def test_delete_business(self):
-        response = self.app.delete('/api/business/1')
+        response = self.app.delete('/api/businesses/1')
         self.assertEqual(response.status_code, 200)
 
     def test_delete_empty_business(self):
-        response = self.app.delete('/api/business/1')
+        response = self.app.delete('/api/businesses/1')
         self.assertEqual(response.status_code, 404)
 
     def create_business(self):

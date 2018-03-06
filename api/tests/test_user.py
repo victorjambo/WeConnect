@@ -56,8 +56,6 @@ class TestUser(unittest.TestCase):
         resp = self.login_user()
         self.assertEqual(resp.status_code, 200)
 
-        self.token = resp['token']
-
     def reset_password(self):
         """Test user can reset password
         and login with new password
