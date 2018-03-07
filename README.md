@@ -37,7 +37,7 @@ Create a virtual enviroment.
 virtualenv venv
 ```
 
-Navigate to the root folder.
+Navigate to api folder.
 ```
 cd Weconnect/api
 ```
@@ -69,3 +69,19 @@ To run you test use
 ```bash
 $ nosetests
 ```
+
+To test endpoints manually fire up postman and run the following endpoints
+
+**EndPoint** | **Functionality**
+--- | ---
+POST `/api/auth/register` | Creates a user account 
+POST `/api/auth/login` | Logs in a user
+POST `/api/auth/logout` | Logs out a user
+POST `/api/auth/reset-password` | Password reset
+POST  `/api/businesses` | Register a business
+PUT `/api/businesses/<businessId>` | Updates a business profile
+DELETE `/api//businesses/<businessId>` | Remove a business
+GET  `/api/businesses` | Retrieves all businesses
+GET  `/api/businesses/<businessId>` | Get a business 
+POST  `/api/businesses/<businessId>/reviews` | Add a review for a business
+GET  `/api/businesses/<businessId>/reviews` | Get all reviews for a business
