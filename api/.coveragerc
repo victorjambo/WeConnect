@@ -21,3 +21,4 @@
   		*flask_jsonpify.py*
 		*jwt/*
 		*passlib/*
+		*virtualenv/*
