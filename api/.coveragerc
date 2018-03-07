@@ -12,3 +12,9 @@
 		*uuid.py*
 		*/http*
 		*numbers.py*
+		*click/*
+  		*flask/*
+  		*itsdangerous.py*
+  		*jinja2/*
+  		*markupsafe/*
+  		*werkzeug/*
