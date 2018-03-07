@@ -1,7 +1,7 @@
 import os
 import unittest
 import json
-from v1 import app, users
+from v1 import app, user_instance
 
 
 class TestUser(unittest.TestCase):
@@ -39,7 +39,7 @@ class TestUser(unittest.TestCase):
         response = self.register_user()
         self.assertEqual(response.status_code, 201)
         self.assertEqual(response.content_type, 'application/json')
-        self.assertGreater(len(users), 0)
+        self.assertGreater(len(user_instance.users), 0)
 
     def test_user_registration_duplication(self):
         """Test if duplicate users can be added
@@ -47,7 +47,7 @@ class TestUser(unittest.TestCase):
         self.register_user()
         resp = self.register_user()
         self.assertEqual(resp.status_code, 409)
-        self.assertEqual(len(users), 1)
+        self.assertEqual(len(user_instance.users), 1)
 
     def test_successful_login(self):
         """ Test if user can login successfully
@@ -138,7 +138,7 @@ class TestUser(unittest.TestCase):
 
     def tearDown(self):
         """"""
-        users.clear()
+        user_instance.users.clear()
 
 
 if __name__ == '__main__':

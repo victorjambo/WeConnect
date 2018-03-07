@@ -3,7 +3,7 @@ this way we can safely use decorator route()
 """
 import jwt
 import datetime
-from v1 import app, users
+from v1 import app, user_instance
 from flask_jsonpify import jsonify
 from passlib.hash import sha256_crypt
 from flask import request, session, make_response
@@ -23,11 +23,9 @@ def signup():
     if check_if_name_taken(data['username']):
         return jsonify({'warning': 'username taken'}), 409
 
-    data['password'] = sha256_crypt.encrypt(str(data['password']))
-    data['id'] = str(len(users) + 1)
-    users.append(data)
+    user_instance.create_user(data)
 
-    if users[-1] == data:
+    if user_instance.users[-1] == data:
         return jsonify({'msg': 'successfully created'}), 201
 
     return jsonify({'warning': 'Could not register user'}), 401
@@ -80,6 +78,7 @@ def reset_password():
     data = request.get_json()
     response = find_user_by_id(current_user)
     if data['password']:
+        # user_instance.reset_password(data['password'], response['password'])
         response['password'] = sha256_crypt.encrypt(str(data['password']))
         return jsonify({'msg': 'password updated'}), 200
     return jsonify({'warning': 'password cannot be empty'}), 403
@@ -96,7 +95,7 @@ def logout():
 def read_all_users():
     """Reads all users
     """
-    return jsonify(users), 200
+    return jsonify(user_instance.users), 200
 
 
 @app.route('/api/user/<user_id>', methods=['GET'])

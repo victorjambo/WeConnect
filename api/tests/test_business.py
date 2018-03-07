@@ -1,7 +1,7 @@
 import os
 import unittest
 import json
-from v1 import app, businesses
+from v1 import app, business_instance
 
 
 class TestBusiness(unittest.TestCase):
@@ -25,14 +25,14 @@ class TestBusiness(unittest.TestCase):
         """
         response = self.app.get('/api/businesses')
         self.assertEqual(response.status_code, 200)
-        self.assertGreater(len(businesses), 0)
+        self.assertGreater(len(business_instance.businesses), 0)
 
     def test_create_business(self):
         """Test if can register new business
         """
-        initial_business_count = len(businesses)
+        initial_business_count = len(business_instance.businesses)
         response = self.create_business()
-        final_business_count = len(businesses)
+        final_business_count = len(business_instance.businesses)
         self.assertEqual(response.status_code, 201)
         self.assertEqual(response.content_type, 'application/json')
         self.assertEqual(final_business_count - initial_business_count, 1)

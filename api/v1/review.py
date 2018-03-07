@@ -2,7 +2,7 @@
 this way we can safely use decorator app.route()
 from flask.ext.jsonpify import jsonify
 """
-from v1 import app, reviews
+from v1 import app, review_instance
 from flask import request
 from flask_jsonpify import jsonify
 from utils import find_reviews_by_business_id, find_review_by_id
@@ -15,11 +15,8 @@ def create_review(businessId):
     """
     current_user = '1'
     data = request.get_json()
-    data['user_id'] = current_user
-    data['id'] = str(len(reviews) + 1)
-    data['business_id'] = businessId
-    reviews.append(data)
-    if reviews[-1] == data:
+    review_instance.create_review(current_user, businessId, data)
+    if review_instance.reviews[-1] == data:
         return jsonify({"msg": "review created"}), 201
     return jsonify({"msg": "Could not create new reviews"}), 401
 
@@ -43,7 +40,7 @@ def delete_reviews(businessId, reviewId):
     if not resp:
         return jsonify({'msg': 'Review not found'}), 404
     if resp['business_id'] == businessId:
-        reviews.remove(resp)
+        review_instance.reviews.remove(resp)
         return jsonify({'msg': 'review deleted'}), 200
     return jsonify({'msg': 'Cannot delete review'}), 404
 
@@ -53,4 +50,4 @@ def read_all_reviews():
     """Reads all Reviews
     used by admin
     """
-    return jsonify(reviews), 200
+    return jsonify(review_instance.reviews), 200

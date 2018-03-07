@@ -11,15 +11,14 @@ and its an easy read
 """
 import os
 from flask import Flask
-from data import business_data, review_data, user_data
+from v1.models import User, Business, Review
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('SECRET')
 
-
-users = user_data()
-businesses = business_data()
-reviews = review_data()
+user_instance = User()
+business_instance = Business()
+review_instance = Review()
 
 import v1.user
 import v1.business
