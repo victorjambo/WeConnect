@@ -1,4 +1,4 @@
-def business():
+def business_data():
     """returns all businesses
     """
     businesses = [
@@ -46,7 +46,7 @@ def business():
     return businesses
 
 
-def review():
+def review_data():
     """All reviews"""
     reviews = [
         {
@@ -79,3 +79,9 @@ def review():
         }
     ]
     return reviews
+
+
+def user_data():
+    """All users"""
+    users = []
+    return users
