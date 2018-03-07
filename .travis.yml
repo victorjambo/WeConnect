@@ -15,5 +15,3 @@ branches:
   - ft-api-endpoints
 after_success:
   - coveralls
-env:
-  - SECRET="supersecret"
