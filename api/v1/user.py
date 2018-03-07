@@ -3,7 +3,7 @@ this way we can safely use decorator route()
 """
 import jwt
 import datetime
-from v1 import app, user_instance
+from v1 import app, user_instance, login_required
 from flask_jsonpify import jsonify
 from passlib.hash import sha256_crypt
 from flask import request, session, make_response
@@ -59,7 +59,7 @@ def login():
         """
         session['logged_in'] = True
         session['username'] = auth['username']
-        exp_time = datetime.datetime.utcnow() + datetime.timedelta(minutes=120)
+        exp_time = datetime.datetime.utcnow() + datetime.timedelta(minutes=999)
         token = jwt.encode(
             {
                 'id': user['id'],
@@ -68,27 +68,41 @@ def login():
         )
         return jsonify({'token': token.decode('UTF-8')}), 200
 
+    return make_response(
+        "Incorrect username or password",
+        401,
+        {
+            "WWW-Authenticate": "Basic realm='Login Required'"
+        }
+    )
+
 
 @app.route('/api/auth/reset-password', methods=['PUT'])
-def reset_password():
+@login_required
+def reset_password(current_user):
     """Update user password
     User should be logged in first to update
     """
-    current_user = '1'
+    if not current_user:
+        return jsonify({'warning': 'Login Again'}), 401
+
     data = request.get_json()
-    response = find_user_by_id(current_user)
     if data['password']:
-        # user_instance.reset_password(data['password'], response['password'])
+        response = find_user_by_id(current_user)
         response['password'] = sha256_crypt.encrypt(str(data['password']))
         return jsonify({'msg': 'password updated'}), 200
     return jsonify({'warning': 'password cannot be empty'}), 403
 
 
 @app.route('/api/auth/logout', methods=['DELETE'])
-def logout():
+@login_required
+def logout(current_user):
     """Destroy user session"""
-    session.clear()
-    return jsonify({'msg': 'logged out'}), 200
+    if session:
+        if session['logged_in']:
+            session.clear()
+            return jsonify({'msg': 'logged out'}), 200
+    return jsonify({'warning': 'Already logged out'}), 404
 
 
 @app.route('/api/users', methods=['GET'])
@@ -99,7 +113,8 @@ def read_all_users():
 
 
 @app.route('/api/user/<user_id>', methods=['GET'])
-def read_user(user_id):
+@login_required
+def read_user(current_user, user_id):
     """Reads user given an ID
     if user is not provided then user current user ID
     """
@@ -115,4 +130,4 @@ def read_user_businesses(user_id):
     response = find_business_by_user(user_id)
     if response:
         return jsonify(response), 200
-    return jsonify({'msg': 'user does not own a business'}), 204
+    return jsonify({'msg': 'user does not own a business'}), 404
