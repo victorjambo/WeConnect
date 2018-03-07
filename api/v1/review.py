@@ -2,18 +2,18 @@
 this way we can safely use decorator app.route()
 from flask.ext.jsonpify import jsonify
 """
-from v1 import app, review_instance
+from v1 import app, review_instance, login_required
 from flask import request
 from flask_jsonpify import jsonify
 from utils import find_reviews_by_business_id, find_review_by_id
 
 
 @app.route('/api/businesses/<businessId>/reviews', methods=['POST'])
-def create_review(businessId):
+@login_required
+def create_review(current_user, businessId):
     """Create Review given a business ID
     Takes current user ID and business ID then attachs it to response data
     """
-    current_user = '1'
     data = request.get_json()
     review_instance.create_review(current_user, businessId, data)
     if review_instance.reviews[-1] == data:
@@ -32,21 +32,28 @@ def read_reviews(businessId):
     '/api/businesses/<businessId>/reviews/<reviewId>',
     methods=['DELETE']
 )
-def delete_reviews(businessId, reviewId):
+@login_required
+def delete_reviews(current_user, businessId, reviewId):
     """Delete a Review given a review ID and business ID
     confirms if current_user is owner of review
     """
     resp = find_review_by_id(reviewId)
     if not resp:
         return jsonify({'msg': 'Review not found'}), 404
+
+    if current_user != resp['user_id']:
+        return jsonify({'warning': 'Not Allowed'}), 401
+
     if resp['business_id'] == businessId:
         review_instance.reviews.remove(resp)
         return jsonify({'msg': 'review deleted'}), 200
+
     return jsonify({'msg': 'Cannot delete review'}), 404
 
 
 @app.route('/api/businesses/reviews', methods=['GET'])
-def read_all_reviews():
+@login_required
+def read_all_reviews(current_user):
     """Reads all Reviews
     used by admin
     """

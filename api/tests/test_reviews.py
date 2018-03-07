@@ -11,6 +11,21 @@ class TestReview(unittest.TestCase):
             "title": "Friday 13th",
             "desc": "biz 1 user 1 id 5"
         }
+        self.new_user_info = {
+            "username": "robert",
+            "password": "password"
+        }
+        self.app.post(
+            '/api/auth/register',
+            data=json.dumps(self.new_user_info),
+            content_type='application/json'
+        )
+        resp = self.app.post(
+            '/api/auth/login',
+            data=json.dumps(self.new_user_info),
+            content_type='application/json'
+        )
+        self.token = json.loads(resp.get_data(as_text=True))['token']
 
     def test_create_review(self):
         """Create new review for a business
@@ -19,11 +34,13 @@ class TestReview(unittest.TestCase):
         response = self.app.post(
             '/api/businesses/1/reviews',
             data=json.dumps(self.new_review),
-            content_type='application/json'
+            headers={
+                "content-type": "application/json",
+                "x-access-token": self.token
+            }
         )
         final_count = len(review_instance.reviews)
         self.assertEqual(response.status_code, 201)
-        self.assertEqual(response.content_type, 'application/json')
         self.assertEqual(final_count - initial_count, 1)
 
     def test_read_reviews(self):
@@ -32,23 +49,44 @@ class TestReview(unittest.TestCase):
         self.app.post(
             '/api/businesses/1/reviews',
             data=json.dumps(self.new_review),
-            content_type='application/json'
+            headers={
+                "content-type": "application/json",
+                "x-access-token": self.token
+            }
         )
         resp = self.app.get('/api/businesses/1/reviews')
         self.assertEqual(resp.status_code, 200)
         self.assertGreater(len(review_instance.reviews), 0)
 
-        response = self.app.get('/api/businesses/reviews')
+        response = self.app.get(
+            '/api/businesses/reviews',
+            headers={
+                "content-type": "application/json",
+                "x-access-token": self.token
+            }
+        )
         self.assertEqual(response.status_code, 200)
 
     def test_delete_review(self):
         """Test deleting business twice
         """
-        response = self.app.delete('/api/businesses/1/reviews/1')
+        response = self.app.delete(
+            '/api/businesses/1/reviews/1',
+            headers={
+                "content-type": "application/json",
+                "x-access-token": self.token
+            }
+        )
         self.assertEqual(response.status_code, 200)
 
         # delete already deleted review
-        response = self.app.delete('/api/businesses/1/reviews/1')
+        response = self.app.delete(
+            '/api/businesses/1/reviews/1',
+            headers={
+                "content-type": "application/json",
+                "x-access-token": self.token
+            }
+        )
         self.assertEqual(response.status_code, 404)
 
 
