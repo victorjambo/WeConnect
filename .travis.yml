@@ -2,8 +2,6 @@ language: python
 python:
   - "3.5"
 # command to install dependencies
-before_install:
-  - cd $TRAVIS_BUILD_DIR/api
 install:
   - "pip install -r requirements.txt"
   - "pip install coveralls"

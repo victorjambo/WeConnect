@@ -11,9 +11,9 @@ and its an easy read
 """
 import os
 import jwt
-from flask import Flask, request, jsonify
 from functools import wraps
-from v1.models import User, Business, Review
+from flask import Flask, request, jsonify
+from versions.v1.models import User, Business, Review
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('SECRET')
@@ -46,6 +46,10 @@ def login_required(f):
         return f(current_user, *args, **kwargs)
     return wrap
 
-import v1.user
-import v1.business
-import v1.review
+import versions.v1.user
+import versions.v1.business
+import versions.v1.review
+
+app.register_blueprint(v1.user.mod, url_prefix='/api/v1')
+app.register_blueprint(v1.business.mod, url_prefix='/api/v1')
+app.register_blueprint(v1.review.mod, url_prefix='/api/v1')

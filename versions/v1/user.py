@@ -1,17 +1,20 @@
 """Importing app from __init__
 this way we can safely use decorator route()
 """
+import os
 import jwt
 import datetime
-from v1 import app, user_instance, login_required
 from flask_jsonpify import jsonify
 from passlib.hash import sha256_crypt
-from flask import request, session, make_response
-from utils import check_if_name_taken, find_user_by_name
-from utils import find_user_by_id, find_business_by_user, check_keys
+from flask import request, session, make_response, Blueprint
+from versions.utils import check_if_name_taken, find_user_by_name
+from versions.utils import find_user_by_id, find_business_by_user, check_keys
+from versions import login_required, user_instance
+
+mod = Blueprint('user', __name__)
 
 
-@app.route('/api/auth/register', methods=['POST'])
+@mod.route('/auth/register', methods=['POST'])
 def signup():
     """Creates a user
     first checks if username already exists
@@ -45,7 +48,7 @@ def signup():
     return jsonify({'warning': 'Could not register user'}), 401
 
 
-@app.route('/api/auth/login', methods=['POST'])
+@mod.route('/auth/login', methods=['POST'])
 def login():
     """creates new user session and token
     confirms if username and password match
@@ -86,7 +89,7 @@ def login():
             {
                 'id': user['id'],
                 'exp': exp_time
-            }, app.config['SECRET_KEY']
+            }, os.getenv("SECRET")
         )
         return jsonify({
             'token': token.decode('UTF-8'),
@@ -102,7 +105,7 @@ def login():
     )
 
 
-@app.route('/api/auth/reset-password', methods=['PUT'])
+@mod.route('/auth/reset-password', methods=['PUT'])
 @login_required
 def reset_password(current_user):
     """Update user password
@@ -124,7 +127,7 @@ def reset_password(current_user):
     return jsonify({'warning': 'Cannot reset password'}), 403
 
 
-@app.route('/api/auth/logout', methods=['DELETE'])
+@mod.route('/auth/logout', methods=['DELETE'])
 @login_required
 def logout(current_user):
     """Destroy user session"""
@@ -134,14 +137,14 @@ def logout(current_user):
     return jsonify({'warning': 'Already logged out'}), 404
 
 
-@app.route('/api/users', methods=['GET'])
+@mod.route('/users', methods=['GET'])
 def read_all_users():
     """Reads all users
     """
     return jsonify({'users': user_instance.users}), 200
 
 
-@app.route('/api/user/<user_id>', methods=['GET'])
+@mod.route('/user/<user_id>', methods=['GET'])
 @login_required
 def read_user(current_user, user_id):
     """Reads user given an ID
@@ -153,7 +156,7 @@ def read_user(current_user, user_id):
     return jsonify({'warning': 'user does not exist'}), 404
 
 
-@app.route('/api/user/<user_id>/businesses', methods=['GET'])
+@mod.route('/user/<user_id>/businesses', methods=['GET'])
 def read_user_businesses(user_id):
     """Read all businesses owned by this user"""
     response = find_business_by_user(user_id)

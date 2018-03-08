@@ -2,12 +2,14 @@
 this way we can safely use decorator app.route()
 """
 from flask_jsonpify import jsonify
-from flask import request
-from v1 import app, business_instance, login_required
-from utils import find_business_by_id, check_if_biz_name_taken
+from flask import request, Blueprint
+from versions import business_instance, login_required
+from versions.utils import find_business_by_id, check_if_biz_name_taken
+
+mod = Blueprint('business', __name__)
 
 
-@app.route('/api/businesses', methods=['GET'])
+@mod.route('/businesses', methods=['GET'])
 def read_all_businesses():
     """Reads all Businesses"""
     if business_instance.businesses:
@@ -15,7 +17,7 @@ def read_all_businesses():
     return jsonify({'warning': 'No Businesses'}), 404
 
 
-@app.route('/api/businesses', methods=['POST'])
+@mod.route('/businesses', methods=['POST'])
 @login_required
 def create_business(current_user):
     """Creates a business
@@ -40,7 +42,7 @@ def create_business(current_user):
     return jsonify({'warning': 'Could not create new business'}), 401
 
 
-@app.route('/api/businesses/<businessId>', methods=['GET'])
+@mod.route('/business/<businessId>', methods=['GET'])
 def read_business(businessId):
     """Reads Business given a business id"""
     response = find_business_by_id(businessId)
@@ -49,7 +51,7 @@ def read_business(businessId):
     return jsonify({'warning': 'Business Not Found'}), 404
 
 
-@app.route('/api/businesses/<businessId>', methods=['PUT'])
+@mod.route('/business/<businessId>', methods=['PUT'])
 @login_required
 def update_business(current_user, businessId):
     """Updates a business given a business ID
@@ -75,7 +77,7 @@ def update_business(current_user, businessId):
     }), 202
 
 
-@app.route('/api/businesses/<businessId>', methods=['DELETE'])
+@mod.route('/business/<businessId>', methods=['DELETE'])
 @login_required
 def delete_business(current_user, businessId):
     """Deletes a business

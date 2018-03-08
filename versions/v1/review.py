@@ -2,13 +2,15 @@
 this way we can safely use decorator app.route()
 from flask.ext.jsonpify import jsonify
 """
-from v1 import app, review_instance, login_required
-from flask import request
+from versions import review_instance, login_required
+from flask import request, Blueprint
 from flask_jsonpify import jsonify
-from utils import find_reviews_by_business_id, find_review_by_id
+from versions.utils import find_reviews_by_business_id, find_review_by_id
+
+mod = Blueprint('review', __name__)
 
 
-@app.route('/api/businesses/<businessId>/reviews', methods=['POST'])
+@mod.route('/business/<businessId>/reviews', methods=['POST'])
 @login_required
 def create_review(current_user, businessId):
     """Create Review given a business ID
@@ -21,15 +23,15 @@ def create_review(current_user, businessId):
     return jsonify({'warning': 'Could not create new reviews'}), 401
 
 
-@app.route('/api/businesses/<businessId>/reviews', methods=['GET'])
+@mod.route('/business/<businessId>/reviews', methods=['GET'])
 def read_reviews(businessId):
     """Reads all Review given a business ID"""
     business_reviews = find_reviews_by_business_id(businessId)
     return jsonify({'reviews': business_reviews}), 200
 
 
-@app.route(
-    '/api/businesses/<businessId>/reviews/<reviewId>',
+@mod.route(
+    '/business/<businessId>/reviews/<reviewId>',
     methods=['DELETE']
 )
 @login_required
@@ -51,7 +53,7 @@ def delete_reviews(current_user, businessId, reviewId):
     return jsonify({'warning': 'Cannot delete review'}), 404
 
 
-@app.route('/api/businesses/reviews', methods=['GET'])
+@mod.route('/businesses/reviews', methods=['GET'])
 @login_required
 def read_all_reviews(current_user):
     """Reads all Reviews

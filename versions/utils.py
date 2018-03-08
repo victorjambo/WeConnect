@@ -1,5 +1,4 @@
-from v1 import user_instance, business_instance, review_instance
-
+from versions import user_instance, business_instance, review_instance
 """ User functions """
 
 

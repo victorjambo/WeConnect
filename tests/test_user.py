@@ -1,7 +1,7 @@
 import os
 import unittest
 import json
-from v1 import app, user_instance
+from versions import app, user_instance
 
 
 class TestUser(unittest.TestCase):
@@ -30,7 +30,7 @@ class TestUser(unittest.TestCase):
             "password": ""
         }
         response = self.app.post(
-            '/api/auth/register',
+            '/api/v1/auth/register',
             data=json.dumps(empty_user_info),
             content_type='application/json'
         )
@@ -70,7 +70,7 @@ class TestUser(unittest.TestCase):
             'password': '123'
         }
         response = self.app.post(
-            '/api/auth/register',
+            '/api/v1/auth/register',
             data=json.dumps(week_password),
             content_type='application/json'
         )
@@ -94,7 +94,7 @@ class TestUser(unittest.TestCase):
             'username': 'victo'
         }
         response = self.app.post(
-            '/api/auth/login',
+            '/api/v1/auth/login',
             data=json.dumps(bad_params),
             content_type='application/json'
         )
@@ -110,7 +110,7 @@ class TestUser(unittest.TestCase):
             'password': 'passwords'
         }
         response = self.app.post(
-            '/api/auth/login',
+            '/api/v1/auth/login',
             data=json.dumps(bad_params),
             content_type='application/json'
         )
@@ -124,7 +124,7 @@ class TestUser(unittest.TestCase):
         self.register_user()
         self.login_user()
         response1 = self.app.put(
-            '/api/auth/reset-password',
+            '/api/v1/auth/reset-password',
             data=json.dumps(self.new_password),
             headers={
                 "content-type": "application/json",
@@ -137,7 +137,7 @@ class TestUser(unittest.TestCase):
         self.assertEqual(output, 'password updated')
 
         response2 = self.app.post(
-            '/api/auth/login',
+            '/api/v1/auth/login',
             data=json.dumps(self.with_new_pass),
             headers={
                 "content-type": "application/json",
@@ -152,7 +152,7 @@ class TestUser(unittest.TestCase):
     def test_reset_password_login_wrong_username(self):
         """Bad login info"""
         response = self.app.post(
-            '/api/auth/login',
+            '/api/v1/auth/login',
             data=json.dumps(self.with_new_pass),
             headers={
                 "content-type": "application/json"
@@ -169,7 +169,7 @@ class TestUser(unittest.TestCase):
         self.register_user()
         self.login_user()
         response = self.app.delete(
-            '/api/auth/logout',
+            '/api/v1/auth/logout',
             headers={
                 "content-type": "application/json",
                 "x-access-token": self.token
@@ -182,7 +182,7 @@ class TestUser(unittest.TestCase):
 
         # logout again
         response2 = self.app.delete(
-            '/api/auth/logout',
+            '/api/v1/auth/logout',
             headers={
                 "content-type": "application/json",
                 "x-access-token": self.token
@@ -197,7 +197,7 @@ class TestUser(unittest.TestCase):
         """Test Get all users route
         """
         self.register_user()
-        response = self.app.get('/api/users')
+        response = self.app.get('/api/v1/users')
         self.assertEqual(response.status_code, 200)
 
         output = json.loads(response.get_data(as_text=True))['users']
@@ -209,7 +209,7 @@ class TestUser(unittest.TestCase):
         self.register_user()
         self.login_user()
         resp = self.app.get(
-            '/api/user/1',
+            '/api/v1/user/1',
             headers={
                 "content-type": "application/json",
                 "x-access-token": self.token
@@ -220,7 +220,7 @@ class TestUser(unittest.TestCase):
     def test_not_found_user(self):
         """Test endpoint if user doesn't exist
         """
-        resp = self.app.get('/api/user/15')
+        resp = self.app.get('/api/v1/user/15')
         self.assertEqual(resp.data, b'{\n  "warning": "token missing"\n}\n')
 
     def test_read_user_businesses(self):
@@ -228,7 +228,7 @@ class TestUser(unittest.TestCase):
         """
         self.register_user()
         self.create_business()
-        response = self.app.get('/api/user/1/businesses')
+        response = self.app.get('/api/v1/user/1/businesses')
         self.assertEqual(response.status_code, 200)
 
         output = json.loads(response.get_data(as_text=True))['user']
@@ -239,7 +239,7 @@ class TestUser(unittest.TestCase):
         If user doesn't exist
         """
         self.register_user()
-        response = self.app.get('/api/user/100/businesses')
+        response = self.app.get('/api/v1/user/100/businesses')
         self.assertEqual(response.status_code, 404)
 
         output = json.loads(response.get_data(as_text=True))['warning']
@@ -247,7 +247,7 @@ class TestUser(unittest.TestCase):
 
     def register_user(self):
         response = self.app.post(
-            '/api/auth/register',
+            '/api/v1/auth/register',
             data=json.dumps(self.new_user_info),
             content_type='application/json'
         )
@@ -255,7 +255,7 @@ class TestUser(unittest.TestCase):
 
     def login_user(self):
         response = self.app.post(
-            '/api/auth/login',
+            '/api/v1/auth/login',
             data=json.dumps(self.new_user_info),
             content_type='application/json'
         )
@@ -270,7 +270,7 @@ class TestUser(unittest.TestCase):
             "bio": "if you like it crown it"
         }
         response = self.app.post(
-            '/api/businesses',
+            '/api/v1/businesses',
             data=json.dumps(new_business_info),
             content_type='application/json'
         )

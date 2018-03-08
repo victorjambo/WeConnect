@@ -1,7 +1,7 @@
 import os
 import unittest
 import json
-from v1 import app, business_instance
+from versions import app, business_instance
 
 
 class TestBusiness(unittest.TestCase):
@@ -24,12 +24,12 @@ class TestBusiness(unittest.TestCase):
             "password": "password"
         }
         self.app.post(
-            '/api/auth/register',
+            '/api/v1/auth/register',
             data=json.dumps(self.new_user_info),
             content_type='application/json'
         )
         resp = self.app.post(
-            '/api/auth/login',
+            '/api/v1/auth/login',
             data=json.dumps(self.new_user_info),
             content_type='application/json'
         )
@@ -39,7 +39,7 @@ class TestBusiness(unittest.TestCase):
         """Test if can access endpoint for all businesses
         """
         self.create_business(self.new_business_info)
-        response = self.app.get('/api/businesses')
+        response = self.app.get('/api/v1/businesses')
         self.assertEqual(response.status_code, 200)
         self.assertGreater(len(business_instance.businesses), 0)
 
@@ -70,7 +70,7 @@ class TestBusiness(unittest.TestCase):
             "bio": "watch it again"
         }
         self.create_business(business_data)
-        response = self.app.get('/api/businesses/1')
+        response = self.app.get('/api/v1/business/1')
         self.assertEqual(response.status_code, 200)
 
         output = json.loads(response.get_data(as_text=True))['business']
@@ -79,7 +79,7 @@ class TestBusiness(unittest.TestCase):
     def test_read_no_business(self):
         """Test 404 not found on business not existing
         """
-        response = self.app.get('/api/businesses/60')
+        response = self.app.get('/api/v1/business/60')
         self.assertEqual(response.status_code, 404)
 
         output = json.loads(response.get_data(as_text=True))['warning']
@@ -89,7 +89,7 @@ class TestBusiness(unittest.TestCase):
         """Test Update business info for non existing business
         """
         resp = self.app.put(
-            '/api/businesses/45',
+            '/api/v1/business/45',
             data=json.dumps(self.update_business_info),
             headers={
                 "content-type": "application/json",
@@ -101,7 +101,7 @@ class TestBusiness(unittest.TestCase):
     def test_delete_business(self):
         initial = len(business_instance.businesses)
         response = self.app.delete(
-            '/api/businesses/1',
+            '/api/v1/business/1',
             headers={
                 "content-type": "application/json",
                 "x-access-token": self.token
@@ -116,7 +116,7 @@ class TestBusiness(unittest.TestCase):
 
     def test_delete_empty_business(self):
         response = self.app.delete(
-            '/api/businesses/1',
+            '/api/v1/business/1',
             headers={
                 "content-type": "application/json",
                 "x-access-token": self.token
@@ -126,7 +126,7 @@ class TestBusiness(unittest.TestCase):
 
     def create_business(self, business_data):
         response = self.app.post(
-            '/api/businesses',
+            '/api/v1/businesses',
             data=json.dumps(business_data),
             headers={
                 "content-type": "application/json",
