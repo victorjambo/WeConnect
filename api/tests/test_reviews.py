@@ -70,6 +70,7 @@ class TestReview(unittest.TestCase):
     def test_delete_review(self):
         """Test deleting business twice
         """
+        initial = len(review_instance.reviews)
         response = self.app.delete(
             '/api/businesses/1/reviews/1',
             headers={
@@ -77,7 +78,10 @@ class TestReview(unittest.TestCase):
                 "x-access-token": self.token
             }
         )
+        final = len(review_instance.reviews)
         self.assertEqual(response.status_code, 200)
+
+        self.assertEqual(initial - final, 1)
 
         # delete already deleted review
         response = self.app.delete(

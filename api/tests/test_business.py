@@ -77,6 +77,7 @@ class TestBusiness(unittest.TestCase):
         self.assertEqual(resp.status_code, 404)
 
     def test_delete_business(self):
+        initial = len(business_instance.businesses)
         response = self.app.delete(
             '/api/businesses/1',
             headers={
@@ -84,7 +85,9 @@ class TestBusiness(unittest.TestCase):
                 "x-access-token": self.token
             }
         )
+        final = len(business_instance.businesses)
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(initial - final, 1)
 
     def test_delete_empty_business(self):
         response = self.app.delete(
