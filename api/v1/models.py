@@ -1,13 +1,17 @@
 from passlib.hash import sha256_crypt
+import re
 
 
 class User(object):
     """user"""
     def __init__(self):
         self.users = []
+        self.username_regex = re.compile("[A-z0-9]{4,}")
+        self.password_regex = re.compile("[A-z0-9]{4,}")
 
     def create_user(self, args):
         args['password'] = sha256_crypt.encrypt(str(args['password']))
+        args['username'] = args['username'].lower().strip()
         args['id'] = str(len(self.users) + 1)
         self.users.append(args)
 

@@ -43,6 +43,11 @@ class TestReview(unittest.TestCase):
         self.assertEqual(response.status_code, 201)
         self.assertEqual(final_count - initial_count, 1)
 
+        output = json.loads(response.get_data(as_text=True))['success']
+        self.assertEqual(output, 'review successfully created')
+
+        self.assertEqual(review_instance.reviews[0]['title'], 'Friday 13th')
+
     def test_read_reviews(self):
         """Get reviews for business
         """
@@ -67,11 +72,14 @@ class TestReview(unittest.TestCase):
         )
         self.assertEqual(response.status_code, 200)
 
+        output = json.loads(response.get_data(as_text=True))['Reviews']
+        self.assertEqual(output[0]['title'], 'Friday 13th')
+
     def test_delete_review(self):
         """Test deleting business twice
         """
         initial = len(review_instance.reviews)
-        response = self.app.delete(
+        response1 = self.app.delete(
             '/api/businesses/1/reviews/1',
             headers={
                 "content-type": "application/json",
@@ -79,7 +87,10 @@ class TestReview(unittest.TestCase):
             }
         )
         final = len(review_instance.reviews)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response1.status_code, 200)
+
+        output1 = json.loads(response1.get_data(as_text=True))['success']
+        self.assertEqual(output1, 'review deleted')
 
         self.assertEqual(initial - final, 1)
 
@@ -92,6 +103,9 @@ class TestReview(unittest.TestCase):
             }
         )
         self.assertEqual(response.status_code, 404)
+
+        output = json.loads(response.get_data(as_text=True))['warning']
+        self.assertEqual(output, 'Review not found')
 
 
 if __name__ == '__main__':

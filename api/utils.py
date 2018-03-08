@@ -42,6 +42,13 @@ def find_business_by_id(businessId):
             return business
 
 
+def check_if_biz_name_taken(name):
+    for business in business_instance.businesses:
+        if business['name'] == name:
+            return True
+    return False
+
+
 """ reviews functions """
 
 
@@ -59,3 +66,11 @@ def find_review_by_id(reviewId):
     for review in review_instance.reviews:
         if review['id'] == reviewId:
             return review
+
+
+def check_keys(args, length):
+    params = ['username', 'password']
+    for key in args.keys():
+        if key not in params or len(args) != length:
+            return True
+    return False

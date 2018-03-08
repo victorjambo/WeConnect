@@ -38,30 +38,52 @@ class TestBusiness(unittest.TestCase):
     def test_read_all_businesses(self):
         """Test if can access endpoint for all businesses
         """
+        self.create_business(self.new_business_info)
         response = self.app.get('/api/businesses')
         self.assertEqual(response.status_code, 200)
         self.assertGreater(len(business_instance.businesses), 0)
+
+        output = json.loads(response.get_data(as_text=True))['businesses']
+        self.assertEqual(output[0]['name'], 'Crown')
 
     def test_create_business(self):
         """Test if can register new business
         """
         initial_business_count = len(business_instance.businesses)
-        response = self.create_business()
+        response = self.create_business(self.new_business_info)
         final_business_count = len(business_instance.businesses)
         self.assertEqual(response.status_code, 201)
         self.assertEqual(response.content_type, 'application/json')
         self.assertEqual(final_business_count - initial_business_count, 1)
 
-    def test_cannot_read_one_business(self):
-        """Test route for single business that doesn't exist
+        output = json.loads(response.get_data(as_text=True))
+        self.assertEqual(output['success'], 'successfully created business')
+        self.assertEqual(output['user'], business_instance.businesses[-1])
+
+    def test_can_read_one_business(self):
+        """Test route for single business
         """
-        self.create_business()
-        response = self.app.get('/api/businesses/45')
-        self.assertEqual(response.status_code, 404)
+        business_data = {
+            "name": "Samsung",
+            "category": "Tv",
+            "location": "New york",
+            "bio": "watch it again"
+        }
+        self.create_business(business_data)
+        response = self.app.get('/api/businesses/1')
+        self.assertEqual(response.status_code, 200)
+
+        output = json.loads(response.get_data(as_text=True))['business']
+        self.assertEqual(output['name'], business_data['name'])
 
     def test_read_no_business(self):
+        """Test 404 not found on business not existing
+        """
         response = self.app.get('/api/businesses/60')
         self.assertEqual(response.status_code, 404)
+
+        output = json.loads(response.get_data(as_text=True))['warning']
+        self.assertEqual(output, 'Business Not Found')
 
     def test_cannot_update_business(self):
         """Test Update business info for non existing business
@@ -89,6 +111,9 @@ class TestBusiness(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(initial - final, 1)
 
+        output = json.loads(response.get_data(as_text=True))
+        self.assertEqual(output['success'], 'Business Deleted')
+
     def test_delete_empty_business(self):
         response = self.app.delete(
             '/api/businesses/1',
@@ -99,10 +124,10 @@ class TestBusiness(unittest.TestCase):
         )
         self.assertEqual(response.status_code, 404)
 
-    def create_business(self):
+    def create_business(self, business_data):
         response = self.app.post(
             '/api/businesses',
-            data=json.dumps(self.new_business_info),
+            data=json.dumps(business_data),
             headers={
                 "content-type": "application/json",
                 "x-access-token": self.token

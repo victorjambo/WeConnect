@@ -17,8 +17,8 @@ def create_review(current_user, businessId):
     data = request.get_json()
     review_instance.create_review(current_user, businessId, data)
     if review_instance.reviews[-1] == data:
-        return jsonify({"msg": "review created"}), 201
-    return jsonify({"msg": "Could not create new reviews"}), 401
+        return jsonify({'success': 'review successfully created'}), 201
+    return jsonify({'warning': 'Could not create new reviews'}), 401
 
 
 @app.route('/api/businesses/<businessId>/reviews', methods=['GET'])
@@ -39,16 +39,16 @@ def delete_reviews(current_user, businessId, reviewId):
     """
     resp = find_review_by_id(reviewId)
     if not resp:
-        return jsonify({'msg': 'Review not found'}), 404
+        return jsonify({'warning': 'Review not found'}), 404
 
     if current_user != resp['user_id']:
         return jsonify({'warning': 'Not Allowed'}), 401
 
     if resp['business_id'] == businessId:
         review_instance.reviews.remove(resp)
-        return jsonify({'msg': 'review deleted'}), 200
+        return jsonify({'success': 'review deleted'}), 200
 
-    return jsonify({'msg': 'Cannot delete review'}), 404
+    return jsonify({'warning': 'Cannot delete review'}), 404
 
 
 @app.route('/api/businesses/reviews', methods=['GET'])
@@ -57,4 +57,4 @@ def read_all_reviews(current_user):
     """Reads all Reviews
     used by admin
     """
-    return jsonify(review_instance.reviews), 200
+    return jsonify({'Reviews': review_instance.reviews}), 200
