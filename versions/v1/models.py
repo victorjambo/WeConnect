@@ -29,9 +29,6 @@ class Business(object):
         args['id'] = str(len(self.businesses) + 1)
         self.businesses.append(args)
 
-    def update_business(self):
-        pass
-
 
 class Review(object):
     """Review"""

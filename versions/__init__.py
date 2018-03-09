@@ -10,6 +10,7 @@ Why do this; it reduces lines of code within a single file
 and its an easy read
 """
 import os
+import re
 import jwt
 from functools import wraps
 from flask import Flask, request, jsonify
@@ -21,6 +22,8 @@ app.config['SECRET_KEY'] = os.getenv('SECRET')
 user_instance = User()
 business_instance = Business()
 review_instance = Review()
+
+regex = re.compile("[A-z0-9]{4,}")
 
 
 def login_required(f):

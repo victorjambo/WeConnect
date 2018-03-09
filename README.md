@@ -39,7 +39,7 @@ virtualenv venv
 
 Navigate to api folder.
 ```
-cd Weconnect/api
+cd Weconnect
 ```
 
 Install the packages.
@@ -74,14 +74,14 @@ To test endpoints manually fire up postman and run the following endpoints
 
 **EndPoint** | **Functionality**
 --- | ---
-POST `/api/auth/register` | Creates a user account 
-POST `/api/auth/login` | Logs in a user
-POST `/api/auth/logout` | Logs out a user
-POST `/api/auth/reset-password` | Password reset
-POST  `/api/businesses` | Register a business
-PUT `/api/businesses/<businessId>` | Updates a business profile
-DELETE `/api//businesses/<businessId>` | Remove a business
-GET  `/api/businesses` | Retrieves all businesses
-GET  `/api/businesses/<businessId>` | Get a business 
-POST  `/api/businesses/<businessId>/reviews` | Add a review for a business
-GET  `/api/businesses/<businessId>/reviews` | Get all reviews for a business
+POST `/api/v1/auth/register` | Creates a user account 
+POST `/api/v1/auth/login` | Logs in a user
+POST `/api/v1/auth/logout` | Logs out a user
+POST `/api/v1/auth/reset-password` | Password reset
+POST  `/api/v1/businesses` | Register a business
+PUT `/api/v1/business/<businessId>` | Updates a business profile
+DELETE `/api/v1/business/<businessId>` | Remove a business
+GET  `/api/v1/businesses` | Retrieves all businesses
+GET  `/api/v1/business/<businessId>` | Get a business 
+POST  `/api/v1/business/<businessId>/reviews` | Add a review for a business
+GET  `/api/v1/business/<businessId>/reviews` | Get all reviews for a business
