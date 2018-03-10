@@ -15,9 +15,12 @@ import jwt
 from functools import wraps
 from flask import Flask, request, jsonify
 from versions.v1.models import User, Business, Review
+from flask_cors import CORS
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('SECRET')
+CORS(app)
 
 user_instance = User()
 business_instance = Business()
