@@ -164,8 +164,7 @@ def read_all_users():
 
 
 @mod.route('/user/<user_id>', methods=['GET'])
-@login_required
-def read_user(current_user, user_id):
+def read_user(user_id):
     """Reads user given an ID
     if user is not provided then user current user ID
     """

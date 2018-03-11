@@ -161,6 +161,21 @@ class TestUser(unittest.TestCase):
         output = json.loads(response.get_data(as_text=True))['warning']
         self.assertEqual(output, 'Incorrect username')
 
+    def test_cannot_login(self):
+        """Test if user cannot login
+        """
+        bad_params = {
+            'username': 'robert',
+            'password': 'passwordsdsdfsdfsd'
+        }
+        self.register_user()
+        response = self.app.post(
+            '/api/v1/auth/login',
+            data=json.dumps(bad_params),
+            content_type='application/json'
+        )
+        self.assertEqual(response.data, b'Cannot Login')
+
     def test_reset_password(self):
         """Test user can reset password
         and login with new password
@@ -207,6 +222,21 @@ class TestUser(unittest.TestCase):
         output = json.loads(response.get_data(as_text=True))['warning']
         self.assertEqual(output, 'Incorrect username')
 
+    def test_reset_pass_with_no_token(self):
+        """Send reset password with no token in header
+        """
+        self.register_user()
+        self.login_user()
+        response = self.app.put(
+            '/api/v1/auth/reset-password',
+            data=json.dumps(self.new_password),
+            headers={
+                "content-type": "application/json"
+            }
+        )
+        output = json.loads(response.get_data(as_text=True))['warning']
+        self.assertEqual(output, 'token missing')
+
     def test_logout(self):
         """Test user logout
         """
@@ -252,20 +282,17 @@ class TestUser(unittest.TestCase):
         """
         self.register_user()
         self.login_user()
-        resp = self.app.get(
-            '/api/v1/user/1',
-            headers={
-                "content-type": "application/json",
-                "x-access-token": self.token
-            }
-        )
-        self.assertEqual(resp.status_code, 200)
+        response = self.app.get('/api/v1/user/1')
+        self.assertEqual(response.status_code, 200)
 
     def test_not_found_user(self):
         """Test endpoint if user doesn't exist
         """
-        resp = self.app.get('/api/v1/user/15')
-        self.assertEqual(resp.data, b'{\n  "warning": "token missing"\n}\n')
+        response = self.app.get('/api/v1/user/15')
+        self.assertEqual(
+            response.data,
+            b'{\n  "warning": "user does not exist"\n}'
+        )
 
     def test_read_user_businesses(self):
         """Test all business owned by user
@@ -290,6 +317,15 @@ class TestUser(unittest.TestCase):
 
         output = json.loads(response.get_data(as_text=True))['warning']
         self.assertEqual(output, 'user does not own a business')
+
+    def test_user_does_not_exist(self):
+        """test user does not exist
+        """
+        # self.register_user()
+        # self.login_user()
+        response = self.app.get('/api/v1/user/112')
+        output = json.loads(response.get_data(as_text=True))['warning']
+        self.assertEqual(output, 'user does not exist')
 
     def register_user(self):
         response = self.app.post(
