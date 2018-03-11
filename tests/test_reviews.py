@@ -80,6 +80,64 @@ class TestReview(unittest.TestCase):
         output = json.loads(response.get_data(as_text=True))['Reviews']
         self.assertEqual(output[0]['title'], 'Friday 13th')
 
+    def test_cannot_delete_review(self):
+        """test different user deleting review
+        """
+        new_user = {
+            "username": "hotpoint",
+            "email": "victor.mutai@nbo.samadc.org",
+            "password": "password"
+        }
+        new_user_login = {
+            "username": "hotpoint",
+            "password": "password"
+        }
+        business_data = {
+            "name": "Crowns paints",
+            "category": "Construction",
+            "location": "NBO",
+            "bio": "if you like it crown it"
+        }
+        self.app.post(
+            '/api/v1/auth/register',
+            data=json.dumps(new_user),
+            content_type='application/json'
+        )
+        response_login = self.app.post(
+            '/api/v1/auth/login',
+            data=json.dumps(new_user_login),
+            content_type='application/json'
+        )
+        token = json.loads(response_login.get_data(as_text=True))['token']
+
+        self.app.post(
+            '/api/v1/businesses',
+            data=json.dumps(business_data),
+            headers={
+                "content-type": "application/json",
+                "x-access-token": self.token
+            }
+        )
+        response = self.app.post(
+            '/api/v1/business/1/reviews',
+            data=json.dumps(self.new_review),
+            headers={
+                "content-type": "application/json",
+                "x-access-token": self.token
+            }
+        )
+        response = self.app.delete(
+            '/api/v1/business/1/reviews/1',
+            headers={
+                "content-type": "application/json",
+                "x-access-token": token
+            }
+        )
+        self.assertEqual(response.status_code, 401)
+
+        output = json.loads(response.get_data(as_text=True))
+        self.assertEqual(output['warning'], 'Not Allowed')
+
     def test_delete_review(self):
         """Test deleting business twice
         """

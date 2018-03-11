@@ -50,7 +50,7 @@ def delete_reviews(current_user, businessId, reviewId):
         review_instance.reviews.remove(resp)
         return jsonify({'success': 'review deleted'}), 200
 
-    return jsonify({'warning': 'Cannot delete review'}), 404
+    return jsonify({'warning': 'Cannot delete review'}), 401
 
 
 @mod.route('/businesses/reviews', methods=['GET'])
