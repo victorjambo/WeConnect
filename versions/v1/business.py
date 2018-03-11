@@ -3,8 +3,8 @@ this way we can safely use decorator app.route()
 """
 from flask_jsonpify import jsonify
 from flask import request, Blueprint
-from versions import business_instance, login_required, regex
-from versions.utils import find_business_by_id, check_if_biz_name_taken
+from versions import business_instance, login_required
+from versions.utils import find_business_by_id, check_if_biz_name_taken, regex
 
 mod = Blueprint('business', __name__)
 

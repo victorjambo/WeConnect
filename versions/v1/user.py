@@ -7,9 +7,11 @@ import datetime
 from flask_jsonpify import jsonify
 from passlib.hash import sha256_crypt
 from flask import request, session, make_response, Blueprint
-from versions.utils import check_if_name_taken, find_user_by_name
+from versions.utils import check_if_name_taken, find_user_by_name, send_email
 from versions.utils import find_user_by_id, find_business_by_user, check_keys
+from versions.utils import validate, check_if_email_taken
 from versions import login_required, user_instance
+
 
 mod = Blueprint('user', __name__)
 
@@ -20,28 +22,26 @@ def signup():
     first checks if username already exists
     """
     data = request.get_json()
-    if check_keys(data, 2):
-        return jsonify({'warning': 'Provide username & password'}), 400
 
-    if not data or not data['password'] or not data['username']:
-        return jsonify({'warning': 'Cannot create user without password'}), 400
-
-    if not user_instance.password_regex.match(data['username']):
-        return jsonify({
-            'warning': 'Provide username with more than 4 characters'
-        })
-
-    if not user_instance.username_regex.match(data['password']):
-        return jsonify({'warning': 'Please provide strong password'})
+    if validate(data):
+        return validate(data)
 
     if check_if_name_taken(data['username']):
         return jsonify({'warning': 'Username has already been taken'}), 409
 
+    if check_if_email_taken(data['email']):
+        return jsonify({'warning': 'Email has already been taken'}), 409
+
     user_instance.create_user(data)
 
     if user_instance.users[-1] == data:
+        send_email(
+            [user_instance.users[-1]['email']],
+            user_instance.users[-1]['hash_key'],
+            user_instance.users[-1]['username']
+        )
         return jsonify({
-            'success': 'Successfully created user',
+            'success': 'User created, Check mail box to activate account',
             'user': user_instance.users[-1]['username']
         }), 201
 
@@ -125,6 +125,25 @@ def reset_password(current_user):
         return jsonify({'success': 'password updated'}), 200
 
     return jsonify({'warning': 'Cannot reset password'}), 403
+
+
+@mod.route("/verify")
+def verify():
+    """Verify email activation
+    """
+    hash_key = request.args.get('key', default=1, type=str)
+    username = request.args.get('name', default=1, type=str)
+    response = find_user_by_name(username)
+    if response['hash_key'] == hash_key:
+        response['activate'] = True
+        return jsonify(
+            {
+                'success': 'Account Activated',
+                'key': response
+            }
+        ), 200
+
+    return jsonify({'warning': 'invalid key error'})
 
 
 @mod.route('/auth/logout', methods=['DELETE'])
