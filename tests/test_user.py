@@ -11,6 +11,11 @@ class TestUser(unittest.TestCase):
         self.app = app.test_client()
         self.new_user_info = {
             "username": "robert",
+            "email": "victor.mutai@students.jkuat.ac.ke",
+            "password": "password"
+        }
+        self.user_login_info = {
+            "username": "robert",
             "password": "password"
         }
         self.new_password = {
@@ -35,7 +40,7 @@ class TestUser(unittest.TestCase):
             content_type='application/json'
         )
         output = json.loads(response.get_data(as_text=True))['warning']
-        self.assertEqual(output, 'Cannot create user without password')
+        self.assertEqual(output, 'Provide email, username & password')
 
         self.assertEqual(response.status_code, 400)
 
@@ -44,14 +49,16 @@ class TestUser(unittest.TestCase):
         """
         response = self.register_user()
         self.assertEqual(response.status_code, 201)
-        self.assertEqual(response.content_type, 'application/json')
         self.assertGreater(len(user_instance.users), 0)
 
         output = json.loads(response.get_data(as_text=True))
-        self.assertEqual(output['success'], 'Successfully created user')
+        self.assertEqual(
+            output['success'],
+            'User created, Check mail box to activate account'
+        )
         self.assertEqual(output['user'], user_instance.users[-1]['username'])
 
-    def test_user_registration_duplication(self):
+    def test_user_registration_dup_username(self):
         """Test if duplicate users can be added
         """
         self.register_user()
@@ -62,11 +69,32 @@ class TestUser(unittest.TestCase):
         output = json.loads(response.get_data(as_text=True))['warning']
         self.assertEqual(output, 'Username has already been taken')
 
+    def test_user_registration_dup_email(self):
+        """Test create user with same email as existing
+        """
+        user_info = {
+            "username": "Victor",
+            "email": "victor.mutai@students.jkuat.ac.ke",
+            "password": "password1234"
+        }
+        self.register_user()
+        response = self.app.post(
+            '/api/v1/auth/register',
+            data=json.dumps(user_info),
+            content_type='application/json'
+        )
+
+        self.assertEqual(len(user_instance.users), 1)
+        self.assertEqual(response.status_code, 409)
+        output = json.loads(response.get_data(as_text=True))['warning']
+        self.assertEqual(output, 'Email has already been taken')
+
     def test_user_registration_with_weak_password(self):
         """test week passwords
         """
         week_password = {
             'username': 'vivian',
+            'email': 'victorjambo@live.com',
             'password': '123'
         }
         response = self.app.post(
@@ -76,6 +104,22 @@ class TestUser(unittest.TestCase):
         )
         output = json.loads(response.get_data(as_text=True))['warning']
         self.assertEqual(output, 'Please provide strong password')
+
+    def test_user_registration_with_bad_email(self):
+        """test week passwords
+        """
+        with_bad_email = {
+            'username': 'vivian',
+            'email': 'some@gmail',
+            'password': '123'
+        }
+        response = self.app.post(
+            '/api/v1/auth/register',
+            data=json.dumps(with_bad_email),
+            content_type='application/json'
+        )
+        output = json.loads(response.get_data(as_text=True))['warning']
+        self.assertEqual(output, 'Please provide valid email')
 
     def test_successful_login(self):
         """ Test if user can login successfully
@@ -227,6 +271,7 @@ class TestUser(unittest.TestCase):
         """Test all business owned by user
         """
         self.register_user()
+        self.login_user()
         self.create_business()
         response = self.app.get('/api/v1/user/1/businesses')
         self.assertEqual(response.status_code, 200)
@@ -239,6 +284,7 @@ class TestUser(unittest.TestCase):
         If user doesn't exist
         """
         self.register_user()
+        self.login_user()
         response = self.app.get('/api/v1/user/100/businesses')
         self.assertEqual(response.status_code, 404)
 
@@ -256,7 +302,7 @@ class TestUser(unittest.TestCase):
     def login_user(self):
         response = self.app.post(
             '/api/v1/auth/login',
-            data=json.dumps(self.new_user_info),
+            data=json.dumps(self.user_login_info),
             content_type='application/json'
         )
         self.token = json.loads(response.get_data(as_text=True))['token']
@@ -272,7 +318,10 @@ class TestUser(unittest.TestCase):
         response = self.app.post(
             '/api/v1/businesses',
             data=json.dumps(new_business_info),
-            content_type='application/json'
+            headers={
+                "content-type": "application/json",
+                "x-access-token": self.token
+            }
         )
         return response
 

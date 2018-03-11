@@ -13,6 +13,11 @@ class TestReview(unittest.TestCase):
         }
         self.new_user_info = {
             "username": "robert",
+            "email": "victor.mutai@students.jkuat.ac.ke",
+            "password": "password"
+        }
+        self.user_login_info = {
+            "username": "robert",
             "password": "password"
         }
         self.app.post(
@@ -22,7 +27,7 @@ class TestReview(unittest.TestCase):
         )
         resp = self.app.post(
             '/api/v1/auth/login',
-            data=json.dumps(self.new_user_info),
+            data=json.dumps(self.user_login_info),
             content_type='application/json'
         )
         self.token = json.loads(resp.get_data(as_text=True))['token']
