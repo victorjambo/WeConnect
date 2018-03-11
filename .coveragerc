@@ -22,3 +22,5 @@
 		*jwt/*
 		*passlib/*
 		*virtualenv/*
+		*email/*
+		*smtplib.py*

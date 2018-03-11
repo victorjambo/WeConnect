@@ -277,7 +277,7 @@ class TestUser(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
 
         output = json.loads(response.get_data(as_text=True))['user']
-        self.assertEqual(output[0]['name'], 'Crown')
+        self.assertEqual(output[-1]['name'], 'Crown')
 
     def test_not_found_user_businesses(self):
         """Test all business owned by user

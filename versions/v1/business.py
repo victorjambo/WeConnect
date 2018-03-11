@@ -70,30 +70,36 @@ def update_business(current_user, businessId):
         return jsonify({'warning': 'Not Allowed'}), 401
 
     try:
-        if check_if_biz_name_taken(data['name']):
+        if data['name'] and not regex.match(data['name']):
             return jsonify({
-                'warning': 'Business name {} already taken'.format(data['name'])
-            }), 409
-        if not regex.match(data['name']):
-            return jsonify({'warning': 'Please provide name with more characters'})
+                'warning': 'Please provide name with more characters'
+            })
         response['name'] = data['name'] if data['name'] else response['name']
     except KeyError:
-        return jsonify({'warning': 'provide business name, leave blank for no update'}), 401
+        return jsonify({
+            'warning': 'provide business name, leave blank for no update'
+        }), 401
 
     try:
         response['category'] = data['category'] if data['category'] else response['category']
     except KeyError:
-        return jsonify({'warning': 'provide category, leave blank for no update'}), 401
+        return jsonify({
+            'warning': 'provide category, leave blank for no update'
+        }), 401
 
     try:
         response['location'] = data['location'] if data['location'] else response['location']
     except KeyError:
-        return jsonify({'warning': 'provide location, leave blank for no update'}), 401
+        return jsonify({
+            'warning': 'provide location, leave blank for no update'
+        }), 401
 
     try:
         response['bio'] = data['bio'] if data['bio'] else response['bio']
     except KeyError:
-        return jsonify({'warning': 'provide bio, leave blank for no update'}), 401
+        return jsonify({
+            'warning': 'provide bio, leave blank for no update'
+        }), 401
 
     return jsonify({
         'success': 'successfully updated',
