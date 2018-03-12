@@ -89,20 +89,6 @@ def check_keys(args, length):
     return False
 
 
-# Send Mail
-def send_email(recipients, hash_key, username):
-    """Send email activation
-    https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-xi-email-support
-    """
-    msg = Message(
-        'Verify Account',
-        sender='victormutaijambo@gmail.com',
-        recipients=recipients
-    )
-    msg.html = render_template('email.html', hash_key=hash_key, name=username)
-    mail.send(msg)
-
-
 # validations
 username_regex = re.compile("^[a-z0-9_-]{3,15}$")
 biz_name_regex = re.compile("[A-z0-9]{4,}")
@@ -137,3 +123,32 @@ def validate(data):
         return jsonify({
             'warning': 'Please provide strong password'
         })
+
+
+# Send Mail
+def send_email(recipients, hash_key, username):
+    """Send email activation
+    https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-xi-email-support
+    """
+    msg = Message(
+        'Verify Account',
+        sender='victormutaijambo@gmail.com',
+        recipients=recipients
+    )
+    msg.html = render_template('email.html', hash_key=hash_key, name=username)
+    mail.send(msg)
+
+
+def send_forgot_password_email(recipients, new_password):
+    """Send email with new password
+    """
+    msg = Message(
+        'Forgot Password',
+        sender='victormutaijambo@gmail.com',
+        recipients=recipients
+    )
+    msg.html = render_template(
+        'forgotemail.html',
+        new_password=new_password
+    )
+    mail.send(msg)

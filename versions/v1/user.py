@@ -3,14 +3,16 @@ this way we can safely use decorator route()
 """
 import os
 import jwt
+import uuid
 import datetime
 from flask_jsonpify import jsonify
 from passlib.hash import sha256_crypt
 from versions import login_required, user_instance
+from versions.utils import send_forgot_password_email
+from versions.utils import find_user_by_id, check_keys
 from flask import request, session, make_response, Blueprint
 from versions.utils import validate, check_if_email_taken, password_regex
 from versions.utils import check_if_name_taken, find_user_by_name, send_email
-from versions.utils import find_user_by_id, check_keys
 
 
 mod = Blueprint('user', __name__)
@@ -132,6 +134,16 @@ def reset_password(current_user):
     return jsonify({'warning': 'old password does not match'}), 403
 
 
+@mod.route('/logout', methods=['DELETE'])
+@login_required
+def logout(current_user):
+    """Destroy user session"""
+    if session and session['logged_in']:
+        session.clear()
+        return jsonify({'success': 'logged out'}), 200
+    return jsonify({'warning': 'Already logged out'}), 404
+
+
 @mod.route("/verify")
 def verify():
     """Verify email activation
@@ -151,11 +163,16 @@ def verify():
     return jsonify({'warning': 'invalid key error'})
 
 
-@mod.route('/logout', methods=['DELETE'])
-@login_required
-def logout(current_user):
-    """Destroy user session"""
-    if session and session['logged_in']:
-        session.clear()
-        return jsonify({'success': 'logged out'}), 200
-    return jsonify({'warning': 'Already logged out'}), 404
+@mod.route("/forgot-password", methods=['POST'])
+def forgot_password():
+    """Sends new password to your mail
+    """
+    data = request.get_json()
+    if data['email'] and check_if_email_taken(data['email']):
+        new_password = uuid.uuid4().hex.upper()[0:6]
+        for user in user_instance.users:
+            if user['email'] == data['email']:
+                user['password'] = sha256_crypt.encrypt(new_password)
+        send_forgot_password_email([data['email']], new_password)
+        return jsonify({'warning': 'Email has been with reset password'}), 200
+    return jsonify({'warning': 'No user exists with that email'}), 409
