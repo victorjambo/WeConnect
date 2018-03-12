@@ -34,17 +34,17 @@ git clone https://github.com/victorjambo/WeConnect.git
 
 Create a virtual enviroment.
 ```
-virtualenv venv
+virtualenv venv --python=python3
 ```
 
 Navigate to api folder.
 ```
-cd Weconnect
+cd WeConnect
 ```
 
 Install the packages.
 ```
-pip install -r requirements.txt
+pip3 install -r requirements.txt
 ```
 
 Confirm your installed packages
@@ -57,7 +57,7 @@ $ pip freeze
 To get the app running...
 
 ```bash
-$ python app.py
+$ python3 app.py
 ```
 
 Open Postman and run endpoints
