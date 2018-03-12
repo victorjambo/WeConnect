@@ -11,18 +11,19 @@ class TestUser(unittest.TestCase):
         self.new_user_info = {
             "username": "robert",
             "email": "victor.mutai@students.jkuat.ac.ke",
-            "password": "password"
+            "password": "password1234"
         }
         self.user_login_info = {
             "username": "robert",
-            "password": "password"
+            "password": "password1234"
         }
         self.new_password = {
-            "password": "12345"
+            "old_password": "password1234",
+            "password": "wallcare12345"
         }
         self.with_new_pass = {
             "username": "robert",
-            "password": "12345"
+            "password": "wallcare12345"
         }
         self.token = {}
 
@@ -71,12 +72,12 @@ class TestUser(unittest.TestCase):
     def test_user_registration_dup_email(self):
         """Test create user with same email as existing
         """
+        self.register_user()
         user_info = {
-            "username": "Victor",
+            "username": "victor",
             "email": "victor.mutai@students.jkuat.ac.ke",
             "password": "password1234"
         }
-        self.register_user()
         response = self.app.post(
             '/api/v1/auth/register',
             data=json.dumps(user_info),
@@ -110,7 +111,7 @@ class TestUser(unittest.TestCase):
         with_bad_email = {
             'username': 'vivian',
             'email': 'some@gmail',
-            'password': '123'
+            'password': 'password1234'
         }
         response = self.app.post(
             '/api/v1/auth/register',
@@ -150,7 +151,7 @@ class TestUser(unittest.TestCase):
         """
         bad_params = {
             'username': 'someone',
-            'password': 'passwords'
+            'password': 'passwords1234'
         }
         response = self.app.post(
             '/api/v1/auth/login',
@@ -165,7 +166,7 @@ class TestUser(unittest.TestCase):
         """
         bad_params = {
             'username': 'robert',
-            'password': 'passwordsdsdfsdfsd'
+            'password': 'password2586'
         }
         self.register_user()
         response = self.app.post(
@@ -173,7 +174,8 @@ class TestUser(unittest.TestCase):
             data=json.dumps(bad_params),
             content_type='application/json'
         )
-        self.assertEqual(response.data, b'Cannot Login')
+        output = json.loads(response.get_data(as_text=True))['warning']
+        self.assertEqual(output, 'Cannot Login wrong password')
 
     def test_reset_password(self):
         """Test user can reset password

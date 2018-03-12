@@ -6,11 +6,11 @@ import jwt
 import datetime
 from flask_jsonpify import jsonify
 from passlib.hash import sha256_crypt
+from versions import login_required, user_instance
 from flask import request, session, make_response, Blueprint
+from versions.utils import validate, check_if_email_taken, password_regex
 from versions.utils import check_if_name_taken, find_user_by_name, send_email
 from versions.utils import find_user_by_id, find_business_by_user, check_keys
-from versions.utils import validate, check_if_email_taken
-from versions import login_required, user_instance
 
 
 mod = Blueprint('user', __name__)
@@ -71,7 +71,7 @@ def login():
         or either username or password are not provided
         """
         return make_response(
-            "Incorrect password",
+            jsonify({'warning': 'Incorrect password'}),
             401,
             {
                 "WWW-Authenticate": "Basic realm='Login Required'"
@@ -97,7 +97,7 @@ def login():
         }), 200
 
     return make_response(
-        "Cannot Login",
+        jsonify({'warning': 'Cannot Login wrong password'}),
         401,
         {
             "WWW-Authenticate": "Basic realm='Login Required'"
@@ -116,15 +116,20 @@ def reset_password(current_user):
 
     data = request.get_json()
 
-    if check_keys(data, 1):
+    if check_keys(data, 2) or not data['password']:
         return jsonify({'warning': 'Provide strong password'}), 400
 
-    if data['password']:
-        response = find_user_by_id(current_user)
+    if not password_regex.match(data['password']):
+        return jsonify({
+            'warning': 'Please provide strong password'
+        })
+
+    response = find_user_by_id(current_user)
+    if sha256_crypt.verify(data['old_password'], response['password']):
         response['password'] = sha256_crypt.encrypt(str(data['password']))
         return jsonify({'success': 'password updated'}), 200
 
-    return jsonify({'warning': 'Cannot reset password'}), 403
+    return jsonify({'warning': 'old password does not match'}), 403
 
 
 @mod.route("/verify")

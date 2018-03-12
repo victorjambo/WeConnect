@@ -1,11 +1,10 @@
-from versions import user_instance, business_instance, review_instance, mail
+import re
 from flask_mail import Message
 from flask import jsonify, render_template
-import re
-
-""" User functions """
+from versions import user_instance, business_instance, review_instance, mail
 
 
+# User functions
 def find_user_by_name(name):
     """Finds user in users array"""
     for user in user_instance.users:
@@ -63,9 +62,7 @@ def check_if_biz_name_taken(name):
     return False
 
 
-""" reviews functions """
-
-
+# reviews functions
 def find_reviews_by_business_id(businessId):
     """find review record"""
     all_reviews = []
@@ -85,16 +82,14 @@ def find_review_by_id(reviewId):
 def check_keys(args, length):
     """Check if dict keys are provided
     """
-    params = ['email', 'username', 'password']
+    params = ['email', 'username', 'password', 'old_password']
     for key in args.keys():
         if key not in params or len(args) != length:
             return True
     return False
 
 
-"""Send Mail"""
-
-
+# Send Mail
 def send_email(recipients, hash_key, username):
     """Send email activation
     https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-xi-email-support
@@ -108,9 +103,10 @@ def send_email(recipients, hash_key, username):
     mail.send(msg)
 
 
-"""validations """
-
-regex = re.compile("[A-z0-9]{4,}")
+# validations
+username_regex = re.compile("^[a-z0-9_-]{3,15}$")
+biz_name_regex = re.compile("[A-z0-9]{4,}")
+password_regex = re.compile("^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$")
 email_regex = re.compile("[^@]+@[^@]+\.[^@]+")
 
 
@@ -127,7 +123,7 @@ def validate(data):
             'warning': 'Cannot create user without all information'
         }), 400
 
-    if not regex.match(data['username']):
+    if not username_regex.match(data['username']):
         return jsonify({
             'warning': 'Provide username with more than 4 characters'
         })
@@ -137,7 +133,7 @@ def validate(data):
             'warning': 'Please provide valid email'
         })
 
-    if not regex.match(data['password']):
+    if not password_regex.match(data['password']):
         return jsonify({
             'warning': 'Please provide strong password'
         })

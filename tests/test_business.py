@@ -21,11 +21,11 @@ class TestBusiness(unittest.TestCase):
         self.new_user_info = {
             "username": "robert",
             "email": "victor.mutai@students.jkuat.ac.ke",
-            "password": "password"
+            "password": "password1234"
         }
         self.user_login_info = {
             "username": "robert",
-            "password": "password"
+            "password": "password1234"
         }
         self.app.post(
             '/api/v1/auth/register',
@@ -192,11 +192,11 @@ class TestBusiness(unittest.TestCase):
         new_user = {
             "username": "hotpoint",
             "email": "victor.mutai@nbo.samadc.org",
-            "password": "password"
+            "password": "password1234"
         }
         new_user_login = {
             "username": "hotpoint",
-            "password": "password"
+            "password": "password1234"
         }
         update_business_data = {
             "name": "",
@@ -356,11 +356,11 @@ class TestBusiness(unittest.TestCase):
         new_user = {
             "username": "hotpoint",
             "email": "victor.mutai@nbo.samadc.org",
-            "password": "password"
+            "password": "password1234"
         }
         new_user_login = {
             "username": "hotpoint",
-            "password": "password"
+            "password": "password1234"
         }
         self.app.post(
             '/api/v1/auth/register',

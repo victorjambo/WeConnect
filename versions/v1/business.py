@@ -4,7 +4,7 @@ this way we can safely use decorator app.route()
 from flask_jsonpify import jsonify
 from flask import request, Blueprint
 from versions import business_instance, login_required
-from versions.utils import find_business_by_id, check_if_biz_name_taken, regex
+from versions.utils import find_business_by_id, check_if_biz_name_taken, biz_name_regex
 
 mod = Blueprint('business', __name__)
 
@@ -26,7 +26,7 @@ def create_business(current_user):
     """
     data = request.get_json()
 
-    if not regex.match(data['name']):
+    if not biz_name_regex.match(data['name']):
         return jsonify({'warning': 'Please provide name with more characters'})
 
     if check_if_biz_name_taken(data['name']):
@@ -70,7 +70,7 @@ def update_business(current_user, businessId):
         return jsonify({'warning': 'Not Allowed'}), 401
 
     try:
-        if data['name'] and not regex.match(data['name']):
+        if data['name'] and not biz_name_regex.match(data['name']):
             return jsonify({
                 'warning': 'Please provide name with more characters'
             })
