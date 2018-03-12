@@ -1,7 +1,6 @@
-import os
 import unittest
 import json
-from versions import app, user_instance
+from versions import app, user_instance, business_instance
 
 
 class TestUser(unittest.TestCase):
@@ -362,8 +361,9 @@ class TestUser(unittest.TestCase):
         return response
 
     def tearDown(self):
-        """Clear user list"""
+        """Clear list"""
         user_instance.users.clear()
+        business_instance.businesses.clear()
 
 
 if __name__ == '__main__':

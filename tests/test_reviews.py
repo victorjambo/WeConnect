@@ -1,7 +1,6 @@
-import  os
 import json
 import unittest
-from versions import app, review_instance
+from versions import app, review_instance, business_instance, user_instance
 
 
 class TestReview(unittest.TestCase):
@@ -141,6 +140,31 @@ class TestReview(unittest.TestCase):
     def test_delete_review(self):
         """Test deleting business twice
         """
+        business_data = {
+            "name": "Crown",
+            "category": "Construction",
+            "location": "NBO",
+            "bio": "if you like it crown it"
+        }
+
+        self.app.post(
+            '/api/v1/businesses',
+            data=json.dumps(business_data),
+            headers={
+                "content-type": "application/json",
+                "x-access-token": self.token
+            }
+        )
+
+        self.app.post(
+            '/api/v1/business/1/reviews',
+            data=json.dumps(self.new_review),
+            headers={
+                "content-type": "application/json",
+                "x-access-token": self.token
+            }
+        )
+
         initial = len(review_instance.reviews)
         response1 = self.app.delete(
             '/api/v1/business/1/reviews/1',
@@ -169,6 +193,12 @@ class TestReview(unittest.TestCase):
 
         output = json.loads(response.get_data(as_text=True))['warning']
         self.assertEqual(output, 'Review not found')
+
+    def tearDown(self):
+        """Clear list"""
+        user_instance.users.clear()
+        business_instance.businesses.clear()
+        review_instance.reviews.clear()
 
 
 if __name__ == '__main__':

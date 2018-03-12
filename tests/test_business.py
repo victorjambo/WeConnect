@@ -1,7 +1,6 @@
-import os
 import unittest
 import json
-from versions import app, business_instance
+from versions import app, business_instance, user_instance
 
 
 class TestBusiness(unittest.TestCase):
@@ -92,7 +91,14 @@ class TestBusiness(unittest.TestCase):
     def test_create_business_if_name_taken(self):
         """Test create business if name is taken
         """
-        response = self.create_business(self.new_business_info)
+        new_business_info = {
+            "name": "Crown",
+            "category": "Technology",
+            "location": "Eldoret",
+            "bio": "white stays white"
+        }
+        self.create_business(self.new_business_info)
+        response = self.create_business(new_business_info)
         output = json.loads(response.get_data(as_text=True))['warning']
         self.assertEqual(
             output,
@@ -167,7 +173,7 @@ class TestBusiness(unittest.TestCase):
         6. If location key is not provided
         7. If bio key is not provided
         """
-        # business_instance.businesses.clear()
+        self.create_business(self.new_business_info)
 
         # 1. Business not found
         response1 = self.app.put(
@@ -220,7 +226,10 @@ class TestBusiness(unittest.TestCase):
         self.assertEqual(response2.status_code, 401)
         output2 = json.loads(response2.get_data(as_text=True))['warning']
         self.assertEqual(output2, 'Not Allowed')
-        assert business_instance.businesses[0]['category'] is not update_business_data['category']
+        self.assertIsNot(
+            business_instance.businesses[0]['category'],
+            update_business_data['category']
+        )
 
         # 3. Business name that fails regex
         update_business_data3 = {
@@ -241,7 +250,10 @@ class TestBusiness(unittest.TestCase):
         self.assertEqual(
             output['warning'],
             'Please provide name with more characters')
-        assert business_instance.businesses[0]['name'] is not update_business_data3['name']
+        self.assertIsNot(
+            business_instance.businesses[0]['name'],
+            update_business_data3['name']
+        )
 
         # 4. If name key is not provided
         update_business_data4 = {
@@ -262,7 +274,10 @@ class TestBusiness(unittest.TestCase):
             output['warning'],
             'provide business name, leave blank for no update'
         )
-        assert business_instance.businesses[0]['location'] is not update_business_data4['location']
+        self.assertIsNot(
+            business_instance.businesses[0]['location'],
+            update_business_data4['location']
+        )
 
         # 5. If category key is not provided
         update_business_data5 = {
@@ -283,7 +298,10 @@ class TestBusiness(unittest.TestCase):
             output['warning'],
             'provide category, leave blank for no update'
         )
-        assert business_instance.businesses[0]['location'] is not update_business_data5['location']
+        self.assertIsNot(
+            business_instance.businesses[0]['location'],
+            update_business_data5['location']
+        )
 
         # 6. If location key is not provided
         update_business_data6 = {
@@ -304,7 +322,9 @@ class TestBusiness(unittest.TestCase):
             output['warning'],
             'provide location, leave blank for no update'
         )
-        assert business_instance.businesses[0]['category'] is not update_business_data6['category']
+        self.assertIsNot(
+            business_instance.businesses[0]['category'],
+            update_business_data6['category'])
 
         # 7. If bio key is not provided
         update_business_data7 = {
@@ -325,7 +345,10 @@ class TestBusiness(unittest.TestCase):
             output['warning'],
             'provide bio, leave blank for no update'
         )
-        assert business_instance.businesses[0]['category'] is not update_business_data7['category']
+        self.assertIsNot(
+            business_instance.businesses[0]['category'],
+            update_business_data7['category']
+        )
 
     def test_delete_business_not_owner(self):
         """Test delete not your business
@@ -352,7 +375,7 @@ class TestBusiness(unittest.TestCase):
         token = json.loads(response_login.get_data(as_text=True))['token']
         self.create_business(self.new_business_info)
         response = self.app.delete(
-            '/api/v1/business/2',
+            '/api/v1/business/1',
             headers={
                 "content-type": "application/json",
                 "x-access-token": token
@@ -366,6 +389,7 @@ class TestBusiness(unittest.TestCase):
     def test_delete_business(self):
         """Test if actually deleted business
         """
+        self.create_business(self.new_business_info)
         initial = len(business_instance.businesses)
         response = self.app.delete(
             '/api/v1/business/1',
@@ -403,6 +427,11 @@ class TestBusiness(unittest.TestCase):
             }
         )
         return response
+
+    def tearDown(self):
+        """Clear list"""
+        user_instance.users.clear()
+        business_instance.businesses.clear()
 
 
 if __name__ == '__main__':
