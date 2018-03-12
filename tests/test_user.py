@@ -290,9 +290,10 @@ class TestUser(unittest.TestCase):
         """Test endpoint if user doesn't exist
         """
         response = self.app.get('/api/v1/user/15')
+        output = json.loads(response.get_data(as_text=True))['warning']
         self.assertEqual(
-            response.data,
-            b'{\n  "warning": "user does not exist"\n}'
+            output,
+            "user does not exist"
         )
 
     def test_read_user_businesses(self):

@@ -65,9 +65,11 @@ def login_required(f):
     return wrap
 
 import versions.v1.user
+import versions.v1.get_user
 import versions.v1.business
 import versions.v1.review
 
-app.register_blueprint(v1.user.mod, url_prefix='/api/v1')
+app.register_blueprint(v1.user.mod, url_prefix='/api/v1/auth')
+app.register_blueprint(v1.get_user.mod, url_prefix='/api/v1')
 app.register_blueprint(v1.business.mod, url_prefix='/api/v1')
 app.register_blueprint(v1.review.mod, url_prefix='/api/v1')

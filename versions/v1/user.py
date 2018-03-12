@@ -10,13 +10,13 @@ from versions import login_required, user_instance
 from flask import request, session, make_response, Blueprint
 from versions.utils import validate, check_if_email_taken, password_regex
 from versions.utils import check_if_name_taken, find_user_by_name, send_email
-from versions.utils import find_user_by_id, find_business_by_user, check_keys
+from versions.utils import find_user_by_id, check_keys
 
 
 mod = Blueprint('user', __name__)
 
 
-@mod.route('/auth/register', methods=['POST'])
+@mod.route('/register', methods=['POST'])
 def signup():
     """Creates a user
     first checks if username already exists
@@ -48,7 +48,7 @@ def signup():
     return jsonify({'warning': 'Could not register user'}), 401
 
 
-@mod.route('/auth/login', methods=['POST'])
+@mod.route('/login', methods=['POST'])
 def login():
     """creates new user session and token
     confirms if username and password match
@@ -105,7 +105,7 @@ def login():
     )
 
 
-@mod.route('/auth/reset-password', methods=['PUT'])
+@mod.route('/reset-password', methods=['PUT'])
 @login_required
 def reset_password(current_user):
     """Update user password
@@ -151,7 +151,7 @@ def verify():
     return jsonify({'warning': 'invalid key error'})
 
 
-@mod.route('/auth/logout', methods=['DELETE'])
+@mod.route('/logout', methods=['DELETE'])
 @login_required
 def logout(current_user):
     """Destroy user session"""
@@ -159,30 +159,3 @@ def logout(current_user):
         session.clear()
         return jsonify({'success': 'logged out'}), 200
     return jsonify({'warning': 'Already logged out'}), 404
-
-
-@mod.route('/users', methods=['GET'])
-def read_all_users():
-    """Reads all users
-    """
-    return jsonify({'users': user_instance.users}), 200
-
-
-@mod.route('/user/<user_id>', methods=['GET'])
-def read_user(user_id):
-    """Reads user given an ID
-    if user is not provided then user current user ID
-    """
-    response = find_user_by_id(user_id)
-    if response:
-        return jsonify({'user': response}), 200
-    return jsonify({'warning': 'user does not exist'}), 404
-
-
-@mod.route('/user/<user_id>/businesses', methods=['GET'])
-def read_user_businesses(user_id):
-    """Read all businesses owned by this user"""
-    response = find_business_by_user(user_id)
-    if response:
-        return jsonify({'user': response}), 200
-    return jsonify({'warning': 'user does not own a business'}), 404
