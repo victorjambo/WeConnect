@@ -1,5 +1,7 @@
-[![Coverage Status](https://coveralls.io/repos/github/victorjambo/WeConnect/badge.svg?branch=ft-api-endpoints)](https://coveralls.io/github/victorjambo/WeConnect?branch=ft-api-endpoints)
 [![Build Status](https://travis-ci.org/victorjambo/WeConnect.svg?branch=ft-api-endpoints)](https://travis-ci.org/victorjambo/WeConnect)
+[![Coverage Status](https://coveralls.io/repos/github/victorjambo/WeConnect/badge.svg?branch=ft-api-endpoints)](https://coveralls.io/github/victorjambo/WeConnect?branch=ft-api-endpoints)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/dfd1f513767a4227aa2202c14a7f4c59)](https://www.codacy.com/app/victorjambo/WeConnect?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=victorjambo/WeConnect&amp;utm_campaign=Badge_Grade)
+[![Maintainability](https://api.codeclimate.com/v1/badges/4020562f1eb41bcf63f9/maintainability)](https://codeclimate.com/github/victorjambo/WeConnect/maintainability)
 
 # WeConnect
 
