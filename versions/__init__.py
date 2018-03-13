@@ -30,7 +30,7 @@ app.config.update(
     MAIL_USE_SSL=True,
     MAIL_USERNAME='victormutaijambo@gmail.com',
     MAIL_PASSWORD=os.getenv('GMAIL_SECRET'),
-    MAIL_SUPPRESS_SEND=os.getenv('SUPPRESSED')
+    MAIL_SUPPRESS_SEND=True
 )
 
 mail = Mail(app)
