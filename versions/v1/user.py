@@ -3,22 +3,20 @@ this way we can safely use decorator route()
 """
 import os
 import jwt
-import uuid
 import datetime
 from flask_jsonpify import jsonify
 from passlib.hash import sha256_crypt
-from versions import login_required, user_instance
-from versions.utils import send_forgot_password_email
-from versions.utils import find_user_by_id, check_keys
 from flask import request, session, make_response, Blueprint
-from versions.utils import validate, check_if_email_taken, password_regex
 from versions.utils import check_if_name_taken, find_user_by_name, send_email
+from versions.utils import find_user_by_id, find_business_by_user, check_keys
+from versions.utils import validate, check_if_email_taken
+from versions import login_required, user_instance
 
 
 mod = Blueprint('user', __name__)
 
 
-@mod.route('/register', methods=['POST'])
+@mod.route('/auth/register', methods=['POST'])
 def signup():
     """Creates a user
     first checks if username already exists
@@ -50,7 +48,7 @@ def signup():
     return jsonify({'warning': 'Could not register user'}), 401
 
 
-@mod.route('/login', methods=['POST'])
+@mod.route('/auth/login', methods=['POST'])
 def login():
     """creates new user session and token
     confirms if username and password match
@@ -73,7 +71,7 @@ def login():
         or either username or password are not provided
         """
         return make_response(
-            jsonify({'warning': 'Incorrect password'}),
+            "Incorrect password",
             401,
             {
                 "WWW-Authenticate": "Basic realm='Login Required'"
@@ -99,7 +97,7 @@ def login():
         }), 200
 
     return make_response(
-        jsonify({'warning': 'Cannot Login wrong password'}),
+        "Cannot Login",
         401,
         {
             "WWW-Authenticate": "Basic realm='Login Required'"
@@ -107,7 +105,7 @@ def login():
     )
 
 
-@mod.route('/reset-password', methods=['PUT'])
+@mod.route('/auth/reset-password', methods=['PUT'])
 @login_required
 def reset_password(current_user):
     """Update user password
@@ -118,30 +116,15 @@ def reset_password(current_user):
 
     data = request.get_json()
 
-    if check_keys(data, 2) or not data['password']:
+    if check_keys(data, 1):
         return jsonify({'warning': 'Provide strong password'}), 400
 
-    if not password_regex.match(data['password']):
-        return jsonify({
-            'warning': 'Please provide strong password'
-        })
-
-    response = find_user_by_id(current_user)
-    if sha256_crypt.verify(data['old_password'], response['password']):
+    if data['password']:
+        response = find_user_by_id(current_user)
         response['password'] = sha256_crypt.encrypt(str(data['password']))
         return jsonify({'success': 'password updated'}), 200
 
-    return jsonify({'warning': 'old password does not match'}), 403
-
-
-@mod.route('/logout', methods=['DELETE'])
-@login_required
-def logout(current_user):
-    """Destroy user session"""
-    if session and session['logged_in']:
-        session.clear()
-        return jsonify({'success': 'logged out'}), 200
-    return jsonify({'warning': 'Already logged out'}), 404
+    return jsonify({'warning': 'Cannot reset password'}), 403
 
 
 @mod.route("/verify")
@@ -163,16 +146,38 @@ def verify():
     return jsonify({'warning': 'invalid key error'})
 
 
-@mod.route("/forgot-password", methods=['POST'])
-def forgot_password():
-    """Sends new password to your mail
+@mod.route('/auth/logout', methods=['DELETE'])
+@login_required
+def logout(current_user):
+    """Destroy user session"""
+    if session and session['logged_in']:
+        session.clear()
+        return jsonify({'success': 'logged out'}), 200
+    return jsonify({'warning': 'Already logged out'}), 404
+
+
+@mod.route('/users', methods=['GET'])
+def read_all_users():
+    """Reads all users
     """
-    data = request.get_json()
-    if data['email'] and check_if_email_taken(data['email']):
-        new_password = uuid.uuid4().hex.upper()[0:6]
-        for user in user_instance.users:
-            if user['email'] == data['email']:
-                user['password'] = sha256_crypt.encrypt(new_password)
-        send_forgot_password_email([data['email']], new_password)
-        return jsonify({'warning': 'Email has been with reset password'}), 200
-    return jsonify({'warning': 'No user exists with that email'}), 409
+    return jsonify({'users': user_instance.users}), 200
+
+
+@mod.route('/user/<user_id>', methods=['GET'])
+def read_user(user_id):
+    """Reads user given an ID
+    if user is not provided then user current user ID
+    """
+    response = find_user_by_id(user_id)
+    if response:
+        return jsonify({'user': response}), 200
+    return jsonify({'warning': 'user does not exist'}), 404
+
+
+@mod.route('/user/<user_id>/businesses', methods=['GET'])
+def read_user_businesses(user_id):
+    """Read all businesses owned by this user"""
+    response = find_business_by_user(user_id)
+    if response:
+        return jsonify({'user': response}), 200
+    return jsonify({'warning': 'user does not own a business'}), 404
