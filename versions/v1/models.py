@@ -1,5 +1,4 @@
 from passlib.hash import sha256_crypt
-import re
 import uuid
 
 
@@ -7,8 +6,6 @@ class User(object):
     """user"""
     def __init__(self):
         self.users = []
-        self.username_regex = re.compile("[A-z0-9]{4,}")
-        self.password_regex = re.compile("[A-z0-9]{4,}")
 
     def create_user(self, args):
         args['password'] = sha256_crypt.encrypt(str(args['password']))
@@ -17,9 +14,6 @@ class User(object):
         args['hash_key'] = uuid.uuid1().hex
         args['activate'] = False
         self.users.append(args)
-
-    def reset_password(self, new_password, response):
-        response['password'] = sha256_crypt.encrypt(str(new_password))
 
 
 class Business(object):

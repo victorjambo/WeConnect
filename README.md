@@ -53,6 +53,10 @@ Confirm your installed packages
 ```bash
 $ pip freeze
 ```
+Set environment variables for `SECRET`, `SUPPRESSED`, `GMAIL_MAIL` and `GMAIL_PASSWORD`
+> SECRET is your secret key
+> SUPPRESSED is either `True` or `False`. Set True if you don't want email to be sent during testing and development
+> `GMAIL_MAIL` and `GMAIL_PASSWORD` got to `https://myaccount.google.com/apppasswords` and generate app password for your api
 
 ## Usage
 

@@ -45,9 +45,7 @@ def check_if_email_taken(email):
     return False
 
 
-""" business functions """
-
-
+# business functions
 def find_business_by_id(businessId):
     """find business record"""
     for business in business_instance.businesses:
