@@ -94,7 +94,7 @@ GET  `/api/v1/business/<businessId>/reviews` | Get all reviews for a business
 
 
 # API Documentation
-View API documentation from
+Once app server is running open root URL from browser to read documumentation or View API documentation from
 ```
 https://weconnect7.docs.apiary.io
 ```

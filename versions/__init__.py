@@ -12,7 +12,7 @@ and its an easy read
 import os
 import jwt
 from functools import wraps
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from versions.v1.models import User, Business, Review
 from flask_cors import CORS
 from flask_mail import Mail
@@ -63,6 +63,12 @@ def login_required(f):
 
         return f(current_user, *args, **kwargs)
     return wrap
+
+
+@app.route('/')
+def home():
+    return render_template('api.html')
+
 
 import versions.v1.user
 import versions.v1.get_user
