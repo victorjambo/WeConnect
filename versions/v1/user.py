@@ -69,9 +69,7 @@ def login():
     candidate_password = auth['password']
 
     if not password or not auth['username'] or not auth['password']:
-        """At this point user does not exist
-        or either username or password are not provided
-        """
+        """ Incorrect password """
         return make_response(
             jsonify({'warning': 'Incorrect password'}),
             401,
