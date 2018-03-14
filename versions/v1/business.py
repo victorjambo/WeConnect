@@ -105,7 +105,7 @@ def update_business(current_user, businessId):
     return jsonify({
         'success': 'successfully updated',
         'business': response
-    }), 202
+    }), 201
 
 
 @mod.route('/business/<businessId>', methods=['DELETE'])

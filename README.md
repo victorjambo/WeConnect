@@ -91,3 +91,10 @@ GET  `/api/v1/businesses` | Retrieves all businesses
 GET  `/api/v1/business/<businessId>` | Get a business 
 POST  `/api/v1/business/<businessId>/reviews` | Add a review for a business
 GET  `/api/v1/business/<businessId>/reviews` | Get all reviews for a business
+
+
+# API Documentation
+View API documentation from
+```
+https://weconnect7.docs.apiary.io
+```
