@@ -24,6 +24,11 @@ cd WeConnect/designs/UI
 
 Run `index.html` file in your browser
 
+UI link to gh-pages
+```
+https://victorjambo.github.io/WeConnect/designs/UI
+```
+
 ## Api Installation
 To set up WeConnect API, make sure that you have python3, postman and pip installed.
 
@@ -53,9 +58,11 @@ Confirm your installed packages
 ```bash
 $ pip freeze
 ```
-Set environment variables for `SECRET`, `SUPPRESSED`, `GMAIL_MAIL` and `GMAIL_PASSWORD`
-> SECRET is your secret key
-> SUPPRESSED is either `True` or `False`. Set True if you don't want email to be sent during testing and development
+Set environment variables for `SECRET`, `ENVIRON`, `GMAIL_MAIL` and `GMAIL_PASSWORD`
+> `SECRET` is your secret key
+
+> `ENVIRON` is the enviroment you are running on. Should be either `Production`, `Development` or `Testing`. NOTE: its case sensitive
+
 > `GMAIL_MAIL` and `GMAIL_PASSWORD` got to `https://myaccount.google.com/apppasswords` and generate app password for your api
 
 ## Usage

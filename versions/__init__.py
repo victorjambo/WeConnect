@@ -19,20 +19,8 @@ from flask_mail import Mail
 
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = os.getenv('SECRET')
+app.config.from_object('config.{}'.format(os.getenv('ENVIRON')))
 CORS(app)
-
-app.config.update(
-    DEBUG=True,
-    MAIL_SERVER='smtp.gmail.com',
-    MAIL_PORT=465,
-    MAIL_USE_TLS=False,
-    MAIL_USE_SSL=True,
-    MAIL_USERNAME=os.getenv('GMAIL_MAIL'),
-    MAIL_PASSWORD=os.getenv('GMAIL_PASSWORD'),
-    MAIL_SUPPRESS_SEND=os.getenv('SUPPRESSED')
-)
-
 mail = Mail(app)
 
 
