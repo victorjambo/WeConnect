@@ -69,7 +69,7 @@ def login():
     candidate_password = auth['password']
 
     if not password or not auth['username'] or not auth['password']:
-        """ Incorrect password """
+        # Incorrect password
         return make_response(
             jsonify({'warning': 'Incorrect password'}),
             401,
@@ -79,9 +79,8 @@ def login():
         )
 
     if sha256_crypt.verify(candidate_password, password):
-        """Sha256 decodes and compares passwords
-        then creates a token that expires in 30 min
-        """
+        ### Sha256 decodes and compares passwords
+        ### then creates a token that expires in 30 min
         session['logged_in'] = True
         session['username'] = auth['username']
         exp_time = datetime.datetime.utcnow() + datetime.timedelta(minutes=999)
