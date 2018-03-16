@@ -2,7 +2,7 @@ import os
 
 
 class Config(object):
-    """docstring for Config"""
+    """BaseClass that defines defaults for child classes"""
     DEBUG = False
     SECRET_KEY = os.getenv('SECRET')
     MAIL_SERVER='smtp.gmail.com'
@@ -12,21 +12,23 @@ class Config(object):
     MAIL_USERNAME=os.getenv('GMAIL_MAIL')
     MAIL_PASSWORD=os.getenv('GMAIL_PASSWORD')
     MAIL_SUPPRESS_SEND=True
+    SQLALCHEMY_DATABASE_URI=os.getenv('DATABASE_URL')
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
 class Development(Config):
-    """docstring for Development"""
+    """Sets Debug mode in Development to True"""
     DEBUG = True
 
 
 class Testing(Config):
-    """docstring for Testing"""
+    """Testing environment"""
     DEBUG = True
     TESTING = True
 
 
 class Production(Config):
-    """"""
+    """Production environment"""
     DEBUG = False
     TESTING = False
     MAIL_SUPPRESS_SEND=False
