@@ -16,12 +16,16 @@ from flask import Flask, request, jsonify, render_template
 from versions.v1.models import User, Business, Review
 from flask_cors import CORS
 from flask_mail import Mail
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 
 
 app = Flask(__name__)
 app.config.from_object('config.{}'.format(os.getenv('ENVIRON')))
 CORS(app)
 mail = Mail(app)
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
 
 user_instance = User()
@@ -62,8 +66,9 @@ import versions.v1.user
 import versions.v1.get_user
 import versions.v1.business
 import versions.v1.review
+import versions.manage
 
-app.register_blueprint(v1.user.mod, url_prefix='/api/v1/auth')
-app.register_blueprint(v1.get_user.mod, url_prefix='/api/v1')
-app.register_blueprint(v1.business.mod, url_prefix='/api/v1')
-app.register_blueprint(v1.review.mod, url_prefix='/api/v1')
+app.register_blueprint(versions.v1.user.mod, url_prefix='/api/v1/auth')
+app.register_blueprint(versions.v1.get_user.mod, url_prefix='/api/v1')
+app.register_blueprint(versions.v1.business.mod, url_prefix='/api/v1')
+app.register_blueprint(versions.v1.review.mod, url_prefix='/api/v1')
