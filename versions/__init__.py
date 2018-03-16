@@ -59,6 +59,7 @@ def login_required(f):
 
 @app.route('/')
 def home():
+    """route for API documentation"""
     return render_template('api.html')
 
 

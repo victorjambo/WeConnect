@@ -79,8 +79,8 @@ def login():
         )
 
     if sha256_crypt.verify(candidate_password, password):
-        ### Sha256 decodes and compares passwords
-        ### then creates a token that expires in 30 min
+        # Sha256 decodes and compares passwords
+        # then creates a token that expires in 30 min
         session['logged_in'] = True
         session['username'] = auth['username']
         exp_time = datetime.datetime.utcnow() + datetime.timedelta(minutes=999)
@@ -143,8 +143,7 @@ def logout(current_user):
 
 @mod.route("/verify")
 def verify():
-    """Verify email activation
-    """
+    """Verify email activation"""
     hash_key = request.args.get('key', default=1, type=str)
     username = request.args.get('name', default=1, type=str)
     response = find_user_by_name(username)
@@ -162,8 +161,7 @@ def verify():
 
 @mod.route("/forgot-password", methods=['POST'])
 def forgot_password():
-    """Sends new password to your mail
-    """
+    """Sends new password to your mail"""
     data = request.get_json()
     if data['email'] and check_if_email_taken(data['email']):
         new_password = uuid.uuid4().hex.upper()[0:6]
