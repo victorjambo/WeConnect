@@ -27,6 +27,7 @@ class Business(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(), index=True)
+    logo = db.Column(db.String())
     location = db.Column(db.String(), index=True)
     category = db.Column(db.String(), index=True)
     bio = db.Column(db.String())
