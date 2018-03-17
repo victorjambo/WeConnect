@@ -26,7 +26,7 @@ user = User.query.get(5)
 """
 from flask import Blueprint, jsonify, request, session
 from versions.v2.models import User, db
-from versions.utils import check_keys, send_email
+from versions.utils import check_keys, send_email, send_forgot_password_email
 from versions.utils import username_regex, email_regex, password_regex
 from passlib.hash import sha256_crypt
 import datetime
@@ -34,6 +34,7 @@ from functools import wraps
 import os
 from versions import login_required
 import jwt
+import uuid
 
 
 mod = Blueprint('auth_v2', __name__)
@@ -193,3 +194,23 @@ def reset_password(current_user):
         return jsonify({'success': 'password updated'}), 200
 
     return jsonify({'warning': 'old password does not match'}), 403
+
+
+@mod.route("/forgot-password", methods=['POST'])
+def forgot_password():
+    """Sends new password to your mail"""
+    data = request.get_json()
+
+    user = User.query.filter_by(email=data['email']).first()
+
+    # check if email is taken
+    if data['email'] and user:
+        new_password = uuid.uuid4().hex.upper()[0:6]
+        user.password = sha256_crypt.encrypt(new_password)
+
+    # Send new password via mail
+    if user.save():
+        send_forgot_password_email([data['email']], new_password)
+        return jsonify({'warning': 'Email has been with reset password'}), 200
+
+    return jsonify({'warning': 'No user exists with that email'}), 409
