@@ -13,8 +13,13 @@ class User(db.Model):
     username = db.Column(db.String(), unique=True, nullable=False)
     email = db.Column(db.String(), unique=True, nullable=False)
     password = db.Column(db.String(), nullable=False)
-    businesses = db.relationship('Business', backref='user', lazy=True)
-    reviews = db.relationship('Review', backref='business', lazy=True)
+    businesses = db.relationship('Business', backref='owner', lazy='dynamic')
+    reviews = db.relationship('Review', backref='reviewer', lazy='dynamic')
+
+    def save(self):
+        """Save a user to the database"""
+        db.session.add(self)
+        db.session.commit()
 
 
 class Business(db.Model):
@@ -31,8 +36,13 @@ class Business(db.Model):
     location = db.Column(db.String(), index=True)
     category = db.Column(db.String(), index=True)
     bio = db.Column(db.String())
-    reviews = db.relationship('Review', backref='business', lazy=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    reviews = db.relationship('Review', backref='business', lazy='dynamic')
+
+    def save(self):
+        """Save a business to the database"""
+        db.session.add(self)
+        db.session.commit()
 
 
 class Review(db.Model):
@@ -52,3 +62,8 @@ class Review(db.Model):
         db.ForeignKey('businesses.id'),
         nullable=False
     )
+
+    def save(self):
+        """Save a review to the database"""
+        db.session.add(self)
+        db.session.commit()

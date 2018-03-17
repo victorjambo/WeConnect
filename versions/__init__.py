@@ -67,9 +67,12 @@ import versions.v1.user
 import versions.v1.get_user
 import versions.v1.business
 import versions.v1.review
-import versions.manage
+import versions.v2.models
+import versions.v2.user
 
 app.register_blueprint(versions.v1.user.mod, url_prefix='/api/v1/auth')
 app.register_blueprint(versions.v1.get_user.mod, url_prefix='/api/v1')
 app.register_blueprint(versions.v1.business.mod, url_prefix='/api/v1')
 app.register_blueprint(versions.v1.review.mod, url_prefix='/api/v1')
+
+app.register_blueprint(versions.v2.user.mod, url_prefix='/api/v2')
