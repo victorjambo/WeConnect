@@ -1,4 +1,6 @@
+import uuid
 from versions import db
+from passlib.hash import sha256_crypt
 
 
 class User(db.Model):
@@ -6,6 +8,7 @@ class User(db.Model):
     One-to-Many relationship with review and business
     User has many businessess
     User has many reviews
+    delete-orphan to delete any attached child
     """
     __tablename__ = 'users'
 
@@ -13,13 +16,37 @@ class User(db.Model):
     username = db.Column(db.String(), unique=True, nullable=False)
     email = db.Column(db.String(), unique=True, nullable=False)
     password = db.Column(db.String(), nullable=False)
-    businesses = db.relationship('Business', backref='owner', lazy='dynamic')
-    reviews = db.relationship('Review', backref='reviewer', lazy='dynamic')
+    hash_key = db.Column(db.String(), unique=True, nullable=False)
+    activate = db.Column(db.String(), nullable=False)
+    businesses = db.relationship(
+        'Business',
+        backref='owner',
+        cascade='all, delete-orphan'
+    )
+    reviews = db.relationship(
+        'Review',
+        backref='reviewer',
+        cascade='all, delete-orphan'
+    )
+
+    def __init__(self, username, email, password):
+        """Sets defaults for creating user instance
+        sets username and email to lower case
+        encrypts password
+        generates a random hash key
+        sets activate to false, this will be changed later
+        """
+        self.username = username.lower().strip()
+        self.email = email.lower().strip()
+        self.password = sha256_crypt.encrypt(str(password))
+        self.hash_key = uuid.uuid1().hex
+        self.activate = False
 
     def save(self):
-        """Save a user to the database"""
+        """Commits user instance to the database"""
         db.session.add(self)
         db.session.commit()
+        return True
 
 
 class Business(db.Model):
@@ -37,12 +64,17 @@ class Business(db.Model):
     category = db.Column(db.String(), index=True)
     bio = db.Column(db.String())
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    reviews = db.relationship('Review', backref='business', lazy='dynamic')
+    reviews = db.relationship(
+        'Review',
+        backref='business',
+        cascade='all, delete-orphan'
+    )
 
     def save(self):
         """Save a business to the database"""
         db.session.add(self)
         db.session.commit()
+        return True
 
 
 class Review(db.Model):
@@ -67,3 +99,4 @@ class Review(db.Model):
         """Save a review to the database"""
         db.session.add(self)
         db.session.commit()
+        return True
