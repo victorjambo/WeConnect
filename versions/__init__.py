@@ -45,13 +45,21 @@ def login_required(f):
             token = request.headers['x-access-token']
 
         if not token:
-            return jsonify({'warning': 'token missing'}), 401
+            return jsonify({
+                'warning': 'Missing token. Please register or login'
+            }), 401
 
         try:
             data = jwt.decode(token, app.config['SECRET_KEY'])
             current_user = data['id']
+        except jwt.ExpiredSignatureError:
+            return jsonify({
+                'warning': 'Expired token. Please login to get a new token'
+            })
         except ValueError:
-            return jsonify({'warning': 'token invalid'}), 401
+            return jsonify({
+                'warning': 'Invalid token. Please register or login'
+            }), 401
 
         return f(current_user, *args, **kwargs)
     return wrap

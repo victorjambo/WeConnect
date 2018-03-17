@@ -48,6 +48,9 @@ class User(db.Model):
         db.session.commit()
         return True
 
+    def find_user():
+        pass
+
 
 class Business(db.Model):
     """Create table businesses

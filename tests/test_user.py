@@ -236,7 +236,7 @@ class TestUser(unittest.TestCase):
             }
         )
         output = json.loads(response.get_data(as_text=True))['warning']
-        self.assertEqual(output, 'token missing')
+        self.assertEqual(output, 'Missing token. Please register or login')
 
     def test_logout(self):
         """Test user logout

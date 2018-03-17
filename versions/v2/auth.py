@@ -23,11 +23,15 @@ POST: forgot password
 GET: verify/Activate email
     After user registrations an email is sent to new user
 """
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, session
 from versions.v2.models import User, db
 from versions.utils import check_keys, send_email
 from versions.utils import username_regex, email_regex, password_regex
+from passlib.hash import sha256_crypt
+import datetime
 from functools import wraps
+import os
+import jwt
 
 
 mod = Blueprint('auth_v2', __name__)
@@ -109,3 +113,42 @@ def signup():
         }}), 200
 
     return jsonify({'warning': 'Could not register user'}), 401
+
+
+@mod.route('/login', methods=['POST'])
+def login():
+    """Login registered user"""
+    auth = request.get_json()
+
+    # validate all fields are present
+    if check_keys(auth, 2):
+        return jsonify({'warning': 'Provide username & password'}), 400
+
+    user = User.query.filter_by(username=auth['username']).first()
+
+    if not user:
+        return jsonify({
+            'warning': '{} does not exist'.format(auth['username'])
+        }), 401
+
+    password = user.password
+    candidate_password = auth['password']
+
+    if sha256_crypt.verify(candidate_password, password):
+        # Sha256 decodes and compares passwords
+        # then creates a token that expires in 30 min
+        session['logged_in'] = True
+        session['username'] = auth['username']
+        exp_time = datetime.datetime.utcnow() + datetime.timedelta(minutes=999)
+        token = jwt.encode(
+            {
+                'id': user.id,
+                'exp': exp_time
+            }, os.getenv("SECRET")
+        )
+        return jsonify({
+            'token': token.decode('UTF-8'),
+            'success': 'Login success'
+        }), 200
+
+    return jsonify({'warning': 'Cannot Login wrong password'}), 401
