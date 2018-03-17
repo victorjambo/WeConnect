@@ -22,6 +22,7 @@ POST: forgot password
     send email with new password
 GET: verify/Activate email
     After user registrations an email is sent to new user
+user = User.query.get(5)
 """
 from flask import Blueprint, jsonify, request, session
 from versions.v2.models import User, db
@@ -31,6 +32,7 @@ from passlib.hash import sha256_crypt
 import datetime
 from functools import wraps
 import os
+from versions import login_required
 import jwt
 
 
@@ -80,6 +82,22 @@ def validations(f):
                 'warning': 'Please provide strong password'
             })
 
+        return f(*args, **kwargs)
+    return wrap
+
+
+def validate_new_password(f):
+    """Check if password is strong enough"""
+    @wraps(f)
+    def wrap(*args, **kwargs):
+        data = request.get_json()
+        if check_keys(data, 2) or not data['password']:
+            return jsonify({'warning': 'Provide strong password'}), 400
+
+        if not password_regex.match(data['password']):
+            return jsonify({
+                'warning': 'Please provide strong password'
+            })
         return f(*args, **kwargs)
     return wrap
 
@@ -152,3 +170,26 @@ def login():
         }), 200
 
     return jsonify({'warning': 'Cannot Login wrong password'}), 401
+
+
+@mod.route('/reset-password', methods=['PUT'])
+@validate_new_password
+@login_required
+def reset_password(current_user):
+    """Update user password
+    User should be logged in first to update
+    """
+    if not current_user:
+        return jsonify({'warning': 'Login Again'}), 401
+
+    data = request.get_json()
+
+    user = User.query.get(current_user)
+
+    if sha256_crypt.verify(data['old_password'], user.password):
+        user.password = sha256_crypt.encrypt(str(data['password']))
+
+    if user.save():
+        return jsonify({'success': 'password updated'}), 200
+
+    return jsonify({'warning': 'old password does not match'}), 403

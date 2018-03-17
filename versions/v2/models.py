@@ -18,6 +18,12 @@ class User(db.Model):
     password = db.Column(db.String(), nullable=False)
     hash_key = db.Column(db.String(), unique=True, nullable=False)
     activate = db.Column(db.String(), nullable=False)
+    created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+    updated_at = db.Column(
+        db.DateTime,
+        default=db.func.current_timestamp(),
+        onupdate=db.func.current_timestamp()
+    )
     businesses = db.relationship(
         'Business',
         backref='owner',
@@ -48,9 +54,6 @@ class User(db.Model):
         db.session.commit()
         return True
 
-    def find_user():
-        pass
-
 
 class Business(db.Model):
     """Create table businesses
@@ -67,6 +70,12 @@ class Business(db.Model):
     category = db.Column(db.String(), index=True)
     bio = db.Column(db.String())
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+    updated_at = db.Column(
+        db.DateTime,
+        default=db.func.current_timestamp(),
+        onupdate=db.func.current_timestamp()
+    )
     reviews = db.relationship(
         'Review',
         backref='business',
@@ -76,6 +85,12 @@ class Business(db.Model):
     def save(self):
         """Save a business to the database"""
         db.session.add(self)
+        db.session.commit()
+        return True
+
+    def delete(self):
+        """Delete a given business"""
+        db.session.delete(self)
         db.session.commit()
         return True
 
@@ -92,6 +107,12 @@ class Review(db.Model):
     title = db.Column(db.String())
     desc = db.Column(db.String())
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+    updated_at = db.Column(
+        db.DateTime,
+        default=db.func.current_timestamp(),
+        onupdate=db.func.current_timestamp()
+    )
     business_id = db.Column(
         db.Integer,
         db.ForeignKey('businesses.id'),
@@ -101,5 +122,11 @@ class Review(db.Model):
     def save(self):
         """Save a review to the database"""
         db.session.add(self)
+        db.session.commit()
+        return True
+
+    def delete(self):
+        """Delete a given review."""
+        db.session.delete(self)
         db.session.commit()
         return True
