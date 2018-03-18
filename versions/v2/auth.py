@@ -232,12 +232,13 @@ def verify():
     hash_key = request.args.get('key', default=1, type=str)
     name = request.args.get('name', default=1, type=str)
     user = User.query.filter_by(username=name).first()
-    if user['hash_key'] == hash_key:
-        user['activate'] = True
+    if user.hash_key == hash_key:
+        user.activate = True
+        user.save()
         return jsonify(
             {
                 'success': 'Account Activated',
-                'key': user
+                'user': user
             }
         ), 200
 
