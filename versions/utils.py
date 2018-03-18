@@ -124,7 +124,7 @@ def validate(data):
 
 
 # Send Mail
-def send_email(recipients, hash_key, username):
+def send_email(recipients, hash_key, username, path):
     """Send email activation
     https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-xi-email-support
     """
@@ -133,7 +133,8 @@ def send_email(recipients, hash_key, username):
         sender='victormutaijambo@gmail.com',
         recipients=recipients
     )
-    msg.html = render_template('email.html', hash_key=hash_key, name=username)
+    msg.html = render_template(
+        'email.html', hash_key=hash_key, name=username, path=path)
     mail.send(msg)
 
 

@@ -40,7 +40,8 @@ def signup():
         send_email(
             [user_instance.users[-1]['email']],
             user_instance.users[-1]['hash_key'],
-            user_instance.users[-1]['username']
+            user_instance.users[-1]['username'],
+            'user'
         )
         return jsonify({
             'success': 'User created, Check mail box to activate account',

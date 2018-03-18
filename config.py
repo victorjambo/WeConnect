@@ -16,21 +16,18 @@ class Config(object):
     MAIL_PASSWORD = os.getenv('GMAIL_PASSWORD')
     MAIL_SUPPRESS_SEND = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
 
 
 class Development(Config):
     """Sets Debug mode in Development to True"""
     DEBUG = True
-    # concatenates envronment name to db url. ie weconnect_development
-    # ensure your db name is weconnect_development in postgres
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL') + '_development'
 
 
 class Testing(Config):
     """Testing environment"""
     DEBUG = True
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL') + '_test'
 
 
 class Production(Config):
@@ -38,4 +35,3 @@ class Production(Config):
     DEBUG = False
     TESTING = False
     MAIL_SUPPRESS_SEND = False
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL') + '_production'

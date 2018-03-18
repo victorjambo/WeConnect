@@ -22,7 +22,7 @@ POST: forgot password
     send email with new password
 GET: verify/Activate email
     After user registrations an email is sent to new user
-user = User.query.get(5)
+app.url_map
 """
 from flask import Blueprint, jsonify, request, session
 from versions.v2.models import User, db
@@ -117,11 +117,13 @@ def signup():
     )
 
     # Commits new user instance to db
-    if new_user.save():
+    new_user.save()
+    if new_user.id:
         send_email(
             [new_user.email],
             new_user.hash_key,
-            new_user.username
+            new_user.username,
+            'auth_v2'
         )
         return jsonify({'success': {
             'username': new_user.username,
@@ -238,7 +240,7 @@ def verify():
         return jsonify(
             {
                 'success': 'Account Activated',
-                'user': user
+                'Activated': user.activate
             }
         ), 200
 
