@@ -55,7 +55,7 @@ def login_required(f):
         except jwt.ExpiredSignatureError:
             return jsonify({
                 'warning': 'Expired token. Please login to get a new token'
-            })
+            }), 401
         except ValueError:
             return jsonify({
                 'warning': 'Invalid token. Please register or login'

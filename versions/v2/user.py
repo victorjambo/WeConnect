@@ -11,7 +11,7 @@ from versions.v2.models import User
 mod = Blueprint('users_v2', __name__)
 
 
-@mod.route('/', methods=['GET'])
+@mod.route('', methods=['GET'])
 def get_all_users():
     """Read all users"""
     users = User.query.all()

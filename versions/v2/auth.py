@@ -69,19 +69,19 @@ def validations(f):
         if not username_regex.match(data['username']):
             return jsonify({
                 'warning': 'Provide username with more than 4 characters'
-            })
+            }), 409
 
         # validate email
         if not email_regex.match(data['email']):
             return jsonify({
                 'warning': 'Please provide valid email'
-            })
+            }), 409
 
         # validate password
         if not password_regex.match(data['password']):
             return jsonify({
                 'warning': 'Please provide strong password'
-            })
+            }), 409
 
         return f(*args, **kwargs)
     return wrap
@@ -126,6 +126,7 @@ def signup():
             'auth_v2'
         )
         return jsonify({'success': {
+            'id': new_user.id,
             'username': new_user.username,
             'email': new_user.email,
             'password': new_user.password,
@@ -190,7 +191,7 @@ def reset_password(current_user):
     user = User.query.get(current_user)
 
     if session['username'] != user.username:
-        return jsonify({'warning': 'Forbidden session'}), 401
+        return jsonify({'warning': 'Forbidden session'}), 400
 
     if sha256_crypt.verify(data['old_password'], user.password):
         user.password = sha256_crypt.encrypt(str(data['password']))
@@ -244,4 +245,4 @@ def verify():
             }
         ), 200
 
-    return jsonify({'warning': 'invalid key error'})
+    return jsonify({'warning': 'invalid key error'}), 401
