@@ -25,3 +25,26 @@ def get_all_users():
             } for user in users
         ]
     ), 200
+
+
+@mod.route('/<user_id>', methods=['GET'])
+def read_user(user_id):
+    """Reads user given an ID"""
+    user = User.query.get(user_id)
+    if user:
+        return jsonify({'user': {
+            'username': user.username,
+            'email': user.email
+        }}), 200
+
+    return jsonify({'warning': 'user does not exist'}), 404
+
+
+@mod.route('/<user_id>/businesses', methods=['GET'])
+def read_user_businesses(user_id):
+    """Read all businesses owned by this user"""
+    user = User.query.get(user_id)
+    if user:
+        return jsonify({'businesses': user.businesses}), 200
+
+    return jsonify({'warning': 'user does not own a business'}), 404
