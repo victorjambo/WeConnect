@@ -10,6 +10,6 @@ script:
   - nosetests --with-coverage
 branches:
   only:
-  - ft-api-endpoints
+  - ft-database
 after_success:
   - coveralls
