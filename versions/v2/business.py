@@ -81,7 +81,7 @@ def create_business(current_user):
 
     business_owner = User.query.get(current_user)
 
-    # create new user instances
+    # create new business instances
     new_business = Business(
         name=data['name'],
         logo=data['logo'],
@@ -98,7 +98,7 @@ def create_business(current_user):
     if new_business.id:
         return jsonify({
             'success': 'successfully created business',
-            'user': new_business.name
+            'business': new_business.name
         }), 201
 
     return jsonify({'warning': 'Could not create new business'}), 401

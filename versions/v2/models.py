@@ -124,6 +124,12 @@ class Review(db.Model):
         nullable=False
     )
 
+    def __init__(self, title, desc, business, reviewer):
+        self.title = title
+        self.desc = desc
+        self.business = business
+        self.reviewer = reviewer
+
     def save(self):
         """Save a review to the database"""
         db.session.add(self)
