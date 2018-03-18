@@ -263,10 +263,10 @@ class TestUser(unittest.TestCase):
                 "x-access-token": self.token
             }
         )
-        self.assertEqual(response2.status_code, 404)
+        self.assertEqual(response2.status_code, 401)
 
         output = json.loads(response2.get_data(as_text=True))['warning']
-        self.assertEqual(output, 'Already logged out')
+        self.assertEqual(output, 'Missing token. Please register or login')
 
     def test_read_all_users(self):
         """Test Get all users route

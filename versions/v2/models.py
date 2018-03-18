@@ -81,6 +81,14 @@ class Business(db.Model):
         cascade='all, delete-orphan'
     )
 
+    def __init__(self, name, logo, location, category, bio, owner):
+        self.name = name
+        self.logo = logo
+        self.location = location
+        self.category = category
+        self.bio = bio
+        self.owner = owner
+
     def save(self):
         """Save a business to the database"""
         db.session.add(self)

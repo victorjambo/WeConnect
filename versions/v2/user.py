@@ -45,6 +45,19 @@ def read_user_businesses(user_id):
     """Read all businesses owned by this user"""
     user = User.query.get(user_id)
     if user:
-        return jsonify({'businesses': user.businesses}), 200
+        return jsonify(
+            [
+                {
+                    'id': business.id,
+                    'name': business.name,
+                    'logo': business.logo,
+                    'location': business.location,
+                    'category': business.category,
+                    'bio': business.bio,
+                    'created_at': business.created_at,
+                    'updated_at': business.updated_at
+                } for business in user.businesses
+            ]
+        ), 200
 
     return jsonify({'warning': 'user does not own a business'}), 404
