@@ -187,10 +187,12 @@ def reset_password(current_user):
 
     user = User.query.get(current_user)
 
+    if session['username'] != user.username:
+        return jsonify({'warning': 'Forbidden session'}), 401
+
     if sha256_crypt.verify(data['old_password'], user.password):
         user.password = sha256_crypt.encrypt(str(data['password']))
-
-    if user.save():
+        user.save()
         return jsonify({'success': 'password updated'}), 200
 
     return jsonify({'warning': 'old password does not match'}), 403
@@ -207,10 +209,36 @@ def forgot_password():
     if data['email'] and user:
         new_password = uuid.uuid4().hex.upper()[0:6]
         user.password = sha256_crypt.encrypt(new_password)
-
-    # Send new password via mail
-    if user.save():
+        user.save()
         send_forgot_password_email([data['email']], new_password)
         return jsonify({'warning': 'Email has been with reset password'}), 200
 
     return jsonify({'warning': 'No user exists with that email'}), 409
+
+
+@mod.route('/logout', methods=['DELETE'])
+@login_required
+def logout(current_user):
+    """Destroy user session"""
+    if session and session['logged_in']:
+        session.clear()
+        return jsonify({'success': 'logged out'}), 200
+    return jsonify({'warning': 'Already logged out'}), 404
+
+
+@mod.route("/verify")
+def verify():
+    """Verify email activation"""
+    hash_key = request.args.get('key', default=1, type=str)
+    name = request.args.get('name', default=1, type=str)
+    user = User.query.filter_by(username=name).first()
+    if user['hash_key'] == hash_key:
+        user['activate'] = True
+        return jsonify(
+            {
+                'success': 'Account Activated',
+                'key': user
+            }
+        ), 200
+
+    return jsonify({'warning': 'invalid key error'})

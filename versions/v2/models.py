@@ -52,7 +52,6 @@ class User(db.Model):
         """Commits user instance to the database"""
         db.session.add(self)
         db.session.commit()
-        return True
 
 
 class Business(db.Model):
@@ -86,13 +85,11 @@ class Business(db.Model):
         """Save a business to the database"""
         db.session.add(self)
         db.session.commit()
-        return True
 
     def delete(self):
         """Delete a given business"""
         db.session.delete(self)
         db.session.commit()
-        return True
 
 
 class Review(db.Model):
@@ -123,10 +120,8 @@ class Review(db.Model):
         """Save a review to the database"""
         db.session.add(self)
         db.session.commit()
-        return True
 
     def delete(self):
         """Delete a given review."""
         db.session.delete(self)
         db.session.commit()
-        return True

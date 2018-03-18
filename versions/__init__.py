@@ -12,7 +12,7 @@ and its an easy read
 import os
 import jwt
 from functools import wraps
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, session
 from versions.v1.models import User, Business, Review
 from flask_cors import CORS
 from flask_mail import Mail
@@ -41,7 +41,7 @@ def login_required(f):
     @wraps(f)
     def wrap(*args, **kwargs):
         token = None
-        if 'x-access-token' in request.headers:
+        if 'x-access-token' in request.headers and session:
             token = request.headers['x-access-token']
 
         if not token:
