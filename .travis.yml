@@ -10,6 +10,7 @@ install:
 # command to run tests
 before_script:
   - psql -c 'create database weconnect_test;' -U postgres
+  - flask db init
   - flask db migrate
   - flask db upgrade
 script:
