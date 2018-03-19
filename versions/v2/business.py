@@ -36,13 +36,13 @@ def precheck(f):
     return wrap
 
 
-@mod.route('/', methods=['GET'])
+@mod.route('', methods=['GET'])
 def read_all_businesses():
     """Reads all Businesses"""
     businesses = Business.query.all()
     if businesses:
-        return jsonify(
-            [
+        return jsonify({
+            'businesses': [
                 {
                     'id': business.id,
                     'name': business.name,
@@ -55,7 +55,7 @@ def read_all_businesses():
                     'updated_at': business.updated_at
                 } for business in businesses
             ]
-        ), 200
+        }), 200
     return jsonify({'warning': 'No Businesses, create one first'}), 404
 
 
@@ -98,7 +98,14 @@ def create_business(current_user):
     if new_business.id:
         return jsonify({
             'success': 'successfully created business',
-            'business': new_business.name
+            'business': {
+                'id': new_business.id,
+                'name': new_business.name,
+                'location': new_business.location,
+                'category': new_business.category,
+                'bio': new_business.bio,
+                'owner': new_business.owner.username
+            }
         }), 201
 
     return jsonify({'warning': 'Could not create new business'}), 401

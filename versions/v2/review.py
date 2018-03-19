@@ -49,7 +49,7 @@ def create_review(current_user, businessId):
     _business = Business.query.get(businessId)
 
     if not _business:
-            return jsonify({'warning': 'Business Not Found'}), 404
+        return jsonify({'warning': 'Business Not Found'}), 404
 
     # create new review instances
     new_review = Review(
@@ -67,7 +67,9 @@ def create_review(current_user, businessId):
         return jsonify({
             'success': 'successfully created business',
             'review': {
+                'id': new_review.id,
                 'title': new_review.title,
+                'reviewer': new_review.reviewer.username,
                 'desc': new_review.desc
             }
         }), 201
@@ -76,7 +78,7 @@ def create_review(current_user, businessId):
 
 
 @mod.route('/<businessId>/reviews', methods=['GET'])
-def read_reviews(businessId):
+def read_review(businessId):
     """Reads all Review given a business ID"""
     business = Business.query.get(businessId)
     if not business:
@@ -101,7 +103,7 @@ def read_reviews(businessId):
 @mod.route('/<businessId>/reviews/<reviewId>', methods=['DELETE'])
 @login_required
 @precheck
-def delete_reviews(current_user, businessId, reviewId):
+def delete_review(current_user, businessId, reviewId):
     """Delete a Review given a review ID and business ID
     confirms if current_user is owner of review
     """

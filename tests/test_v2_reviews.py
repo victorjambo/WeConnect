@@ -1,204 +1,158 @@
 import json
 import unittest
-from versions import app, review_instance, business_instance, user_instance
+from versions import app
+from versions.v2.models import User, db, Business, Review
 
 
-class TestReview(unittest.TestCase):
+class TestReviewV2(unittest.TestCase):
     def setUp(self):
+        app.config.from_object('config.Testing')
         self.app = app.test_client()
         self.new_review = {
             "title": "Friday 13th",
-            "desc": "biz 1 user 1 id 5"
+            "desc": "Lorem ipsum dolor sit amet consectetur adip elit."
         }
         self.new_user_info = {
-            "username": "robert",
-            "email": "victor.mutai@students.jkuat.ac.ke",
+            "username": "oliver",
+            "email": "oliver.mutai@maseno.com",
             "password": "password1234"
         }
         self.user_login_info = {
-            "username": "robert",
+            "username": "oliver",
             "password": "password1234"
         }
-        self.app.post(
-            '/api/v1/auth/register',
-            data=json.dumps(self.new_user_info),
-            content_type='application/json'
-        )
-        resp = self.app.post(
-            '/api/v1/auth/login',
-            data=json.dumps(self.user_login_info),
-            content_type='application/json'
-        )
-        self.token = json.loads(resp.get_data(as_text=True))['token']
+        self.new_business_info = {
+            "name": "Crown paints",
+            "logo": "url",
+            "category": "Construction",
+            "location": "NBO",
+            "bio": "if you like it crown it"
+        }
 
     def test_create_review(self):
         """Create new review for a business
         """
-        initial_count = len(review_instance.reviews)
-        response = self.app.post(
-            '/api/v1/business/1/reviews',
-            data=json.dumps(self.new_review),
-            headers={
-                "content-type": "application/json",
-                "x-access-token": self.token
-            }
-        )
-        final_count = len(review_instance.reviews)
+        response = self.register_review()
         self.assertEqual(response.status_code, 201)
-        self.assertEqual(final_count - initial_count, 1)
-
-        output = json.loads(response.get_data(as_text=True))['success']
-        self.assertEqual(output, 'review successfully created')
-
-        self.assertEqual(review_instance.reviews[0]['title'], 'Friday 13th')
+        self.assertIn('successfully created business', str(response.data))
+        _review = json.loads(response.get_data(as_text=True))
+        exists = db.session.query(
+            db.exists().where(Review.title == _review['review']['title']))
+        self.assertTrue(exists)
 
     def test_read_reviews(self):
         """Get reviews for business
         """
-        self.app.post(
-            '/api/v1/business/1/reviews',
+        new_business = self.register_business()
+        business_id = json.loads(
+            new_business.get_data(as_text=True))['business']['id']
+
+        new_review = self.app.post(
+            '/api/v2/businesses/{}/reviews'.format(business_id),
             data=json.dumps(self.new_review),
             headers={
                 "content-type": "application/json",
-                "x-access-token": self.token
-            }
-        )
-        resp = self.app.get('/api/v1/business/1/reviews')
+                "x-access-token": self.token()})
+
+        review_id = json.loads(
+            new_review.get_data(as_text=True))['review']['id']
+
+        resp = self.app.get(
+            '/api/v2/businesses/{}/reviews'.format(business_id))
+
         self.assertEqual(resp.status_code, 200)
-        self.assertGreater(len(review_instance.reviews), 0)
+        self.assertEqual(
+            review_id,
+            json.loads(resp.get_data(as_text=True))['reviews'][0]['id'])
 
         response = self.app.get(
-            '/api/v1/businesses/reviews',
+            '/api/v2/businesses/reviews',
             headers={
                 "content-type": "application/json",
-                "x-access-token": self.token
+                "x-access-token": self.token()
             }
         )
         self.assertEqual(response.status_code, 200)
 
         output = json.loads(response.get_data(as_text=True))['Reviews']
-        self.assertEqual(output[0]['title'], 'Friday 13th')
-
-    def test_cannot_delete_review(self):
-        """test different user deleting review
-        """
-        new_user = {
-            "username": "hotpoint",
-            "email": "victor.mutai@nbo.samadc.org",
-            "password": "password1234"
-        }
-        new_user_login = {
-            "username": "hotpoint",
-            "password": "password1234"
-        }
-        business_data = {
-            "name": "Crowns paints",
-            "category": "Construction",
-            "location": "NBO",
-            "bio": "if you like it crown it"
-        }
-        self.app.post(
-            '/api/v1/auth/register',
-            data=json.dumps(new_user),
-            content_type='application/json'
-        )
-        response_login = self.app.post(
-            '/api/v1/auth/login',
-            data=json.dumps(new_user_login),
-            content_type='application/json'
-        )
-        token = json.loads(response_login.get_data(as_text=True))['token']
-
-        self.app.post(
-            '/api/v1/businesses',
-            data=json.dumps(business_data),
-            headers={
-                "content-type": "application/json",
-                "x-access-token": self.token
-            }
-        )
-        response = self.app.post(
-            '/api/v1/business/1/reviews',
-            data=json.dumps(self.new_review),
-            headers={
-                "content-type": "application/json",
-                "x-access-token": self.token
-            }
-        )
-        response = self.app.delete(
-            '/api/v1/business/1/reviews/1',
-            headers={
-                "content-type": "application/json",
-                "x-access-token": token
-            }
-        )
-        self.assertEqual(response.status_code, 401)
-
-        output = json.loads(response.get_data(as_text=True))
-        self.assertEqual(output['warning'], 'Not Allowed')
+        self.assertEqual(output[0]['title'], self.new_review['title'])
 
     def test_delete_review(self):
         """Test deleting business twice
         """
-        business_data = {
-            "name": "Crown",
-            "category": "Construction",
-            "location": "NBO",
-            "bio": "if you like it crown it"
-        }
+        new_business = self.register_business()
+        business_id = json.loads(
+            new_business.get_data(as_text=True))['business']['id']
 
-        self.app.post(
-            '/api/v1/businesses',
-            data=json.dumps(business_data),
-            headers={
-                "content-type": "application/json",
-                "x-access-token": self.token
-            }
-        )
-
-        self.app.post(
-            '/api/v1/business/1/reviews',
+        new_review = self.app.post(
+            '/api/v2/businesses/{}/reviews'.format(business_id),
             data=json.dumps(self.new_review),
             headers={
                 "content-type": "application/json",
-                "x-access-token": self.token
-            }
-        )
+                "x-access-token": self.token()})
 
-        initial = len(review_instance.reviews)
-        response1 = self.app.delete(
-            '/api/v1/business/1/reviews/1',
+        review_id = json.loads(
+            new_review.get_data(as_text=True))['review']['id']
+        self.app.delete(
+            '/api/v2/businesses/{}/reviews/{}'.format(business_id, review_id),
+            data=json.dumps(self.new_review),
             headers={
                 "content-type": "application/json",
-                "x-access-token": self.token
-            }
+                "x-access-token": self.token()})
+        exists = db.session.query(
+            db.exists().where(Review.title == self.new_review['title']))
+        self.assertTrue(exists)
+
+    def register_user(self):
+        return self.app.post(
+            '/api/v2/auth/register',
+            data=json.dumps(self.new_user_info),
+            content_type='application/json'
         )
-        final = len(review_instance.reviews)
-        self.assertEqual(response1.status_code, 200)
 
-        output1 = json.loads(response1.get_data(as_text=True))['success']
-        self.assertEqual(output1, 'review deleted')
+    def login(self):
+        return self.app.post(
+            '/api/v2/auth/login',
+            data=json.dumps(self.user_login_info),
+            content_type='application/json'
+        )
 
-        self.assertEqual(initial - final, 1)
+    def token(self):
+        response = self.app.post(
+            '/api/v2/auth/login',
+            data=json.dumps(self.user_login_info),
+            content_type='application/json')
+        return json.loads(response.get_data(as_text=True))['token']
 
-        # delete already deleted review
-        response = self.app.delete(
-            '/api/v1/business/1/reviews/1',
+    def register_business(self):
+        self.register_user()
+        return self.app.post(
+            '/api/v2/businesses',
+            data=json.dumps(self.new_business_info),
             headers={
                 "content-type": "application/json",
-                "x-access-token": self.token
+                "x-access-token": self.token()
             }
         )
-        self.assertEqual(response.status_code, 404)
 
-        output = json.loads(response.get_data(as_text=True))['warning']
-        self.assertEqual(output, 'Review not found')
+    def register_review(self):
+        new_business = self.register_business()
+        business_id = json.loads(
+            new_business.get_data(as_text=True))['business']['id']
+
+        return self.app.post(
+            '/api/v2/businesses/{}/reviews'.format(business_id),
+            data=json.dumps(self.new_review),
+            headers={
+                "content-type": "application/json",
+                "x-access-token": self.token()})
 
     def tearDown(self):
-        """Clear list"""
-        user_instance.users.clear()
-        business_instance.businesses.clear()
-        review_instance.reviews.clear()
+        """Clean-up db"""
+        db.session.query(Review).delete()
+        db.session.query(Business).delete()
+        db.session.query(User).delete()
+        db.session.commit()
 
 
 if __name__ == '__main__':
