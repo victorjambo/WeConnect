@@ -10,9 +10,9 @@ install:
 # command to run tests
 before_script:
   - psql -c 'create database weconnect_test;' -U postgres
-  - python app.py migrate --noinput
+  - flask db migrate --noinput
 script:
-  - python app.py test --keepdb
+  - flask db migrate --keepdb
   - nosetests --with-coverage
 branches:
   only:
@@ -21,3 +21,4 @@ after_success:
   - coveralls
 env:
   - DB=postgres
+  - FLASK_APP=app.py
