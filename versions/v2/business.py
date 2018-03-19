@@ -187,3 +187,28 @@ def delete_business(current_user, businessId):
         return jsonify({'success': 'Business Deleted'}), 200
 
     return jsonify({'warning': 'Business Not Deleted'}), 400
+
+
+@mod.route('/')
+def search():
+    """Perform search querys"""
+    query = request.args.get('query', default=1, type=str)
+    search_result = Business.query.filter(
+        Business.name.like('%' + query + '%')).all()
+    if search_result:
+        return jsonify({
+            'businesses': [
+                {
+                    'id': business.id,
+                    'name': business.name,
+                    'logo': business.logo,
+                    'location': business.location,
+                    'category': business.category,
+                    'bio': business.bio,
+                    'owner': business.owner.username,
+                    'created_at': business.created_at,
+                    'updated_at': business.updated_at
+                } for business in search_result
+            ]
+        }), 200
+    return jsonify({'warning': 'no result'})
