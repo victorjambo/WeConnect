@@ -18,6 +18,8 @@ script:
 branches:
   only:
   - ft-database
+  - develop
+  - master
 after_success:
   - coveralls
 env:
