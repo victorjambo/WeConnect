@@ -38,7 +38,10 @@ def precheck(f):
 
 @mod.route('/', methods=['GET'])
 def read_all_businesses():
-    """Reads all Businesses"""
+    """Reads all Businesses
+    user can search for business via business name
+    response is paginated per limit
+    """
     page = request.args.get('page', default=1, type=int)
     limit = request.args.get('limit', default=5, type=int)
     query = request.args.get('q', default=None, type=str)
