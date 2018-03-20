@@ -36,10 +36,16 @@ def precheck(f):
     return wrap
 
 
-@mod.route('', methods=['GET'])
+@mod.route('/', methods=['GET'])
 def read_all_businesses():
     """Reads all Businesses"""
-    businesses = Business.query.all()
+    page = request.args.get('page', default=1, type=int)
+    per_page = request.args.get('per-page', default=5, type=int)
+    query = request.args.get('q', default=None, type=str)
+    if query:
+        businesses = Business.query.filter(Business.name.like('%' + query + '%')).paginate(page, per_page, error_out=False).items
+    else:
+        businesses = Business.query.order_by(Business.created_at.desc()).paginate(page, per_page, error_out=False).items
     if businesses:
         return jsonify({
             'businesses': [
@@ -187,28 +193,3 @@ def delete_business(current_user, businessId):
         return jsonify({'success': 'Business Deleted'}), 200
 
     return jsonify({'warning': 'Business Not Deleted'}), 400
-
-
-@mod.route('/')
-def search():
-    """Perform search querys"""
-    query = request.args.get('query', default=1, type=str)
-    search_result = Business.query.filter(
-        Business.name.like('%' + query + '%')).all()
-    if search_result:
-        return jsonify({
-            'businesses': [
-                {
-                    'id': business.id,
-                    'name': business.name,
-                    'logo': business.logo,
-                    'location': business.location,
-                    'category': business.category,
-                    'bio': business.bio,
-                    'owner': business.owner.username,
-                    'created_at': business.created_at,
-                    'updated_at': business.updated_at
-                } for business in search_result
-            ]
-        }), 200
-    return jsonify({'warning': 'no result'})
