@@ -42,17 +42,16 @@ def read_all_businesses():
     user can search for business via business name
     response is paginated per limit
     """
-    page = request.args.get('page', default=1, type=int)
-    limit = request.args.get('limit', default=5, type=int)
-    query = request.args.get('q', default=None, type=str)
-    if query:
-        businesses = Business.query.filter(
-            Business.name.like('%' + query + '%')
-        ).paginate(page, limit, error_out=False).items
-    else:
-        businesses = Business.query.order_by(
-            Business.created_at.desc()
-        ).paginate(page, limit, error_out=False).items
+    params = {
+        'page': request.args.get('page', default=1, type=int),
+        'limit': request.args.get('limit', default=5, type=int),
+        'location': request.args.get('location', default=None, type=str),
+        'category': request.args.get('category', default=None, type=str),
+        '_query': request.args.get('q', default=None, type=str)
+    }
+
+    businesses = Business().Search(params)
+
     if businesses:
         return jsonify({
             'businesses': [

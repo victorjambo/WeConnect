@@ -81,13 +81,62 @@ class Business(db.Model):
         cascade='all, delete-orphan'
     )
 
-    def __init__(self, name, logo, location, category, bio, owner):
+    def __init__(self, name=None, logo=None, location=None,
+                 category=None, bio=None, owner=None):
         self.name = name
         self.logo = logo
         self.location = location
         self.category = category
         self.bio = bio
         self.owner = owner
+
+    def update(self):
+        pass
+
+    def Search(self, params):
+        """Search and filter"""
+        page = params['page']
+        limit = params['limit']
+        location = params['location']
+        category = params['category']
+        _query = params['_query']
+
+        if _query or location or category:
+            if location and _query and not category:
+                return self.query.filter(
+                    Business.location == location,
+                    Business.name.ilike('%' + _query + '%')
+                ).paginate(page, limit, error_out=False).items
+
+            if category and _query and not location:
+                return self.query.filter(
+                    Business.category == category,
+                    Business.name.ilike('%' + _query + '%')
+                ).paginate(page, limit, error_out=False).items
+
+            if category and location and not _query:
+                return self.query.filter(
+                    Business.location == location,
+                    Business.category == category
+                ).paginate(page, limit, error_out=False).items
+
+            if location and not _query and not category:
+                return self.query.filter(
+                    Business.location == location
+                ).paginate(page, limit, error_out=False).items
+
+            if category and not _query and not location:
+                return self.query.filter(
+                    Business.category == category
+                ).paginate(page, limit, error_out=False).items
+
+            return self.query.filter(
+                Business.name.ilike('%' + _query + '%')
+            ).paginate(page, limit, error_out=False).items
+
+        return self.query.order_by(
+            Business.created_at.desc()
+        ).paginate(page, limit, error_out=False).items
 
     def save(self):
         """Save a business to the database"""

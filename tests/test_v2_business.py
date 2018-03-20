@@ -36,7 +36,7 @@ class TestBusinessV2(unittest.TestCase):
         """Test if can access endpoint for all businesses
         """
         self.register_business()
-        response = self.app.get('/api/v2/businesses')
+        response = self.app.get('/api/v2/businesses/')
         self.assertEqual(response.status_code, 200)
         output = json.loads(response.get_data(as_text=True))['businesses']
         self.assertEqual(output[0]['name'], self.new_business_info['name'])
@@ -44,7 +44,7 @@ class TestBusinessV2(unittest.TestCase):
     def test_read_if_no_businesses(self):
         """Test what happens when no businesses
         """
-        response = self.app.get('/api/v2/businesses')
+        response = self.app.get('/api/v2/businesses/')
         self.assertEqual(response.status_code, 404)
         self.assertIn('No Businesses, create one first', str(response.data))
 
