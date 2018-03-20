@@ -46,9 +46,13 @@ def read_all_businesses():
     limit = request.args.get('limit', default=5, type=int)
     query = request.args.get('q', default=None, type=str)
     if query:
-        businesses = Business.query.filter(Business.name.like('%' + query + '%')).paginate(page, limit, error_out=False).items
+        businesses = Business.query.filter(
+            Business.name.like('%' + query + '%')
+        ).paginate(page, limit, error_out=False).items
     else:
-        businesses = Business.query.order_by(Business.created_at.desc()).paginate(page, limit, error_out=False).items
+        businesses = Business.query.order_by(
+            Business.created_at.desc()
+        ).paginate(page, limit, error_out=False).items
     if businesses:
         return jsonify({
             'businesses': [
