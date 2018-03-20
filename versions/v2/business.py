@@ -40,12 +40,12 @@ def precheck(f):
 def read_all_businesses():
     """Reads all Businesses"""
     page = request.args.get('page', default=1, type=int)
-    per_page = request.args.get('per-page', default=5, type=int)
+    limit = request.args.get('limit', default=5, type=int)
     query = request.args.get('q', default=None, type=str)
     if query:
-        businesses = Business.query.filter(Business.name.like('%' + query + '%')).paginate(page, per_page, error_out=False).items
+        businesses = Business.query.filter(Business.name.like('%' + query + '%')).paginate(page, limit, error_out=False).items
     else:
-        businesses = Business.query.order_by(Business.created_at.desc()).paginate(page, per_page, error_out=False).items
+        businesses = Business.query.order_by(Business.created_at.desc()).paginate(page, limit, error_out=False).items
     if businesses:
         return jsonify({
             'businesses': [
