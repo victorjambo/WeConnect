@@ -65,10 +65,15 @@ def login_required(f):
     return wrap
 
 
-@app.route('/')
-def home():
+@app.route('/version1')
+def version1():
     """route for API documentation"""
-    return render_template('api.html')
+    return render_template('version1.html')
+    
+@app.route('/')
+def version2():
+    """route for API documentation"""
+    return render_template('version2.html')
 
 
 import versions.v1.user

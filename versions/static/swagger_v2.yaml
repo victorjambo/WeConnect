@@ -1,0 +1,501 @@
+swagger: '2.0'
+info:
+  version: '2.0'
+  title: "WeConnect"
+  description: WeConnect provides a platform that brings businesses and individuals together by creating awareness for businesses and giving the users the ability to write reviews about the businesses they have interacted with.
+  license:
+    name: MIT
+    url: https://github.com/apiaryio/polls-api/blob/master/LICENSE
+host: weconnect-app.herokuapp.com
+basePath: /api/v2
+schemes:
+  - https
+externalDocs:
+  description: "Check out Documentation for v1"
+  url: "https://weconnect-app.herokuapp.com/version1"
+produces:
+  - application/json
+consumes:
+- application/json
+
+paths:
+  /auth/register:
+    x-summary: Register.
+    post:
+      summary: Register (Sign up) new user
+      description: 
+        Creates a new user. User must provide a valid email, username and strong password. Once there is no existing user with same name account is created and email activation is sent
+      parameters:
+        - in: body
+          name: user
+          description: The user to create.
+          schema:
+            $ref: "#/definitions/Register"  
+      responses:
+        201:
+          description: User created, Check mail box to activate account
+        409:
+          description: Username / Email already taken
+        401:
+          description: Could not register user
+      tags:
+        - Auth
+        
+        
+  /auth/login:
+    x-summary: Login
+    post:
+      summary: Login registered user
+      description: Closed endpoints require a valid Token to be included in the header of the request. A Token can be acquired from the Login response
+      parameters:
+        - in: body
+          name: login
+          description: login user.
+          schema:
+            $ref: "#/definitions/Login"
+      responses:
+        200:
+          description: User successfully logged in, Token Generated
+        400:
+          description: All fields are required
+        401:
+          description: Incorrect Username / Password 
+      tags:
+        - Auth
+        
+        
+        
+  /auth/reset-password:
+    x-summary: Reset
+    put:
+      summary: Reset Password
+      description: Resets Password related to the User whose Token is provided with the request
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: reset_password
+          description: resets user password.
+          schema:
+            $ref: "#/definitions/Reset"
+        - in: header
+          name: x-access-token
+          description: Auth token in header
+          required: true
+          type: string
+      responses:
+        200:
+          description: updated password 
+        401:
+          description: you need to be logged in first
+        400:
+          description: Provide a strong password
+        403:
+          description: passwords don't match
+      tags:
+        - Auth
+        
+        
+  /auth/forgot-password:
+    x-summary: Forgot Password
+    post:
+      summary: forgot password
+      description:
+        user provides email used during registration. new password is sent to user's email
+      parameters:
+      - in: body
+        name: forgot password
+        description: forgot password.
+        schema:
+            $ref: "#/definitions/Forgot-password"
+      responses:
+        200:
+          description: Email has been with reset password
+        409:
+          description: No user exists with that email
+      tags:
+        - Auth
+        
+  /auth/logout:
+    x-summary: Logout
+    delete:
+      summary: Logout, End session
+      description:
+        End current session and invalidates token provided during login
+      parameters:
+      - in: header
+        name: x-access-token
+        description: Auth token in header
+        required: true
+        type: string
+      responses:
+        200:
+          description: logged out
+        404:
+          description: Already logged out
+      tags:
+        - Auth
+        
+        
+  /users:
+    x-summary: Get All Users
+    get:
+      summary: List all users
+      responses:
+        200:
+          description: List
+      tags:
+        - Users
+        
+  /user/{user_id}:
+    x-summary: Get user info
+    get:
+      summary: List user info
+      produces:
+      - application/json
+      parameters:
+      - name: user_id
+        in: path
+        required: true
+        type: string
+        description: ID of the user
+        x-example: '1'
+      responses:
+        200:
+          description: OK
+        404:
+          description: user does not exist
+      tags:
+        - Users
+
+  /user/{user_id}/businesses:
+    x-summary: Get businesses of user
+    get:
+      summary: List businesses by user ID
+      produces:
+      - application/json
+      parameters:
+      - name: user_id
+        in: path
+        required: true
+        type: string
+        description: ID of the user
+        x-example: '1'
+      responses:
+        200:
+          description: OK
+        404:
+          description: user does not own a business
+      tags:
+        - Users
+        
+  /businesses:
+    x-summary: Get and Post business
+    get:
+      summary: Get all businesses
+      description: Show all businesses the active User can access and with what permission level. Includes their own business if they have one.
+      responses:
+        200:
+          description: return all businesses
+        404:
+          description: No business create/found
+      tags:
+        - Businesses
+
+    post:
+      summary: Register business 
+      description: Create business for the authenticated User if the business name does not already exist.
+      consumes:
+        - application/json
+      parameters:
+      - in: body
+        name: business
+        description: business name.
+        schema:
+          $ref: "#/definitions/Business"
+      - name: x-access-token
+        in: header
+        description: Auth token in header
+        required: true
+        type: string
+      responses:
+        201:
+          description: Business created
+        401:
+          description: Could not create new business
+        409:
+          description: Business name already taken
+      tags:
+        - Businesses
+    
+    
+  /business/{businessId}:
+    x-summary: Get, Put and Delete business
+    get:
+      summary: get single business
+      description: get single business
+      parameters:
+        - name: businessId
+          in: path
+          required: true
+          type: string
+          description: ID of the business
+          x-example: '1'
+      responses:
+        200:
+          description: List business
+        404:
+          description: Business Not Found
+      tags: 
+        - Businesses
+    
+    put:
+      summary: Update single business
+      description: Manipulates the business that the Authenticated User has permissions to access.
+      parameters:
+        - name: businessId
+          in: path
+          required: true
+          type: string
+          description: ID of the business
+          x-example: '1'
+        - in: header
+          name: x-access-token
+          description: Auth token in header
+          required: true
+          type: string
+        - in: body
+          name: update business
+          description: business
+          schema:
+            $ref: "#/definitions/Business"
+      responses:
+        201:
+          description: Response will reflect back the updated information.
+        401:
+          description: Authorized User is not Owner of business or not all fields have been filled
+        404:
+          description: Business Not Found
+      tags: 
+        - Businesses
+
+    delete:
+      summary: Delete a business 
+      description: Allow the Authenticated User to delete their business.
+      parameters:
+        - name: businessId
+          in: path
+          required: true
+          type: string
+          description: ID of the business
+          x-example: '1'
+        - in: header
+          name: x-access-token
+          description: Auth token in header
+          required: true
+          type: string
+      responses:
+        200:
+          description: Business Deleted
+        401:
+          description: Authorized User is not Owner of business
+        404:
+          description: Business Not Found
+      tags: 
+       - Businesses
+        
+        
+     
+  /businesses/{businessId}/reviews:
+    x-summary: Get & Post review
+    post:
+      summary: Review a business 
+      description: Allow authenticated user to create a new review for any business
+      parameters:
+        - in: body
+          name: business
+          description: business name.
+          schema:
+            $ref: "#/definitions/Review"
+            
+        - name: businessId
+          in: path
+          required: true
+          type: string
+          description: ID of the business
+          x-example: '1'
+        - in: header
+          name: x-access-token
+          description: Auth token in header
+          required: true
+          type: string
+      responses:
+        200:
+          description: OK
+        401:
+          description: Could not create new reviews
+      tags:
+        - Reviews
+        
+    get:
+      summary: Get business reviews
+      description: Get all reviews in business given the business ID
+      parameters:
+        - name: businessId
+          in: path
+          required: true
+          type: string
+          description: ID of the business
+          x-example: '1'
+      responses:
+        200:
+          description: OK
+      tags: 
+        - Reviews
+        
+  /businesses/reviews:
+    x-summary: All reviews
+    get:
+      summary: Gets all reviews
+      description: Allow the Authenticated User to get all reviews in WeConnect
+      parameters:
+        - in: header
+          name: x-access-token
+          description: Auth token in header
+          required: true
+          type: string
+      responses:
+        200:
+          description: OK
+      tags: 
+        - Reviews
+    
+  /businesses/{businessId}/reviews/{reviewId}:
+    x-summary: delete review
+    delete:
+      summary: Delete A Review 
+      description: Allow the Authenticated User to delete their review given businessID and reviewID
+      parameters:
+        - name: businessId
+          in: path
+          required: true
+          type: string
+          description: ID of the business
+          x-example: '1'
+        - name: reviewId
+          in: path
+          required: true
+          type: string
+          description: ID of review
+          x-example: '1'
+        - in: header
+          name: x-access-token
+          description: Auth token in header
+          required: true
+          type: string
+      responses:
+        200:
+          description: OK
+        401:
+          description: Authorized User is not Owner of review
+        404:
+          description: Review Not found
+      tags: 
+       - Reviews
+
+
+
+
+
+
+definitions:
+  Register:
+    type: object
+    required:
+      - email
+      - username
+      - password
+    properties:
+      email:
+        type: string
+      username:
+        type: string
+      password:
+        type: string
+    example:
+      email: victorjambo@live.com
+      username: victorjambo
+      password: password1234
+
+  Login:
+    type: object
+    required: 
+      - password
+      - username
+    properties:
+      username:
+        type: string
+        default: 'victorjambo'
+      password: 
+        type: string
+        default: 'password1234'
+        
+  Reset:
+    type: object
+    required:
+      - password
+      - old_password
+    properties:
+      password:
+        type: string
+      old_password:
+        type: string
+    example:
+      password: password1234
+      old_password: sarah123456
+  
+  Forgot-password:
+    type: object
+    required:
+      - email
+    properties:
+      email:
+        type: string
+    example:
+      email: victorjambo@live.com
+        
+  Business:
+    type: object
+    required: 
+      - name
+      - location
+      - category
+      - bio
+    properties:
+      name:
+        type: string
+      location: 
+        type: string 
+      category:
+        type: string
+      bio:
+        type: string
+    example:
+      name: Crown Paints
+      location: New York
+      Category: Construction
+      bio: Lorem ipsum dolor sit amet, consectetur adipisicing elit
+
+  Review:
+    type: object
+    required:
+      - title
+      - desc
+    properties:
+      title:
+        type: string
+      desc:
+        type: string
+    example:
+      title: Good Work
+      desc: Lorem ipsum dolor sit amet
