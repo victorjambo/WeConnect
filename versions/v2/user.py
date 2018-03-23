@@ -40,6 +40,8 @@ def read_user(user_id):
     if user:
         return jsonify({'user': {
             'username': user.username,
+            'id': user.id,
+            'activate': user.activate,
             'email': user.email
         }}), 200
 
