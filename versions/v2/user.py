@@ -15,16 +15,22 @@ mod = Blueprint('users_v2', __name__)
 def get_all_users():
     """Read all users"""
     users = User.query.all()
-    return jsonify(
-        [
-            {
-                'id': user.id,
-                'username': user.username,
-                'email': user.email,
-                'businesses': user.businesses
-            } for user in users
-        ]
-    ), 200
+    if users:
+        return jsonify(
+            [
+                {
+                    'id': user.id,
+                    'username': user.username,
+                    'email': user.email,
+                    'businesses': [
+                        {
+                            'id': b.id,
+                            'name': b.name
+                        } for b in user.businesses] if user.businesses else None
+                } for user in users
+            ]
+        ), 200
+    return jsonify({'warning': 'No Users'}), 404
 
 
 @mod.route('/<user_id>', methods=['GET'])
@@ -57,7 +63,7 @@ def read_user_businesses(user_id):
                     'created_at': business.created_at,
                     'updated_at': business.updated_at
                 } for business in user.businesses
-            ]
+            ] if user.businesses else None
         ), 200
 
     return jsonify({'warning': 'user does not own a business'}), 404
