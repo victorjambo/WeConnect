@@ -90,9 +90,6 @@ class Business(db.Model):
         self.bio = bio
         self.owner = owner
 
-    def update(self):
-        pass
-
     def Search(self, params):
         """Search and filter"""
         page = params['page']
