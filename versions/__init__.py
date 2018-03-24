@@ -69,7 +69,8 @@ def login_required(f):
 def version1():
     """route for API documentation"""
     return render_template('version1.html')
-    
+
+
 @app.route('/')
 def version2():
     """route for API documentation"""
