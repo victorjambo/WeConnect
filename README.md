@@ -72,9 +72,9 @@ Set environment variables for `SECRET`, `ENVIRON` `DATABASE_URL`, `FLASK_APP`, `
 
 > `ENVIRON` is the enviroment you are running on. Should be either `Production`, `Development` or `Testing`. NOTE: its case sensitive
 
-> `GMAIL_MAIL` and `GMAIL_PASSWORD` got to `https://myaccount.google.com/apppasswords` and generate app password for your api
+> `GMAIL_MAIL` and `GMAIL_PASSWORD` got to `https://myaccount.google.com/apppasswords` and generate app password for your api. Use dummy mail for test
 
-> `DATABASE_URL` this is your postgres database URI
+> `DATABASE_URL` this is your postgres database URI. create a PG DB first.
 
 > `FLASK_APP` value should be `app.py`. That is the file where our app starts from. `FLASK_APP=app.py`
 
@@ -82,7 +82,12 @@ Set environment variables for `SECRET`, `ENVIRON` `DATABASE_URL`, `FLASK_APP`, `
 
 Before running migrations, ensure you have created a database and exported a `DATABASE_URL` variable.
 
-To run migrations, first initialize the migration. This creates a folder `migrations`
+Since we already have migration folder just run;
+```bash
+$ flask db upgrade
+```
+
+If you want to run your own migrations, first initialize the migration. This creates a folder `migrations`
 ```bash
 $ flask db init
 ```
