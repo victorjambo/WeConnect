@@ -34,7 +34,7 @@ class TestReviewV2(unittest.TestCase):
         """
         response = self.register_review()
         self.assertEqual(response.status_code, 201)
-        self.assertIn('successfully created business', str(response.data))
+        self.assertIn('successfully created review', str(response.data))
         _review = json.loads(response.get_data(as_text=True))
         exists = db.session.query(
             db.exists().where(Review.title == _review['review']['title']))

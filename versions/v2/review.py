@@ -9,7 +9,7 @@ DELETE: Deletes a Review
     expects businessID, current_user and reviewID as arguments
 """
 from flask import Blueprint, jsonify, request
-from versions.v2.models import Business, db, User, Review
+from versions.v2.models import Business, db, User, Review, Notification
 from versions import login_required
 from functools import wraps
 
@@ -64,8 +64,18 @@ def create_review(current_user, businessId):
 
     # Send response if business was saved
     if new_review.id:
+        # create a notification if review is created
+        if current_user != _business.owner.id:
+            new_notification = Notification(
+                recipient=_business.owner,
+                actor=_reviewer.username,
+                business_id=businessId,
+                review_id=new_review.id
+            )
+            new_notification.save()
+
         return jsonify({
-            'success': 'successfully created business',
+            'success': 'successfully created review',
             'review': {
                 'id': new_review.id,
                 'title': new_review.title,

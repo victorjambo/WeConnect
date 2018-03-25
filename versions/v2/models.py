@@ -34,6 +34,11 @@ class User(db.Model):
         backref='reviewer',
         cascade='all, delete-orphan'
     )
+    notifications = db.relationship(
+        'Notification',
+        backref='recipient',
+        cascade='all, delete-orphan'
+    )
 
     def __init__(self, username, email, password):
         """Sets defaults for creating user instance
@@ -184,4 +189,32 @@ class Review(db.Model):
     def delete(self):
         """Delete a given review."""
         db.session.delete(self)
+        db.session.commit()
+        
+        
+class Notification(db.Model):
+    """Handles notifications when user reviews on a business"""
+    __tablename__ = 'notifications'
+    
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    recipient_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    actor = db.Column(db.String(), nullable=False)
+    business_id = db.Column(db.Integer, nullable=False)
+    review_id = db.Column(db.Integer, nullable=False)
+    action = db.Column(db.String(), nullable=False)
+    read_at = db.Column(db.DateTime)
+    created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+    
+    
+    def __init__(self, recipient, actor, business_id, review_id, read_at=None):
+        self.recipient = recipient
+        self.actor = actor
+        self.business_id = business_id
+        self.review_id = review_id
+        self.read_at = read_at
+        self.action = ' has reviewed your business'
+
+    def save(self):
+        """Save a review to the database"""
+        db.session.add(self)
         db.session.commit()
