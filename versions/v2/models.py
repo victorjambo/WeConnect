@@ -190,8 +190,8 @@ class Review(db.Model):
         """Delete a given review."""
         db.session.delete(self)
         db.session.commit()
-        
-        
+
+
 class Notification(db.Model):
     """Handles notifications when user reviews on a business"""
     __tablename__ = 'notifications'
