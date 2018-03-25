@@ -195,7 +195,7 @@ class Review(db.Model):
 class Notification(db.Model):
     """Handles notifications when user reviews on a business"""
     __tablename__ = 'notifications'
-    
+
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     recipient_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     actor = db.Column(db.String(), nullable=False)
