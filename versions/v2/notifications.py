@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify
 from versions.v2.models import db, Notification, User
 from versions import login_required
 
