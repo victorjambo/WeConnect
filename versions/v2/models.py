@@ -204,8 +204,7 @@ class Notification(db.Model):
     action = db.Column(db.String(), nullable=False)
     read_at = db.Column(db.DateTime)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
-    
-    
+
     def __init__(self, recipient, actor, business_id, review_id, read_at=None):
         self.recipient = recipient
         self.actor = actor
