@@ -10,7 +10,7 @@ mod = Blueprint('notification_v2', __name__)
 def get_notifications(current_user):
     """Fetch all unread notifications of current user"""
     unread = db.session.query(Notification).join(User).filter(
-        User.id==2,
+        User.id==current_user,
         Notification.read_at==None
     ).all()
 
