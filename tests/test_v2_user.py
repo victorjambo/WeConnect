@@ -11,6 +11,7 @@ class TestUser(unittest.TestCase):
         self.app = app.test_client()
         self.new_user_info = {
             'username': 'victorjambo',
+            'fullname': 'victor jambo',
             'email': 'victor.mutai@gmail.com',
             'password': 'password1234'
         }

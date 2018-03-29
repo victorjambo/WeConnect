@@ -14,6 +14,7 @@ class TestReviewV2(unittest.TestCase):
         }
         self.new_user_info = {
             "username": "oliver",
+            "fullname": "oliver mutai",
             "email": "oliver.mutai@maseno.com",
             "password": "password1234"
         }

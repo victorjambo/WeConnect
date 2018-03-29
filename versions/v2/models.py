@@ -14,6 +14,7 @@ class User(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(), unique=True, nullable=False)
+    fullname = db.Column(db.String(), nullable=False)
     email = db.Column(db.String(), unique=True, nullable=False)
     password = db.Column(db.String(), nullable=False)
     hash_key = db.Column(db.String(), unique=True, nullable=False)
@@ -40,7 +41,7 @@ class User(db.Model):
         cascade='all, delete-orphan'
     )
 
-    def __init__(self, username, email, password):
+    def __init__(self, username, fullname, email, password):
         """Sets defaults for creating user instance
         sets username and email to lower case
         encrypts password
@@ -48,6 +49,7 @@ class User(db.Model):
         sets activate to false, this will be changed later
         """
         self.username = username.lower().strip()
+        self.fullname = fullname
         self.email = email.lower().strip()
         self.password = sha256_crypt.encrypt(str(password))
         self.hash_key = uuid.uuid1().hex

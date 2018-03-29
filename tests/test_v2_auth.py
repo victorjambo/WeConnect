@@ -13,6 +13,7 @@ class TestAuth(unittest.TestCase):
         self.app_client = app.test_client()
         self.new_user_info = {
             'username': 'victorjambo',
+            'fullname': 'victor jambo',
             'email': 'victor.mutai@gmail.com',
             'password': 'password1234'
         }
@@ -61,12 +62,13 @@ class TestAuth(unittest.TestCase):
         self.assertEqual(response1.status_code, 400)
         self.assertFalse(exists1)
         self.assertIn(
-            'All fields. Provide email, username & password',
+            'All Fields Required',
             str(response1.data))
 
         # 2. test fail when username is taken
         auth2 = {
             'username': 'victorjambo',
+            'fullname': 'victor jambo',
             'email': 'victor2.mutai@gmail.com',
             'password': 'password1234'
         }
@@ -87,6 +89,7 @@ class TestAuth(unittest.TestCase):
         # 3. test fail when email is taken
         auth3 = {
             'username': 'victor3',
+            'fullname': 'vitor muts',
             'email': 'victor.mutai@gmail.com',
             'password': 'password1234'
         }
@@ -105,6 +108,7 @@ class TestAuth(unittest.TestCase):
         # 4. test fail on username validation
         auth4 = {
             'username': 'a',
+            'fullname': 'victor jambo',
             'email': 'victor4.mutai@gmail.com',
             'password': 'password1234'
         }
@@ -119,12 +123,13 @@ class TestAuth(unittest.TestCase):
         self.assertEqual(response4.status_code, 409)
         self.assertFalse(exists4)
         self.assertIn(
-            'Provide username with more than 4 characters',
+            'Invalid username',
             str(response4.data))
 
         # 5. test fail on email validation
         auth5 = {
             'username': 'abcd',
+            'fullname': 'victor jambo',
             'email': 'victor.mutai@',
             'password': 'password1235'
         }
@@ -139,12 +144,13 @@ class TestAuth(unittest.TestCase):
         self.assertEqual(response5.status_code, 409)
         self.assertFalse(exists5)
         self.assertIn(
-            'Please provide valid email',
+            'Invalid email',
             str(response5.data))
 
         # 6. test fail on password validation
         auth6 = {
             'username': 'abcd',
+            'fullname': 'victor jambo',
             'email': 'victor6.mutai@gmail.com',
             'password': 'password'
         }
@@ -159,7 +165,7 @@ class TestAuth(unittest.TestCase):
         self.assertEqual(response6.status_code, 409)
         self.assertFalse(exists6)
         self.assertIn(
-            'Please provide strong password',
+            'Provide strong password',
             str(response6.data))
 
     def test_login(self):

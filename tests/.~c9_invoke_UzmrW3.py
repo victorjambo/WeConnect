@@ -24,7 +24,7 @@ class TestBusinessV2(unittest.TestCase):
         }
         self.new_user_info = {
             "username": "robert",
-            "fullname": "robert jambo",
+            'fullname': 'victor jambo',
             "email": "victor.mutai@jkuat.comm",
             "password": "password1234"
         }
@@ -106,7 +106,7 @@ class TestBusinessV2(unittest.TestCase):
         self.assertEqual(output['id'], business_id)
 
     def test_read_no_business(self):
-        """Test 404 not found on business not existing
+        """
         """
         response = self.app.get('/api/v2/businesses/6000')
         self.assertEqual(response.status_code, 404)
@@ -154,7 +154,6 @@ class TestBusinessV2(unittest.TestCase):
         """
         new_user = {
             "username": "hotpoint",
-            "fullname": "robert hotpoint",
             "email": "victor.mutai@nbo.samadc.org",
             "password": "password1234"
         }

@@ -80,7 +80,7 @@ def find_review_by_id(reviewId):
 def check_keys(args, length):
     """Check if dict keys are provided
     """
-    params = ['email', 'username', 'password', 'old_password']
+    params = ['email', 'username', 'password', 'old_password', 'fullname']
     for key in args.keys():
         if key not in params or len(args) != length:
             return True

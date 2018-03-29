@@ -48,9 +48,9 @@ def validations(f):
         data = request.get_json()
 
         # check if all fields are provided
-        if check_keys(data, 3):
+        if check_keys(data, 4):
             return jsonify({
-                'warning': 'All fields. Provide email, username & password'
+                'warning': 'All Fields Required'
             }), 400
 
         # check if username is taken
@@ -66,21 +66,21 @@ def validations(f):
             return jsonify({'warning': 'Email has already been taken'}), 409
 
         # validate username
-        if not username_regex.match(data['username']):
+        if not username_regex.match(data['username'].lower()):
             return jsonify({
-                'warning': 'Provide username with more than 4 characters'
+                'warning': 'Invalid username'
             }), 409
 
         # validate email
         if not email_regex.match(data['email']):
             return jsonify({
-                'warning': 'Please provide valid email'
+                'warning': 'Invalid email'
             }), 409
 
         # validate password
         if not password_regex.match(data['password']):
             return jsonify({
-                'warning': 'Please provide strong password'
+                'warning': 'Provide strong password'
             }), 409
 
         return f(*args, **kwargs)
@@ -97,7 +97,7 @@ def validate_new_password(f):
 
         if not password_regex.match(data['password']):
             return jsonify({
-                'warning': 'Please provide strong password'
+                'warning': 'Provide strong password'
             })
         return f(*args, **kwargs)
     return wrap
@@ -112,6 +112,7 @@ def signup():
     # create new user instances
     new_user = User(
         username=data['username'],
+        fullname=data['fullname'],
         email=data['email'],
         password=data['password']
     )
