@@ -12,16 +12,20 @@ and its an easy read
 import os
 import jwt
 from functools import wraps
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, session
 from versions.v1.models import User, Business, Review
 from flask_cors import CORS
 from flask_mail import Mail
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 
 
 app = Flask(__name__)
 app.config.from_object('config.{}'.format(os.getenv('ENVIRON')))
 CORS(app)
 mail = Mail(app)
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
 
 user_instance = User()
@@ -37,33 +41,64 @@ def login_required(f):
     @wraps(f)
     def wrap(*args, **kwargs):
         token = None
-        if 'x-access-token' in request.headers:
+        if 'x-access-token' in request.headers and session:
             token = request.headers['x-access-token']
 
         if not token:
-            return jsonify({'warning': 'token missing'}), 401
+            return jsonify({
+                'warning': 'Missing token. Please register or login'
+            }), 401
 
         try:
             data = jwt.decode(token, app.config['SECRET_KEY'])
             current_user = data['id']
+        except jwt.ExpiredSignatureError:
+            return jsonify({
+                'warning': 'Expired token. Please login to get a new token'
+            }), 401
         except ValueError:
-            return jsonify({'warning': 'token invalid'}), 401
+            return jsonify({
+                'warning': 'Invalid token. Please register or login'
+            }), 401
 
         return f(current_user, *args, **kwargs)
     return wrap
 
 
+@app.route('/version1')
+def version1():
+    """route for API documentation"""
+    return render_template('version1.html')
+
+
 @app.route('/')
-def home():
-    return render_template('api.html')
+def version2():
+    """route for API documentation"""
+    return render_template('version2.html')
 
 
 import versions.v1.user
 import versions.v1.get_user
 import versions.v1.business
 import versions.v1.review
+import versions.v2.models
+import versions.v2.auth
+import versions.v2.user
+import versions.v2.business
+import versions.v2.review
+import versions.v2.notifications
 
-app.register_blueprint(v1.user.mod, url_prefix='/api/v1/auth')
-app.register_blueprint(v1.get_user.mod, url_prefix='/api/v1')
-app.register_blueprint(v1.business.mod, url_prefix='/api/v1')
-app.register_blueprint(v1.review.mod, url_prefix='/api/v1')
+# version 1 routes
+app.register_blueprint(versions.v1.user.mod, url_prefix='/api/v1/auth')
+app.register_blueprint(versions.v1.get_user.mod, url_prefix='/api/v1')
+app.register_blueprint(versions.v1.business.mod, url_prefix='/api/v1')
+app.register_blueprint(versions.v1.review.mod, url_prefix='/api/v1')
+
+# version 2 routes
+app.register_blueprint(versions.v2.auth.mod, url_prefix='/api/v2/auth')
+app.register_blueprint(versions.v2.user.mod, url_prefix='/api/v2/users')
+app.register_blueprint(
+    versions.v2.business.mod, url_prefix='/api/v2/businesses')
+app.register_blueprint(
+    versions.v2.review.mod, url_prefix='/api/v2/businesses')
+app.register_blueprint(versions.v2.notifications.mod, url_prefix='/api/v2')

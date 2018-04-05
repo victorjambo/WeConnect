@@ -7,6 +7,14 @@
 
 WeConnect provides a platform that brings businesses and individuals together. This platform creates awareness for businesses and gives the users the ability to write reviews about the businesses they have interacted with. 
 
+## Requirements
+It is recommended that you have the following set up on your local environment before getting started
+
+1. [python 3.x](https://www.python.org/downloads/)
+2. [Postgres](http://www.postgresql.org)
+3. [Git](https://git-scm.com)
+4. Working browser or [Postman](https://chrome.google.com/webstore/detail/postman/fhbjgbiflinjbdggehcddcbncdddomop?utm_source=chrome-app-launcher-info-dialog)
+
 ## Installation
 For the UI designs to work you need a working browser like google chrome
 
@@ -29,7 +37,8 @@ UI link to gh-pages
 https://victorjambo.github.io/WeConnect/designs/UI
 ```
 
-## Api Installation
+
+## API Installation
 To set up WeConnect API, make sure that you have python3, postman and pip installed.
 
 Use [virtualenv](http://www.pythonforbeginners.com/basics/how-to-use-python-virtualenv) for an isolated working environment.
@@ -58,26 +67,56 @@ Confirm your installed packages
 ```bash
 $ pip freeze
 ```
-Set environment variables for `SECRET`, `ENVIRON`, `GMAIL_MAIL` and `GMAIL_PASSWORD`
+Set environment variables for `SECRET`, `ENVIRON` `DATABASE_URL`, `FLASK_APP`, `GMAIL_MAIL` and `GMAIL_PASSWORD`
 > `SECRET` is your secret key
 
 > `ENVIRON` is the enviroment you are running on. Should be either `Production`, `Development` or `Testing`. NOTE: its case sensitive
 
-> `GMAIL_MAIL` and `GMAIL_PASSWORD` got to `https://myaccount.google.com/apppasswords` and generate app password for your api
+> `GMAIL_MAIL` and `GMAIL_PASSWORD` got to `https://myaccount.google.com/apppasswords` and generate app password for your api. Use dummy mail for test
 
-## Usage
+> `DATABASE_URL` this is your postgres database URI. create a PG DB first.
+
+> `FLASK_APP` value should be `app.py`. That is the file where our app starts from. `FLASK_APP=app.py`
+
+## Migrations
+
+Before running migrations, ensure you have created a database and exported a `DATABASE_URL` variable.
+
+Since we already have migration folder just run;
+```bash
+$ flask db upgrade
+```
+
+If you want to run your own migrations, first initialize the migration. This creates a folder `migrations`
+```bash
+$ flask db init
+```
+
+Then migrate the db
+```bash
+$ flask db migrate
+```
+
+Finally, upgrade to create the tables in the database
+```bash
+$ flask db upgrade
+```
+
+
+## API Usage
 
 To get the app running...
 
 ```bash
-$ python3 app.py
+$ flask run
 ```
 
-Open Postman and run endpoints
+Open root path in your browser to test the endpoints. 
+You can also use Postman or any other agent to test the endpoints
 
 ## Test
 
-To run you test use
+To run your tests use
 
 ```bash
 $ nosetests

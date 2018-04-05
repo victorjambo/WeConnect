@@ -673,7 +673,7 @@
             </p>
 
 
-            <a class="email-primary-cta" href="{{ url_for('user.verify', key=hash_key, name=name, _external=True) }}" style="background:#5070e3; border:15px solid #5070e3; border-radius:3px; color:#fff; display:inline-block; font-size:16px; font-weight:bold; padding-left:20px; padding-right:20px; text-align:center; text-decoration:none; text-transform:uppercase"
+            <a class="email-primary-cta" href="{{ url_for('{}.verify'.format(path), key=hash_key, name=name, _external=True) }}" style="background:#5070e3; border:15px solid #5070e3; border-radius:3px; color:#fff; display:inline-block; font-size:16px; font-weight:bold; padding-left:20px; padding-right:20px; text-align:center; text-decoration:none; text-transform:uppercase"
               align="center" target="_blank">
               <!--[if mso]>&nbsp;<![endif]-->Activate<span style="white-space: nowrap;">&nbsp;<img src="https://d1xx3pvec9nqb7.cloudfront.net/media/images/emails/cta-more-triangle.2c95c8d0cc68.png" width="4" height="7" alt="" style="border:0 none; display:inline; margin-left:5px; max-width:100%; vertical-align:9%" valign="9%"></span>
               <!--[if mso]>&nbsp;<![endif]-->

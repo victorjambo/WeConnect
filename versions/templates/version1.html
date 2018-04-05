@@ -1,11 +1,6 @@
-<!DOCTYPE html>
-<html>
-  <head>
-  	<title>WeConnect :: API v1</title>
-  	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='swagger-ui.css') }}">
-  </head>
-  <body>
-  	<div id="swagger-ui"></div>
+{% extends 'layouts.html' %}
+
+{% block body %}
 
 	<script src="{{ url_for('static', filename='swagger-ui-bundle.js') }}"></script>
 	<script src="{{ url_for('static', filename='swagger-ui-standalone-preset.js') }}"></script>
@@ -13,7 +8,7 @@
 	<script>
 		window.onload = function() {
 		  const ui = SwaggerUIBundle({
-		    url: "{{ url_for('static', filename='swagger.json') }}",
+		    url: "{{ url_for('static', filename='swagger_v1.json') }}",
 		    dom_id: '#swagger-ui',
 		    presets: [
 		      SwaggerUIBundle.presets.apis,
@@ -24,5 +19,4 @@
 		  window.ui = ui
 		}
 	</script>
-  </body>
-</html>
+{% endblock %}

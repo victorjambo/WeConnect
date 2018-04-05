@@ -1,0 +1,22 @@
+{% extends 'layouts.html' %}
+
+{% block body %}
+
+    <script src="{{ url_for('static', filename='swagger-ui-bundle.js') }}"></script>
+    <script src="{{ url_for('static', filename='swagger-ui-standalone-preset.js') }}"></script>
+    
+    <script>
+    	window.onload = function() {
+    	  const ui = SwaggerUIBundle({
+    	    url: "{{ url_for('static', filename='swagger_v2.json') }}",
+    	    dom_id: '#swagger-ui',
+    	    presets: [
+    	      SwaggerUIBundle.presets.apis,
+    	      SwaggerUIStandalonePreset
+    	    ]
+    	  })
+    
+    	  window.ui = ui
+    	}
+    </script>
+{% endblock %}
