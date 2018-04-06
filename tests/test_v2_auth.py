@@ -307,10 +307,10 @@ class TestAuth(unittest.TestCase):
                 "x-access-token": token
             }
         )
-        self.assertEqual(response2.status_code, 401)
+        self.assertEqual(response2.status_code, 404)
 
         output = json.loads(response2.get_data(as_text=True))['warning']
-        self.assertEqual(output, 'Missing token. Please register or login')
+        self.assertEqual(output, 'Already logged out')
 
     def test_forgot_password(self):
         """Test when user has forgotten password"""

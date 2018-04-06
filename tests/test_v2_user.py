@@ -101,7 +101,7 @@ class TestUser(unittest.TestCase):
         }
         token = json.loads(self.login().get_data(as_text=True))['token']
         response = self.app.post(
-            '/api/v2/businesses',
+            '/api/v2/businesses/',
             data=json.dumps(new_business_info),
             headers={
                 "content-type": "application/json",
