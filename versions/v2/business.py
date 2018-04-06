@@ -71,7 +71,7 @@ def read_all_businesses():
     return jsonify({'warning': 'No Businesses, create one first'}), 404
 
 
-@mod.route('', methods=['POST'])
+@mod.route('/', methods=['POST'])
 @login_required
 def create_business(current_user):
     """Creates a business

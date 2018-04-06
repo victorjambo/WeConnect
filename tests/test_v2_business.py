@@ -72,7 +72,7 @@ class TestBusinessV2(unittest.TestCase):
         }
         self.register_user()
         response = self.app.post(
-            '/api/v2/businesses',
+            '/api/v2/businesses/',
             data=json.dumps(business_data),
             headers={
                 "content-type": "application/json",
@@ -243,7 +243,7 @@ class TestBusinessV2(unittest.TestCase):
     def register_business(self):
         self.register_user()
         return self.app.post(
-            '/api/v2/businesses',
+            '/api/v2/businesses/',
             data=json.dumps(self.new_business_info),
             headers={
                 "content-type": "application/json",
