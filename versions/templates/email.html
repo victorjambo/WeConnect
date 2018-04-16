@@ -1,0 +1,720 @@
+<head>
+
+  <meta name="viewport" content="width=device-width">
+
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+  <style>
+    /* -------------------------------------
+        GLOBAL
+    ------------------------------------- */
+    * {
+      margin:0;
+      padding:0;
+    }
+    * {
+      font-family: "Lucida Grande", "Helvetica Neue", Helvetica, Arial, sans-serif
+    }
+    
+    img {
+      max-width: 100%;
+      display: block;
+    }
+    .collapse {
+      margin:0;
+      padding:0;
+    }
+    body {
+      width: 100%!important;
+      height: 100%;
+      color: #888888;
+      background-color: #F7F7F7;
+    }
+    
+    
+    /* -------------------------------------
+        ELEMENTS
+    ------------------------------------- */
+    a {
+      color: #333333;
+      text-decoration: none;
+    }
+    
+    .btn {
+      text-decoration:none;
+      color: #FFF;
+      background-color: #666;
+      padding:10px 16px;
+      font-weight:bold;
+      margin-right:10px;
+      text-align:center;
+      cursor:pointer;
+      display: inline-block;
+    }
+    
+    table.social {
+    /*   padding:15px; */
+      background-color: #ebebeb;
+    
+    }
+    .social .soc-btn {
+      padding: 3px 7px;
+      font-size:12px;
+      margin-bottom:10px;
+      text-decoration:none;
+      color: #FFF;font-weight:bold;
+      display:block;
+      text-align:center;
+    }
+    a.fb { background-color: #3B5998!important; }
+    a.tw { background-color: #1daced!important; }
+    a.gp { background-color: #DB4A39!important; }
+    a.ms { background-color: #000!important; }
+    
+    .sidebar .soc-btn {
+      display:block;
+      width:100%;
+    }
+    
+    /* -------------------------------------
+        HEADER
+    ------------------------------------- */
+    table.head-wrap { width: 100%;}
+    
+    .header.container table td.logo { padding: 15px; }
+    .header.container table td.label { padding: 15px; padding-left:0px;}
+    
+    
+    /* -------------------------------------
+        BODY
+    ------------------------------------- */
+    table.body-wrap { width: 100%;}
+    
+    
+    /* -------------------------------------
+        FOOTER
+    ------------------------------------- */
+    table.footer-wrap { width: 100%;  clear:both!important;
+    }
+    .footer-wrap .container td.content  p { border-top: 1px solid rgb(215,215,215); padding-top:15px;}
+    .footer-wrap .container td.content p {
+      font-size:10px;
+      font-weight: bold;
+    
+    }
+    
+    
+    /* -------------------------------------
+        TYPOGRAPHY
+    ------------------------------------- */
+    h1,h2,h3,h4,h5,h6 {
+      line-height: 1.1;
+      margin-bottom:15px;
+      color:#000;
+    }
+    h1 small, h2 small, h3 small, h4 small, h5 small, h6 small { font-size: 60%; color: #6f6f6f; line-height: 0; text-transform: none; }
+    
+    h1 { font-weight:200; font-size: 44px;}
+    h2 { font-weight:200; font-size: 37px;}
+    h3 { font-weight:500; font-size: 27px;}
+    h4 { font-weight:500; font-size: 23px;}
+    h5 { font-weight:900; font-size: 17px;}
+    h6 { font-weight:900; font-size: 14px; text-transform: uppercase; color:#444;}
+    
+    .collapse { margin:0!important;}
+    
+    p, ul {
+      margin-bottom: 10px;
+      font-weight: normal;
+      font-size:14px;
+      line-height:1.6;
+    }
+    p.lead { font-size:17px; }
+    p.last { margin-bottom:0px;}
+    
+    ul li {
+      margin-left:5px;
+      list-style-position: inside;
+    }
+    
+    /* -------------------------------------
+        SIDEBAR
+    ------------------------------------- */
+    ul.sidebar {
+      background:#ebebeb;
+      display:block;
+      list-style-type: none;
+    }
+    ul.sidebar li { display: block; margin:0;}
+    ul.sidebar li a {
+      text-decoration:none;
+      color: #666;
+      padding:10px 16px;
+    /*   font-weight:bold; */
+      margin-right:10px;
+    /*   text-align:center; */
+      cursor:pointer;
+      border-bottom: 1px solid #777777;
+      border-top: 1px solid #FFFFFF;
+      display:block;
+      margin:0;
+    }
+    ul.sidebar li a.last { border-bottom-width:0px;}
+    ul.sidebar li a h1,ul.sidebar li a h2,ul.sidebar li a h3,ul.sidebar li a h4,ul.sidebar li a h5,ul.sidebar li a h6,ul.sidebar li a p { margin-bottom:0!important;}
+    
+    
+    
+    /* ---------------------------------------------------
+        RESPONSIVENESS
+    ------------------------------------------------------ */
+    
+    /* Set a max-width, and make it display as block so it will automatically stretch to that width, but will also shrink down on a phone or something */
+    .container {
+      display:block!important;
+      max-width:600px!important;
+      margin:0 auto!important; /* makes it centered */
+      clear:both!important;
+    }
+    
+    /* This should also be a block element, so that it will fill 100% of the .container */
+    .content {
+      padding:15px;
+      max-width:600px;
+      margin:0 auto;
+      display:block;
+    }
+    
+    .stylist-footer {
+      padding: 0;
+    }
+    
+    .intro-content {
+      padding: 24px 48px 0 48px;
+    }
+    
+    .stylist-picture {
+      vertical-align: top;
+    }
+    
+    .footer-content {
+      padding: 24px 48px;
+      text-align: center;
+      color: #999999;
+    }
+    
+    .footer-content p {
+      font-size: 12px;
+      width: 75%;
+      margin: 0 auto;
+    }
+    
+    .logo-container {
+      padding: 0;
+    }
+    
+    .logo-container p {
+      text-align: center;
+      padding: 24px 0;
+    }
+    
+    .logo-container p img {
+      display: inline-block;
+    }
+    
+    /* Let's make sure tables in the content area are 100% wide */
+    .content table { width: 100%; }
+    
+    /* -------------------------------------------
+        PHONE
+        For clients that support media queries.
+        Nothing fancy.
+    -------------------------------------------- */
+    @media only screen and (max-width: 600px) {
+    
+      a[class="btn"] { display:block!important; margin-bottom:10px!important; background-image:none!important; margin-right:0!important;}
+    
+    }
+    
+    
+      
+    
+    /* Android 4.4 https://litmus.com/community/code/4194-why-is-email-not-centered-on-android-4-4 */
+    body { margin:0 !important; }
+    div[style*="margin: 16px 0"] { margin:0 !important; }
+    
+    *,
+    div,
+    p
+    {
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    }
+    
+    body,
+    html {
+      background-color: #f0f0f0;
+    }
+    
+    .container {
+      width: 100%;
+      max-width: 600px !important;
+      text-align: center;
+    }
+    
+    td {
+      background-color: #f0f0f0;
+    }
+    
+    .content-border {
+      border: 1px solid #d9d9d9;
+      max-width: 550px;
+      margin-right: auto;
+      margin-left: auto;
+    }
+    
+    img, a {
+      border: 0 none;
+    }
+    
+    .center {
+      text-align: center !important;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    .align-left {
+      text-align: left;
+    }
+    
+    .header {
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .header-margin-top,
+    .header-margin-bottom {
+      max-height: 30px;
+      width: 100%;
+      height: 30px;
+    }
+    
+    .tagline {
+      color: #aaaaaa;
+      font-size: 15px;
+      line-height: 40px;
+    }
+    
+    .content-container {
+      max-width: 650px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    .title {
+      margin: 0;
+      padding: 0;
+      font-size: 36px;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      line-height: 1.2em;
+      color: #333333;
+      width: 100%;
+      font-weight: bold;
+    }
+    .title-margin-top {
+      max-height: 12px;
+      width: 100%;
+      height: 12px;
+    }
+    .title-margin-bottom {
+      max-height: 42px;
+      width: 100%;
+      height: 42px;
+    }
+    .title-margin-left,
+    .title-margin-right {
+      width: 79px;
+      height: 100%;
+    }
+    
+    .subtitle-margin-bottom {
+      max-height: 18px;
+      width: 100%;
+      height: 18px;
+    }
+    
+    
+    .section-margin-before-title {
+      max-height: 24px;
+      min-height: 24px;
+      width: 100%;
+      height: 24px;
+    }
+    .section-margin-after-title {
+      max-height: 12px;
+      min-height: 12px;
+      width: 100%;
+      height: 12px;
+    }
+    .section-margin-after-copy {
+      max-height: 30px;
+      min-height: 30px;
+      width: 100%;
+      height: 30px;
+    }
+    .section-margin-after-picture {
+      max-height: 34px;
+      min-height: 34px;
+      width: 100%;
+      height: 34px;
+    }
+    
+    .hero-content-image {
+      max-width: 654px;
+      width: 100% !important;
+      background-color: #999999;
+    }
+    .content-image {
+      max-width: 568px;
+      width: 100% !important;
+      background-color: #999999;
+    }
+    
+    .hero-caption {
+      color: #aaaaaa;
+      padding: 0 0 0;
+      max-width: 430px;
+    }
+    
+    .content-copy {
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 17px !important;
+      max-width: 480px;
+      width: 92%;
+      line-height: 1.5em;
+      color: #333333;
+      margin-top: 0;
+      margin-bottom: 0;
+      padding: 0 4%;
+      box-sizing: border-box;
+      margin: 0 auto;
+    }
+    
+    .content-copy p {
+      font-size: 17px !important;
+    }
+    .content-copy-margin-top,
+    .content-copy-margin-bottom {
+      max-height: 24px;
+      width: 100%;
+      height: 24px;
+    }
+    .content-copy-margin-left,
+    .content-copy-margin-right {
+      width: 79px;
+      height: 100%;
+    }
+    .content-copy a {
+      color: #aaaaaa;
+      text-decoration: underline;
+    }
+    
+    .wanted-button {
+      max-width: 240px;
+      min-width: 240px;
+      max-height: 240px;
+      min-height: 47px;
+      width: 240px;
+      height: 47px;
+      color: #111;
+      font-weight: bold;
+      line-height: 250%;
+    }
+    
+    .stylist-profile {
+      max-width: 102px;
+      min-width: 102px;
+      max-height: 102px;
+      min-height: 102px;
+      width: 102px;
+      height: 102px;
+    }
+    
+    /************************
+    Footer
+    ************************/
+    
+    .footer {
+      max-width: 570px;
+      margin-left: auto;
+      margin-right: auto;
+      border-top: 1px solid #d8d8d8;
+    }
+    
+    .footer p {
+      font-size: 12px !important;
+      color: #aaaaaa;
+    }
+    
+    .footer a {
+      color: #aaaaaa !important; /* This is for iOS where addresses are automatically linked to */
+    }
+    
+    .footer .email-link {
+      color: #aaaaaa;
+      text-decoration: underline;
+    }
+    
+    .footer,
+    .footer td {
+      background-color: transparent;
+    }
+    
+    .footer-margin-top {
+      max-height: 32px;
+      width: 100%;
+      height: 32px;
+    }
+    
+    /************************
+    Headings sections
+    This is for the copy that's width constrained sitting between wider images. Examples in dripfeed day 0.
+    ************************/
+    
+    .section-heading,
+    .add-to-contacts
+    {
+      max-width: 290px;
+      width: 290px !important;
+    }
+    
+    .section-heading .section-heading-left,
+    .add-to-contacts .add-to-contacts-left
+    {
+      min-width: 41px;
+      padding-right: 17px;
+      vertical-align: top;
+    }
+    
+    .section-heading .roundel,
+    .add-to-contacts .add-contact-icon
+    {
+      width: 41px !important;
+      max-width: none !important;
+    }
+    
+    .add-to-contacts .add-contact-icon {
+      width: 102px !important;
+      max-width: none !important;
+      display: inline-block;
+    }
+    
+    .section-heading a {
+      color: #AAAAAA;
+      text-decoration: underline;
+    }
+    
+    .add-to-contacts-margin-bottom {
+      height: 70px;
+    }
+    
+    
+      .hidden {
+      display: none; }
+    
+      body {
+        font-family: "Relative", "Akzidenz Grotesk", "Helvetica Neue", Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        font-size: 14px; }
+    
+      h1, h2, h3 {
+        font-weight: normal; }
+    
+      h1 {
+        color: #333;
+        font-size: 32px;
+      }
+    
+      h3 {
+        font-size: 18px;
+        color: #333; }
+    
+      .subtitle {
+        margin: 0;
+        margin-top: 0;
+        margin-bottom: 0;
+        padding: 0;
+        font-size: 24px;
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        line-height: 1.3em;
+        color: #333333;
+        width: 100%; }
+    
+      /* Puts headline in a table that's stretched and centered.
+        Uses spacer gifs to provide vertical spacing */
+      .headline-centered {
+        width: 100%;
+        text-align: center;
+      }
+    
+      .small-title {
+        width: 100%;
+        text-align: center;
+        text-transform: uppercase;
+        font-weight: bold;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        font-size: 16px;
+        color: #555555;
+      }
+    
+      .content-copy {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+    
+      .email-primary-cta {
+        background: #000;
+        border-radius: 3px;
+        color: #fff;
+        display: inline-block;
+        font-size: 16px;
+        font-weight: bold;
+        text-transform: uppercase;
+        border: 15px solid #000;
+        padding-left: 20px;
+        padding-right: 20px;
+        text-align: center; }
+        .email-primary-cta img {
+          display: inline;
+          margin-left: 5px;
+          vertical-align: 9%; }
+    
+      hr {
+        border: none;
+        height: 1px;
+        background: #dedede;
+        display: block;
+        margin-top: 25px;
+        margin-bottom: 25px;
+      }
+    
+      @media (max-width: 600px) {
+        .container {
+          max-width: 320px !important;
+        }
+    
+        h1 {
+          font-size: 24px !important;
+        }
+    
+        .email-primary-cta {
+          border: none !important;
+          display: block !important;
+          font-size: 14px !important;
+          padding: 10px !important;
+        }
+    
+        .email-primary-cta img {
+          vertical-align: 0;
+        }
+    
+        .content-copy {
+          font-size: 14px !important;
+        }
+      }
+  </style>
+
+</head>
+
+
+<body bgcolor="#f0f0f0" style="-webkit-font-smoothing:antialiased; background-color:#f0f0f0; color:#888; font-family:&quot;Relative&quot;, &quot;Akzidenz Grotesk&quot;, &quot;Helvetica Neue&quot;, Arial, sans-serif; font-size:14px; height:100%; margin:0; width:100%"
+  height="100%" width="100%">
+  <table align="center" cellpadding="0" cellspacing="0" border="0" width="100%">
+    <tbody>
+      <tr>
+        <td style="background-color:#f0f0f0" bgcolor="#f0f0f0">&nbsp;</td>
+        <td align="center" width="600" style="background-color:#f0f0f0; max-width:600px" bgcolor="#f0f0f0">
+          <!--[if gt mso 11]>
+        <div style="width: 600px">
+      <![endif]-->
+
+          <div class="container" style="clear:both; display:block; font-family:&quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; margin:0 auto; max-width:600px; text-align:center; width:100%" align="center" width="100%">
+
+            <div style="color:#F4F4F4; display:none; font-family:&quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-size:1px; line-height:1px; max-height:0; max-width:0; opacity:0; overflow:hidden">
+              WeConnect provides a platform that brings businesses and individuals together. This platform creates awareness for businesses and gives the users the ability to write reviews about the businesses they have interacted with. 
+            </div>
+
+
+            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="header" style="margin-left:auto; margin-right:auto">
+              <tbody>
+                <tr>
+                  <td style="background-color:#f0f0f0" bgcolor="#f0f0f0"></td>
+                </tr>
+                <tr>
+                  <td align="center" style="background-color:#f0f0f0" bgcolor="#f0f0f0">
+                    <a href="{{ url_for('business.read_all_businesses') }}" style="border:0 none; color:#5070e3; font-size: 55px; text-decoration:none" target="_blank">WeConnect
+                    </a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+
+            <hr style="background:#dedede; border:none; display:block; height:1px; margin-bottom:25px; margin-top:25px" height="1">
+
+            <h1 style="color:#333; font-size:32px; font-weight:normal; line-height:1.1; margin-bottom:15px">You’re almost there</h1>
+
+
+            <p class="content-copy" style="box-sizing:border-box; color:#333; font-family:&quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-size:17px; font-weight:normal; line-height:1.5em; margin:0 auto; margin-bottom:20px; margin-top:0; max-width:480px; padding:0 4%; text-align:center; width:92%"
+              width="92%" align="center">
+              We know our registration process takes a few minutes, we hope it’ll be worth your while …
+            </p>
+            <p class="content-copy" style="box-sizing:border-box; color:#333; font-family:&quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-size:17px; font-weight:normal; line-height:1.5em; margin:0 auto; margin-bottom:20px; margin-top:0; max-width:480px; padding:0 4%; text-align:center; width:92%"
+              width="92%" align="center">
+              Click link below to activate your account and you will soon be reunited with all businesses in WeConnect.
+            </p>
+
+
+            <a class="email-primary-cta" href="{{ url_for('{}.verify'.format(path), key=hash_key, name=name, _external=True) }}" style="background:#5070e3; border:15px solid #5070e3; border-radius:3px; color:#fff; display:inline-block; font-size:16px; font-weight:bold; padding-left:20px; padding-right:20px; text-align:center; text-decoration:none; text-transform:uppercase"
+              align="center" target="_blank">
+              <!--[if mso]>&nbsp;<![endif]-->Activate<span style="white-space: nowrap;">&nbsp;<img src="https://d1xx3pvec9nqb7.cloudfront.net/media/images/emails/cta-more-triangle.2c95c8d0cc68.png" width="4" height="7" alt="" style="border:0 none; display:inline; margin-left:5px; max-width:100%; vertical-align:9%" valign="9%"></span>
+              <!--[if mso]>&nbsp;<![endif]-->
+            </a>
+
+
+            <br><br><br><br>
+
+
+            <table width="100%" cellpadding="0" cellspacing="0" border="0" class="footer" style="background-color:transparent; border-top:1px solid #d8d8d8; margin-left:auto; margin-right:auto; max-width:570px" bgcolor="transparent">
+              <tbody>
+                <tr>
+                  <td style="background-color:transparent" bgcolor="transparent"><img src="https://d1xx3pvec9nqb7.cloudfront.net/media/images/emails/1px.325472601571.gif" alt="" class="footer-margin-top" style="border:0 none; display:block; height:32px; max-height:32px; max-width:100%; width:100%" height="32" width="100%"></td>
+                </tr>
+                <tr>
+                  <td align="center" style="background-color:transparent" bgcolor="transparent">
+                    <p style="color:#aaa; font-family:&quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-size:12px; font-weight:normal; line-height:1.6; margin-bottom:10px">
+                      If you have any questions, please email us at <a class="email-link" href="mailto:support@thread.com" style="border:0 none; color:#aaa; text-decoration:underline" target="_blank">victorjambo@live.com</a>.
+                    </p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+          </div>
+          <!-- /.container -->
+
+          <!--[if gt mso 11]>
+        </div>
+      <![endif]-->
+
+        </td>
+        <td style="background-color:#f0f0f0" bgcolor="#f0f0f0">&nbsp;</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- See: https://css-tricks.com/override-gmail-mobile-optimized-email/ -->
+  <div id="gmail-force-desktop" style="color:#fff; display:none; font-family:&quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; line-height:0; white-space:nowrap">
+    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  </div>
+
+
+</body>

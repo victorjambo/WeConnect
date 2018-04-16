@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  	<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>WeConnect :: Profile</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,400i" rel="stylesheet"> 
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="./assets/css/styles.css">
+  </head>
+
+  <body>
+  	<!-- Navigation -->
+    <nav class="navbar navbar-default navbar-custom navbar-override navbar-fixed-top">
+      <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+            <span class="sr-only">Toggle navigation</span>
+            Menu <i class="fa fa-bars"></i>
+          </button>
+          <a href="./index.html" class="navbar-brand" id="navbar-logo">
+            We<span class="txt-shadow">Connect</span>
+          </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="./index.html">Home</a></li>
+            <li><a href="./newbusiness.html">new business</a></li>
+            <li class="dropdown"><a href="./signup.html">Register</a></li>
+            <li><a href="./login.html">login</a></li>
+          </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container -->
+    </nav>
+
+   
+    <div class="container push-profile">
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="col-md-4 col-sm-6 col-xs-12 ">    
+            <div class="float-left">
+              <img src="./assets/images/marvel.jpg" alt="" class="img-responsive shadow">
+            </div>
+            <div class="push">
+            	<a href="./editbusiness.html" class="btn btn-warning">Edit</a>
+            	<a href="./editbusiness.html" class="btn btn-danger">Delete Business</a>
+            </div>
+          </div>
+          <div class="col-md-8 col-sm-6 col-xs-12">
+            <div class="overview bucket">
+            	<h2>Overview</h2>
+              <div class="overview-info">
+                <label>Location: </label>
+                <span class="value">Nairobi, Kenya</span>
+              </div>
+              <div class="overview-info">
+                <label>Category: </label>
+                <span class="value">Telecommunication</span>
+              </div>
+              <div class="overview-info">
+                <label>Business website: </label>
+                <span class="value">www.safcom.com</span>
+              </div>
+            </div>
+
+            <div class="about bucket">
+              <h2>About Safaricom</h2>
+              <div class="about-txt">
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repellendus nulla nesciunt, dignissimos, repudiandae consequuntur eius quod. Quam delectus, totam distinctio, nam officiis eius sit, maiores modi sunt laboriosam rem dignissimos.</p>
+              </div>              
+            </div>
+
+            <div class="reviews bucket">
+            	<h2>Reviews</h2>
+            	<hr>
+            	<div class="review">
+            		<h3 class="title">Awesome services</h3>
+            		<div class="review-body">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cum repellendus, praesentium voluptatum impedit, quam temporibus dolorem, beatae maxime quia debitis porro soluta? Fugiat illo quas asperiores eos, perferendis. Veritatis, expedita.</div>
+            	</div>
+            	<hr>
+            	<div class="review">
+            		<h3 class="title">Slow internet</h3>
+            		<div class="review-body">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cum repellendus, praesentium voluptatum impedit, quam temporibus dolorem, beatae maxime quia debitis porro soluta? Fugiat illo quas asperiores eos, perferendis. Veritatis, expedita.</div>
+            	</div>
+            	<hr>
+            	<div class="review">
+            		<h3 class="title">M-Pesa services</h3>
+            		<div class="review-body">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cum repellendus, praesentium voluptatum impedit, quam temporibus dolorem, beatae maxime quia debitis porro soluta? Fugiat illo quas asperiores eos, perferendis. Veritatis, expedita.</div>
+            	</div>
+            </div>
+
+            <div class="add-review bucket">
+            	<h2>Give us feedback</h2>
+            	<div class="review-body">
+            		<form action="" method="post">
+            			<div class="form-group">
+			              <label for="description">About business</label>
+			              <textarea class="form-control" cols="50" rows="6"></textarea>
+			            </div>
+			            <div class="form-group">
+			              <button type="submit" class="btn btn-primary">
+			                <i class="fa fa-btn fa-pencil"></i> Submit
+			              </button>
+			            </div>
+            		</form>
+            	</div>
+            </div>
+
+          </div>    
+        </div>
+      </div>
+    </div>
+
+
+    <script defer src="https://use.fontawesome.com/releases/v5.0.7/js/all.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>       
+  </body>
+</html>
