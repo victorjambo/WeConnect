@@ -80,9 +80,6 @@ def create_business(current_user):
     """
     data = request.get_json()
 
-    if not biz_name_regex.match(data['name']):
-        return jsonify({'warning': 'Please provide name with more characters'})
-
     # Check if there is an existing business with same name
     if db.session.query(
         db.exists().where(Business.name == data['name'])

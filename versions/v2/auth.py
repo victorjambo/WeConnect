@@ -98,7 +98,7 @@ def validate_new_password(f):
         if not password_regex.match(data['password']):
             return jsonify({
                 'warning': 'Provide strong password'
-            })
+            }), 400
         return f(*args, **kwargs)
     return wrap
 
@@ -162,7 +162,7 @@ def login():
         # then creates a token that expires in 30 min
         session['logged_in'] = True
         session['username'] = auth['username']
-        exp_time = datetime.datetime.utcnow() + datetime.timedelta(minutes=999)
+        exp_time = datetime.datetime.utcnow() + datetime.timedelta(minutes=30)
         token = jwt.encode(
             {
                 'id': user.id,
@@ -191,8 +191,8 @@ def reset_password(current_user):
 
     user = User.query.get(current_user)
 
-    if session['username'] != user.username:
-        return jsonify({'warning': 'Forbidden session'}), 400
+    # if session['username'] != user.username:
+    #     return jsonify({'warning': 'Forbidden session'}), 400
 
     if sha256_crypt.verify(data['old_password'], user.password):
         user.password = sha256_crypt.encrypt(str(data['password']))
