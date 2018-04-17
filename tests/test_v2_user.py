@@ -7,7 +7,7 @@ from versions.v2.models import User, db, Business
 class TestUser(unittest.TestCase):
     def setUp(self):
         """Creates the app as test client"""
-        app.config.from_object('config.Testing')
+        app.config.from_object('config.Development')
         self.app = app.test_client()
         self.new_user_info = {
             'username': 'victorjambo',
