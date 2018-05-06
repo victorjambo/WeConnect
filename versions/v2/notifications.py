@@ -30,7 +30,7 @@ def get_notifications(current_user):
                     'created_at': notification.created_at,
                     'read_at': notification.read_at,
                     'act': notification.actor + notification.action,
-                    'url': '/api/v2/businesses/{}#review-{}'.format(notification.business_id, notification.review_id)
+                    'url': '/business/{}#review-{}'.format(notification.business_id, notification.review_id)
                 } for notification in unread
             ]}), 200
 

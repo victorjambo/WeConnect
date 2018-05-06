@@ -5,7 +5,7 @@ from flask_jsonpify import jsonify
 from flask import request, Blueprint
 from versions.utils import find_business_by_id
 from versions import business_instance, login_required
-from versions.utils import check_if_biz_name_taken, biz_name_regex
+from versions.utils import check_if_biz_name_taken, biz_name_regex, find
 
 mod = Blueprint('business', __name__)
 
@@ -46,13 +46,12 @@ def create_business(current_user):
     return jsonify({'warning': 'Could not create new business'}), 401
 
 
-@mod.route('/business/<businessId>', methods=['GET'])
+@mod.route('/business/<businessId>')
 def read_business(businessId):
-    """Reads Business given a business id"""
-    response = find_business_by_id(businessId)
-    if response:
-        return jsonify({'business': response}), 200
-    return jsonify({'warning': 'Business Not Found'}), 404
+    """GET Business by id
+    Returns single business
+    """
+    return find('find_business_by_id', businessId)
 
 
 @mod.route('/business/<businessId>', methods=['PUT'])

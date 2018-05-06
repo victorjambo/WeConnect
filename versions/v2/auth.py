@@ -166,6 +166,7 @@ def login():
         token = jwt.encode(
             {
                 'id': user.id,
+                'username': user.username,
                 'exp': exp_time
             }, os.getenv("SECRET")
         )
@@ -215,7 +216,7 @@ def forgot_password():
         user.password = sha256_crypt.encrypt(new_password)
         user.save()
         send_forgot_password_email([data['email']], new_password)
-        return jsonify({'warning': 'Email has been with reset password'}), 200
+        return jsonify({'success': 'Email has been with reset password'}), 200
 
     return jsonify({'warning': 'No user exists with that email'}), 409
 

@@ -1,6 +1,6 @@
 from versions import user_instance
 from flask import jsonify, Blueprint
-from versions.utils import find_user_by_id, find_business_by_user
+from versions.utils import find_user_by_id, find_business_by_user, find
 
 
 mod = Blueprint('get_user', __name__)
@@ -18,16 +18,10 @@ def read_user(user_id):
     """Reads user given an ID
     if user is not provided then user current user ID
     """
-    response = find_user_by_id(user_id)
-    if response:
-        return jsonify({'user': response}), 200
-    return jsonify({'warning': 'user does not exist'}), 404
+    return find('find_user_by_id', user_id)
 
 
 @mod.route('/user/<user_id>/businesses', methods=['GET'])
 def read_user_businesses(user_id):
     """Read all businesses owned by this user"""
-    response = find_business_by_user(user_id)
-    if response:
-        return jsonify({'user': response}), 200
-    return jsonify({'warning': 'user does not own a business'}), 404
+    return find('find_business_by_user', user_id)

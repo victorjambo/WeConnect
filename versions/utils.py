@@ -110,17 +110,17 @@ def validate(data):
     if not username_regex.match(data['username']):
         return jsonify({
             'warning': 'Provide username with more than 4 characters'
-        })
+        }), 400
 
     if not email_regex.match(data['email']):
         return jsonify({
             'warning': 'Please provide valid email'
-        })
+        }), 400
 
     if not password_regex.match(data['password']):
         return jsonify({
             'warning': 'Please provide strong password'
-        })
+        }), 400
 
 
 # Send Mail
@@ -151,3 +151,19 @@ def send_forgot_password_email(recipients, new_password):
         new_password=new_password
     )
     mail.send(msg)
+
+def find(functionType, ID):
+    """find"""
+    func = {
+        'find_user_by_id': [
+            find_user_by_id, 'user does not exist', 'user' ],
+        'find_business_by_user': [
+            find_business_by_user, 'user does not own a business', 'user' ],
+        'find_business_by_id': [
+            find_business_by_id, 'Business Not Found', 'business']
+    }
+    data = func[functionType]
+    response = data[0](ID)
+    if response:
+        return jsonify({data[2]: response}), 200
+    return jsonify({'warning': data[1]}), 404
