@@ -1,6 +1,6 @@
 from versions import user_instance
 from flask import jsonify, Blueprint
-from versions.utils import find_business_by_user, find
+from versions.utils import find
 
 
 mod = Blueprint('get_user', __name__)

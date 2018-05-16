@@ -142,7 +142,7 @@ def logout(current_user):
     if token_from_request in instance_tokens:
         instance_tokens[token_from_request] = 'invalid'
         return jsonify({'success': 'logged out'}), 200
-    return jsonify({'message': 'Invalid token!'}), 401
+    return jsonify({'warning': 'Invalid token!'}), 401
 
 
 @mod.route("/verify")
