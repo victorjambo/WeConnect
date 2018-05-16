@@ -48,11 +48,11 @@ def login_required(f):
             return jsonify({
                 'warning': 'Missing token. Please register or login'
             }), 401
-            
+
         is_token_valid = versions.v2.models.AuthToken.query.filter_by(token=token).first()
-        
+
         is_token_valid = is_token_valid.valid if is_token_valid else True
-        
+
         if token in user_instance.tokens and user_instance.tokens[token] == 'invalid' or not is_token_valid:
             return jsonify({ 'warning': 'Login again'}), 401
 

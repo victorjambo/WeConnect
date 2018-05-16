@@ -91,7 +91,7 @@ def login():
                 'exp': exp_time
             }, os.getenv("SECRET")
         )
-        user_instance.tokens[token.decode('UTF-8')] = 'valid' 
+        user_instance.tokens[token.decode('UTF-8')] = 'valid'
         return jsonify({
             'token': token.decode('UTF-8'),
             'success': 'Login success'
