@@ -61,27 +61,6 @@ class TestBusinessV2(unittest.TestCase):
         ).scalar()
         self.assertTrue(exists)
 
-    def test_validate_create_business_name(self):
-        """Create business with bad name format
-        """
-        business_data = {
-            "name": "    ",
-            "category": "Tv",
-            "location": "New york",
-            "bio": "watch it again"
-        }
-        self.register_user()
-        response = self.app.post(
-            '/api/v2/businesses/',
-            data=json.dumps(business_data),
-            headers={
-                "content-type": "application/json",
-                "x-access-token": self.token()
-            }
-        )
-        output = json.loads(response.get_data(as_text=True))['warning']
-        self.assertEqual(output, 'Please provide name with more characters')
-
     def test_create_business_if_name_taken(self):
         """Test create business if name is taken
         """

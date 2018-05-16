@@ -64,7 +64,7 @@ def login():
     user = find_user_by_name(auth['username'].lower())
 
     if not user:
-        return jsonify({'warning': 'Incorrect username'}), 401
+        return jsonify({'warning': 'username does not exist'}), 401
 
     password = user['password'] if user else None
     candidate_password = auth['password']
@@ -84,13 +84,14 @@ def login():
         # then creates a token that expires in 30 min
         session['logged_in'] = True
         session['username'] = auth['username']
-        exp_time = datetime.datetime.utcnow() + datetime.timedelta(minutes=999)
+        exp_time = datetime.datetime.utcnow() + datetime.timedelta(minutes=30)
         token = jwt.encode(
             {
                 'id': user['id'],
                 'exp': exp_time
             }, os.getenv("SECRET")
         )
+        user_instance.tokens[token.decode('UTF-8')] = 'valid'
         return jsonify({
             'token': token.decode('UTF-8'),
             'success': 'Login success'
@@ -136,10 +137,12 @@ def reset_password(current_user):
 @login_required
 def logout(current_user):
     """Destroy user session"""
-    if session and session['logged_in']:
-        session.clear()
+    token_from_request = request.headers['x-access-token']
+    instance_tokens = user_instance.tokens
+    if token_from_request in instance_tokens:
+        instance_tokens[token_from_request] = 'invalid'
         return jsonify({'success': 'logged out'}), 200
-    return jsonify({'warning': 'Already logged out'}), 404
+    return jsonify({'warning': 'Invalid token!'}), 401
 
 
 @mod.route("/verify")

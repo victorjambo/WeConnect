@@ -25,7 +25,7 @@ GET: verify/Activate email
 app.url_map
 """
 from flask import Blueprint, jsonify, request, session
-from versions.v2.models import User, db
+from versions.v2.models import User, db, AuthToken
 from versions.utils import check_keys, send_email, send_forgot_password_email
 from versions.utils import username_regex, email_regex, password_regex
 from passlib.hash import sha256_crypt
@@ -98,7 +98,7 @@ def validate_new_password(f):
         if not password_regex.match(data['password']):
             return jsonify({
                 'warning': 'Provide strong password'
-            })
+            }), 400
         return f(*args, **kwargs)
     return wrap
 
@@ -162,13 +162,15 @@ def login():
         # then creates a token that expires in 30 min
         session['logged_in'] = True
         session['username'] = auth['username']
-        exp_time = datetime.datetime.utcnow() + datetime.timedelta(minutes=999)
+        exp_time = datetime.datetime.utcnow() + datetime.timedelta(minutes=30)
         token = jwt.encode(
             {
                 'id': user.id,
+                'username': user.username,
                 'exp': exp_time
             }, os.getenv("SECRET")
         )
+        AuthToken(token.decode('UTF-8')).save()
         return jsonify({
             'token': token.decode('UTF-8'),
             'success': 'Login success'
@@ -191,9 +193,6 @@ def reset_password(current_user):
 
     user = User.query.get(current_user)
 
-    if session['username'] != user.username:
-        return jsonify({'warning': 'Forbidden session'}), 400
-
     if sha256_crypt.verify(data['old_password'], user.password):
         user.password = sha256_crypt.encrypt(str(data['password']))
         user.save()
@@ -215,7 +214,7 @@ def forgot_password():
         user.password = sha256_crypt.encrypt(new_password)
         user.save()
         send_forgot_password_email([data['email']], new_password)
-        return jsonify({'warning': 'Email has been with reset password'}), 200
+        return jsonify({'success': 'Email has been sent with new password'}), 200
 
     return jsonify({'warning': 'No user exists with that email'}), 409
 
@@ -224,10 +223,13 @@ def forgot_password():
 @login_required
 def logout(current_user):
     """Destroy user session"""
-    if session and session['logged_in']:
-        session.clear()
+    token_from_request = request.headers['x-access-token']
+    instance_tokens = AuthToken.query.filter_by(token=token_from_request).first()
+    if instance_tokens:
+        instance_tokens.valid = False
+        instance_tokens.save()
         return jsonify({'success': 'logged out'}), 200
-    return jsonify({'warning': 'Already logged out'}), 404
+    return jsonify({'message': 'Invalid token!'}), 401
 
 
 @mod.route("/verify")

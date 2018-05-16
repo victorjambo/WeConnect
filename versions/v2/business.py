@@ -11,7 +11,6 @@ DELETE: Delete single business
 from flask import Blueprint, jsonify, request
 from versions.v2.models import Business, db, User
 from versions import login_required
-from versions.utils import biz_name_regex
 from functools import wraps
 
 
@@ -79,9 +78,6 @@ def create_business(current_user):
     test if actually saved
     """
     data = request.get_json()
-
-    if not biz_name_regex.match(data['name']):
-        return jsonify({'warning': 'Please provide name with more characters'})
 
     # Check if there is an existing business with same name
     if db.session.query(

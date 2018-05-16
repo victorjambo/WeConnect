@@ -159,7 +159,7 @@ class TestUser(unittest.TestCase):
             content_type='application/json'
         )
         output = json.loads(response.get_data(as_text=True))['warning']
-        self.assertEqual(output, 'Incorrect username')
+        self.assertEqual(output, 'username does not exist')
 
     def test_cannot_login(self):
         """Test if user cannot login
@@ -221,7 +221,7 @@ class TestUser(unittest.TestCase):
         self.assertEqual(response.status_code, 401)
 
         output = json.loads(response.get_data(as_text=True))['warning']
-        self.assertEqual(output, 'Incorrect username')
+        self.assertEqual(output, 'username does not exist')
 
     def test_reset_pass_with_no_token(self):
         """Send reset password with no token in header
@@ -263,10 +263,10 @@ class TestUser(unittest.TestCase):
                 "x-access-token": self.token
             }
         )
-        self.assertEqual(response2.status_code, 404)
+        self.assertEqual(response2.status_code, 401)
 
         output = json.loads(response2.get_data(as_text=True))['warning']
-        self.assertEqual(output, 'Already logged out')
+        self.assertEqual(output, 'Login again')
 
     def test_read_all_users(self):
         """Test Get all users route

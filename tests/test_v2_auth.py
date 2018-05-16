@@ -307,10 +307,10 @@ class TestAuth(unittest.TestCase):
                 "x-access-token": token
             }
         )
-        self.assertEqual(response2.status_code, 404)
+        self.assertEqual(response2.status_code, 401)
 
         output = json.loads(response2.get_data(as_text=True))['warning']
-        self.assertEqual(output, 'Already logged out')
+        self.assertEqual(output, 'Login again')
 
     def test_forgot_password(self):
         """Test when user has forgotten password"""
@@ -322,7 +322,7 @@ class TestAuth(unittest.TestCase):
             content_type='application/json'
         )
         self.assertEqual(response.status_code, 200)
-        self.assertIn('Email has been with reset password', str(response.data))
+        self.assertIn('Email has been sent with new password', str(response.data))
 
     def test_unsuccessful_forgot_password(self):
         """Test email not found at forgot password"""

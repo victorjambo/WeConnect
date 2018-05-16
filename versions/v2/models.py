@@ -219,3 +219,21 @@ class Notification(db.Model):
         """Save a review to the database"""
         db.session.add(self)
         db.session.commit()
+
+class AuthToken(db.Model):
+    """Stores all tokens during login"""
+    __tablename__ = 'authtokens'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    token = db.Column(db.String(), nullable=False)
+    valid = db.Column(db.Boolean, nullable=False)
+
+    def __init__(self, token, valid=True):
+        self.token = token
+        self.valid = valid
+
+    def save(self):
+        """Save a review to the database"""
+        db.session.add(self)
+        db.session.commit()
+    
