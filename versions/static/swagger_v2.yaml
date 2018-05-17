@@ -12,7 +12,7 @@ schemes:
   - https
 externalDocs:
   description: "Check out Documentation for v1"
-  url: "https://weconnect-app.herokuapp.com/version1"
+  url: "https://weconnect-app.herokuapp.com/"
 produces:
   - application/json
 consumes:
@@ -35,9 +35,11 @@ paths:
         201:
           description: User created, Check mail box to activate account
         409:
-          description: Username / Email already taken
+          description: Username / Email already taken OR Username has already been taken
         401:
           description: Could not register user
+        400:
+          description: All Fields Required
       tags:
         - Auth
         
@@ -147,7 +149,7 @@ paths:
       tags:
         - Users
         
-  /user/{user_id}:
+  /users/{user_id}:
     x-summary: Get user info
     get:
       summary: List user info
@@ -168,7 +170,7 @@ paths:
       tags:
         - Users
 
-  /user/{user_id}/businesses:
+  /users/{user_id}/businesses:
     x-summary: Get businesses of user
     get:
       summary: List businesses by user ID
@@ -189,7 +191,7 @@ paths:
       tags:
         - Users
         
-  /businesses:
+  /businesses/:
     x-summary: Get and Post business
     get:
       summary: Get all businesses
@@ -229,7 +231,7 @@ paths:
         - Businesses
     
     
-  /business/{businessId}:
+  /businesses/{businessId}:
     x-summary: Get, Put and Delete business
     get:
       summary: get single business
@@ -402,6 +404,25 @@ paths:
           description: Review Not found
       tags: 
        - Reviews
+       
+  /notifications:
+    x-summary: Get notifications for current user
+    get:
+      summary: get notifications
+      description: get notifications
+      parameters:
+        - in: header
+          name: x-access-token
+          description: Auth token in header
+          required: true
+          type: string
+      responses:
+        200:
+          description: List notifications
+        404:
+          description: user has no notifications
+      tags: 
+        - Notification
 
 
 
@@ -415,6 +436,7 @@ definitions:
       - email
       - username
       - password
+      - fullname
     properties:
       email:
         type: string
@@ -422,10 +444,13 @@ definitions:
         type: string
       password:
         type: string
+      fullname:
+        type: string
     example:
       email: victorjambo@live.com
       username: victorjambo
       password: password1234
+      fullname: victor mutai
 
   Login:
     type: object
@@ -435,10 +460,11 @@ definitions:
     properties:
       username:
         type: string
-        default: 'victorjambo'
       password: 
         type: string
-        default: 'password1234'
+    example:
+      username: mutai
+      password: password1234
         
   Reset:
     type: object
@@ -469,13 +495,16 @@ definitions:
     required: 
       - name
       - location
+      - logo
       - category
       - bio
     properties:
       name:
         type: string
       location: 
-        type: string 
+        type: string
+      logo: 
+        type: string
       category:
         type: string
       bio:
@@ -483,7 +512,8 @@ definitions:
     example:
       name: Crown Paints
       location: New York
-      Category: Construction
+      logo: 123445
+      category: Construction
       bio: Lorem ipsum dolor sit amet, consectetur adipisicing elit
 
   Review:

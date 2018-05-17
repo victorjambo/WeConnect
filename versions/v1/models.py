@@ -6,6 +6,7 @@ class User(object):
     """user"""
     def __init__(self):
         self.users = []
+        self.tokens = {}
 
     def create_user(self, args):
         args['password'] = sha256_crypt.encrypt(str(args['password']))

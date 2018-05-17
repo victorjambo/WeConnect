@@ -11,7 +11,6 @@ DELETE: Delete single business
 from flask import Blueprint, jsonify, request
 from versions.v2.models import Business, db, User
 from versions import login_required
-from versions.utils import biz_name_regex
 from functools import wraps
 
 
