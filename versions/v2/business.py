@@ -12,6 +12,7 @@ from flask import Blueprint, jsonify, request
 from versions.v2.models import Business, db, User
 from versions import login_required
 from functools import wraps
+from versions.utils import existing_module, get_in_module
 
 
 mod = Blueprint('business_v2', __name__)
@@ -23,7 +24,7 @@ def precheck(f):
     """
     @wraps(f)
     def wrap(*args, **kwargs):
-        business = Business.query.get(kwargs['businessId'])
+        business = get_in_module('business', kwargs['businessId'])
 
         if not business:
             return jsonify({'warning': 'Business Not Found'}), 404
@@ -54,8 +55,7 @@ def read_all_businesses():
     if businesses:
         return jsonify({
             'businesses': [
-                {
-                    'id': business.id,
+                {   'id': business.id,
                     'name': business.name,
                     'logo': business.logo,
                     'location': business.location,
@@ -80,14 +80,12 @@ def create_business(current_user):
     data = request.get_json()
 
     # Check if there is an existing business with same name
-    if db.session.query(
-        db.exists().where(Business.name == data['name'])
-    ).scalar():
+    if existing_module('business', data['name']):
         return jsonify({
             'warning': 'Business name {} already taken'.format(data['name'])
         }), 409
 
-    business_owner = User.query.get(current_user)
+    business_owner = get_in_module('user', current_user)
 
     # create new business instances
     new_business = Business(
@@ -122,7 +120,7 @@ def create_business(current_user):
 @mod.route('/<businessId>', methods=['GET'])
 def read_business(businessId):
     """Reads Business given a business id"""
-    business = Business.query.get(businessId)
+    business = get_in_module('business', businessId)
 
     if business:
         return jsonify({
@@ -149,7 +147,7 @@ def update_business(current_user, businessId):
     confirms if current user is owner of business
     """
     data = request.get_json()
-    business = Business.query.get(businessId)
+    business = get_in_module('business', businessId)
 
     business.name = data['name']
     business.logo = data['logo']
@@ -185,13 +183,11 @@ def delete_business(current_user, businessId):
     """Deletes a business
     confirms if current user is owner of business
     """
-    business = Business.query.get(businessId)
+    business = get_in_module('business', businessId)
     name = business.name
     business.delete()
 
-    if not db.session.query(
-        db.exists().where(Business.name == name)
-    ).scalar():
+    if not existing_module('business', name):
         return jsonify({'success': 'Business Deleted'}), 200
 
     return jsonify({'warning': 'Business Not Deleted'}), 400

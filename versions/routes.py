@@ -5,7 +5,7 @@ from flask import render_template, jsonify
 def version2():
     """route for API documentation"""
     return render_template('version2.html')
-    
+
 @app.errorhandler(404)
 def page_not_found(e):
     return jsonify({'warning': '404, Endpoint not found'}), 404

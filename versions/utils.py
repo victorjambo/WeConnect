@@ -2,6 +2,7 @@ import re
 from flask_mail import Message
 from flask import jsonify, render_template
 from versions import mail
+from versions.v2.models import Business, db, User
 
 def check_keys(args, length):
     """Check if dict keys are provided
@@ -77,3 +78,22 @@ def send_forgot_password_email(recipients, new_password):
         new_password=new_password
     )
     mail.send(msg)
+
+def existing_module(module, name):
+    modules = { 'user': User, 'business': Business }
+    if db.session.query(
+            db.exists().where(modules[module].name == name)
+        ).scalar():
+        return True
+    return False
+    
+def get_in_module(module, businessId):
+    modules = { 'user': User, 'business': Business }
+    return modules[module].query.get(businessId)
+
+def check_email(email):
+    if db.session.query(
+            db.exists().where(User.email == email)
+        ).scalar():
+        return True
+    return False
