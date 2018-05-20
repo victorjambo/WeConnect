@@ -30,19 +30,36 @@ class TestReview(unittest.TestCase):
             content_type='application/json'
         )
         self.token = json.loads(resp.get_data(as_text=True))['token']
+        
 
     def test_create_review(self):
         """Create new review for a business
         """
+        business_data = {
+            "name": "Crown",
+            "category": "Construction",
+            "location": "NBO",
+            "bio": "if you like it crown it"
+        }
+        self.app.post(
+            '/api/v1/businesses',
+            data=json.dumps(business_data),
+            headers={
+                "content-type": "application/json",
+                "x-access-token": self.token
+            }
+        )
+
         initial_count = len(review_instance.reviews)
         response = self.app.post(
-            '/api/v1/business/1/reviews',
+            '/api/v1/businesses/1/reviews',
             data=json.dumps(self.new_review),
             headers={
                 "content-type": "application/json",
                 "x-access-token": self.token
             }
         )
+
         final_count = len(review_instance.reviews)
         self.assertEqual(response.status_code, 201)
         self.assertEqual(final_count - initial_count, 1)
@@ -56,14 +73,14 @@ class TestReview(unittest.TestCase):
         """Get reviews for business
         """
         self.app.post(
-            '/api/v1/business/1/reviews',
+            '/api/v1/businesses/1/reviews',
             data=json.dumps(self.new_review),
             headers={
                 "content-type": "application/json",
                 "x-access-token": self.token
             }
         )
-        resp = self.app.get('/api/v1/business/1/reviews')
+        resp = self.app.get('/api/v1/businesses/1/reviews')
         self.assertEqual(resp.status_code, 200)
         self.assertGreater(len(review_instance.reviews), 0)
 
@@ -118,7 +135,7 @@ class TestReview(unittest.TestCase):
             }
         )
         response = self.app.post(
-            '/api/v1/business/1/reviews',
+            '/api/v1/businesses/1/reviews',
             data=json.dumps(self.new_review),
             headers={
                 "content-type": "application/json",
@@ -126,7 +143,7 @@ class TestReview(unittest.TestCase):
             }
         )
         response = self.app.delete(
-            '/api/v1/business/1/reviews/1',
+            '/api/v1/businesses/1/reviews/1',
             headers={
                 "content-type": "application/json",
                 "x-access-token": token
@@ -157,7 +174,7 @@ class TestReview(unittest.TestCase):
         )
 
         self.app.post(
-            '/api/v1/business/1/reviews',
+            '/api/v1/businesses/1/reviews',
             data=json.dumps(self.new_review),
             headers={
                 "content-type": "application/json",
@@ -167,7 +184,7 @@ class TestReview(unittest.TestCase):
 
         initial = len(review_instance.reviews)
         response1 = self.app.delete(
-            '/api/v1/business/1/reviews/1',
+            '/api/v1/businesses/1/reviews/1',
             headers={
                 "content-type": "application/json",
                 "x-access-token": self.token
@@ -183,7 +200,7 @@ class TestReview(unittest.TestCase):
 
         # delete already deleted review
         response = self.app.delete(
-            '/api/v1/business/1/reviews/1',
+            '/api/v1/businesses/1/reviews/1',
             headers={
                 "content-type": "application/json",
                 "x-access-token": self.token

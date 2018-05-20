@@ -10,7 +10,7 @@ from versions.utils import check_if_biz_name_taken, biz_name_regex, find
 mod = Blueprint('business', __name__)
 
 
-@mod.route('/businesses', methods=['GET'])
+@mod.route('', methods=['GET'])
 def read_all_businesses():
     """Reads all Businesses"""
     if business_instance.businesses:
@@ -18,7 +18,7 @@ def read_all_businesses():
     return jsonify({'warning': 'No Businesses'}), 404
 
 
-@mod.route('/businesses', methods=['POST'])
+@mod.route('', methods=['POST'])
 @login_required
 def create_business(current_user):
     """Creates a business
@@ -40,13 +40,13 @@ def create_business(current_user):
     if business_instance.businesses[-1] == data:
         return jsonify({
             'success': 'successfully created business',
-            'user': business_instance.businesses[-1]
+            'business': business_instance.businesses[-1]
         }), 201
 
     return jsonify({'warning': 'Could not create new business'}), 401
 
 
-@mod.route('/business/<businessId>')
+@mod.route('/<businessId>')
 def read_business(businessId):
     """GET Business by id
     Returns single business
@@ -54,7 +54,7 @@ def read_business(businessId):
     return find('find_business_by_id', businessId)
 
 
-@mod.route('/business/<businessId>', methods=['PUT'])
+@mod.route('/<businessId>', methods=['PUT'])
 @login_required
 def update_business(current_user, businessId):
     """Updates a business given a business ID
@@ -107,7 +107,7 @@ def update_business(current_user, businessId):
     }), 201
 
 
-@mod.route('/business/<businessId>', methods=['DELETE'])
+@mod.route('/<businessId>', methods=['DELETE'])
 @login_required
 def delete_business(current_user, businessId):
     """Deletes a business

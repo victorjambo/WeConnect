@@ -10,7 +10,7 @@ from versions.utils import find_reviews_by_business_id, find_review_by_id
 mod = Blueprint('review', __name__)
 
 
-@mod.route('/business/<businessId>/reviews', methods=['POST'])
+@mod.route('/<businessId>/reviews', methods=['POST'])
 @login_required
 def create_review(current_user, businessId):
     """Create Review given a business ID
@@ -23,7 +23,7 @@ def create_review(current_user, businessId):
     return jsonify({'warning': 'Could not create new reviews'}), 401
 
 
-@mod.route('/business/<businessId>/reviews', methods=['GET'])
+@mod.route('/<businessId>/reviews', methods=['GET'])
 def read_reviews(businessId):
     """Reads all Review given a business ID"""
     business_reviews = find_reviews_by_business_id(businessId)
@@ -31,7 +31,7 @@ def read_reviews(businessId):
 
 
 @mod.route(
-    '/business/<businessId>/reviews/<reviewId>',
+    '/<businessId>/reviews/<reviewId>',
     methods=['DELETE']
 )
 @login_required
@@ -53,7 +53,7 @@ def delete_reviews(current_user, businessId, reviewId):
     return jsonify({'warning': 'Cannot delete review'}), 401
 
 
-@mod.route('/businesses/reviews', methods=['GET'])
+@mod.route('/reviews', methods=['GET'])
 @login_required
 def read_all_reviews(current_user):
     """Reads all Reviews

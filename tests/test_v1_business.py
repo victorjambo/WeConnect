@@ -72,7 +72,7 @@ class TestBusiness(unittest.TestCase):
 
         output = json.loads(response.get_data(as_text=True))
         self.assertEqual(output['success'], 'successfully created business')
-        self.assertEqual(output['user'], business_instance.businesses[-1])
+        self.assertEqual(output['business'], business_instance.businesses[-1])
 
     def test_validate_create_business_name(self):
         """Create business with bad name format
@@ -117,7 +117,7 @@ class TestBusiness(unittest.TestCase):
             "bio": "watch it again"
         }
         self.create_business(business_data)
-        response = self.app.get('/api/v1/business/1')
+        response = self.app.get('/api/v1/businesses/1')
         self.assertEqual(response.status_code, 200)
 
         output = json.loads(response.get_data(as_text=True))['business']
@@ -126,7 +126,7 @@ class TestBusiness(unittest.TestCase):
     def test_read_no_business(self):
         """Test 404 not found on business not existing
         """
-        response = self.app.get('/api/v1/business/60')
+        response = self.app.get('/api/v1/businesses/60')
         self.assertEqual(response.status_code, 404)
 
         output = json.loads(response.get_data(as_text=True))['warning']
@@ -149,7 +149,7 @@ class TestBusiness(unittest.TestCase):
         }
         self.create_business(business_data)
         response = self.app.put(
-            '/api/v1/business/1',
+            '/api/v1/businesses/1',
             data=json.dumps(update_business_data),
             headers={
                 "content-type": "application/json",
@@ -177,7 +177,7 @@ class TestBusiness(unittest.TestCase):
 
         # 1. Business not found
         response1 = self.app.put(
-            '/api/v1/business/45',
+            '/api/v1/businesses/45',
             data=json.dumps(self.update_business_info),
             headers={
                 "content-type": "application/json",
@@ -216,7 +216,7 @@ class TestBusiness(unittest.TestCase):
         )
         token = json.loads(response2_login.get_data(as_text=True))['token']
         response2 = self.app.put(
-            '/api/v1/business/1',
+            '/api/v1/businesses/1',
             data=json.dumps(update_business_data),
             headers={
                 "content-type": "application/json",
@@ -239,7 +239,7 @@ class TestBusiness(unittest.TestCase):
             "bio": ""
         }
         response3 = self.app.put(
-            '/api/v1/business/1',
+            '/api/v1/businesses/1',
             data=json.dumps(update_business_data3),
             headers={
                 "content-type": "application/json",
@@ -262,7 +262,7 @@ class TestBusiness(unittest.TestCase):
             "bio": ""
         }
         response4 = self.app.put(
-            '/api/v1/business/1',
+            '/api/v1/businesses/1',
             data=json.dumps(update_business_data4),
             headers={
                 "content-type": "application/json",
@@ -286,7 +286,7 @@ class TestBusiness(unittest.TestCase):
             "bio": ""
         }
         response5 = self.app.put(
-            '/api/v1/business/1',
+            '/api/v1/businesses/1',
             data=json.dumps(update_business_data5),
             headers={
                 "content-type": "application/json",
@@ -310,7 +310,7 @@ class TestBusiness(unittest.TestCase):
             "bio": ""
         }
         response6 = self.app.put(
-            '/api/v1/business/1',
+            '/api/v1/businesses/1',
             data=json.dumps(update_business_data6),
             headers={
                 "content-type": "application/json",
@@ -333,7 +333,7 @@ class TestBusiness(unittest.TestCase):
             "category": "Firebase"
         }
         response7 = self.app.put(
-            '/api/v1/business/1',
+            '/api/v1/businesses/1',
             data=json.dumps(update_business_data7),
             headers={
                 "content-type": "application/json",
@@ -375,7 +375,7 @@ class TestBusiness(unittest.TestCase):
         token = json.loads(response_login.get_data(as_text=True))['token']
         self.create_business(self.new_business_info)
         response = self.app.delete(
-            '/api/v1/business/1',
+            '/api/v1/businesses/1',
             headers={
                 "content-type": "application/json",
                 "x-access-token": token
@@ -392,7 +392,7 @@ class TestBusiness(unittest.TestCase):
         self.create_business(self.new_business_info)
         initial = len(business_instance.businesses)
         response = self.app.delete(
-            '/api/v1/business/1',
+            '/api/v1/businesses/1',
             headers={
                 "content-type": "application/json",
                 "x-access-token": self.token
@@ -409,7 +409,7 @@ class TestBusiness(unittest.TestCase):
         """Test delete already deleted business
         """
         response = self.app.delete(
-            '/api/v1/business/1',
+            '/api/v1/businesses/1',
             headers={
                 "content-type": "application/json",
                 "x-access-token": self.token

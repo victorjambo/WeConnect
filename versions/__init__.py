@@ -16,16 +16,12 @@ from flask import Flask, request, jsonify, render_template, session
 from versions.v1.models import User, Business, Review
 from flask_cors import CORS
 from flask_mail import Mail
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
 
 
 app = Flask(__name__)
 app.config.from_object('config.{}'.format(os.getenv('ENVIRON')))
 CORS(app)
 mail = Mail(app)
-db = SQLAlchemy(app)
-migrate = Migrate(app, db)
 
 
 user_instance = User()
@@ -49,11 +45,7 @@ def login_required(f):
                 'warning': 'Missing token. Please register or login'
             }), 401
 
-        is_token_valid = versions.v2.models.AuthToken.query.filter_by(token=token).first()
-
-        is_token_valid = is_token_valid.valid if is_token_valid else True
-
-        if token in user_instance.tokens and user_instance.tokens[token] == 'invalid' or not is_token_valid:
+        if token in user_instance.tokens and user_instance.tokens[token] == 'invalid':
             return jsonify({ 'warning': 'Login again'}), 401
 
         try:
@@ -71,49 +63,23 @@ def login_required(f):
         return f(current_user, *args, **kwargs)
     return wrap
 
-
-@app.route('/version1')
-def version1():
-    """route for API documentation"""
-    return render_template('version1.html')
-
-
 @app.route('/')
 def version2():
     """route for API documentation"""
-    return render_template('version2.html')
+    return render_template('version1.html')
     
 @app.errorhandler(404)
 def page_not_found(e):
-    return jsonify({'warning': '404, Endpoint not found'}), 404
-
-@app.errorhandler(500)
-def internal_server_error(e):
-    return jsonify({'warning': '500, Internal Server Error'}), 500
+    return jsonify({'warning': '404, not found'}), 404
 
 
 import versions.v1.user
 import versions.v1.get_user
 import versions.v1.business
 import versions.v1.review
-import versions.v2.models
-import versions.v2.auth
-import versions.v2.user
-import versions.v2.business
-import versions.v2.review
-import versions.v2.notifications
 
 # version 1 routes
 app.register_blueprint(versions.v1.user.mod, url_prefix='/api/v1/auth')
-app.register_blueprint(versions.v1.get_user.mod, url_prefix='/api/v1')
-app.register_blueprint(versions.v1.business.mod, url_prefix='/api/v1')
-app.register_blueprint(versions.v1.review.mod, url_prefix='/api/v1')
-
-# version 2 routes
-app.register_blueprint(versions.v2.auth.mod, url_prefix='/api/v2/auth')
-app.register_blueprint(versions.v2.user.mod, url_prefix='/api/v2/users')
-app.register_blueprint(
-    versions.v2.business.mod, url_prefix='/api/v2/businesses')
-app.register_blueprint(
-    versions.v2.review.mod, url_prefix='/api/v2/businesses')
-app.register_blueprint(versions.v2.notifications.mod, url_prefix='/api/v2')
+app.register_blueprint(versions.v1.get_user.mod, url_prefix='/api/v1/users')
+app.register_blueprint(versions.v1.business.mod, url_prefix='/api/v1/businesses')
+app.register_blueprint(versions.v1.review.mod, url_prefix='/api/v1/businesses')

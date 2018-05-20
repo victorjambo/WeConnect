@@ -283,13 +283,13 @@ class TestUser(unittest.TestCase):
         """
         self.register_user()
         self.login_user()
-        response = self.app.get('/api/v1/user/1')
+        response = self.app.get('/api/v1/users/1')
         self.assertEqual(response.status_code, 200)
 
     def test_not_found_user(self):
         """Test endpoint if user doesn't exist
         """
-        response = self.app.get('/api/v1/user/15')
+        response = self.app.get('/api/v1/users/15')
         output = json.loads(response.get_data(as_text=True))['warning']
         self.assertEqual(
             output,
@@ -302,7 +302,7 @@ class TestUser(unittest.TestCase):
         self.register_user()
         self.login_user()
         self.create_business()
-        response = self.app.get('/api/v1/user/1/businesses')
+        response = self.app.get('/api/v1/users/1/businesses')
         self.assertEqual(response.status_code, 200)
 
         output = json.loads(response.get_data(as_text=True))['user']
@@ -314,7 +314,7 @@ class TestUser(unittest.TestCase):
         """
         self.register_user()
         self.login_user()
-        response = self.app.get('/api/v1/user/100/businesses')
+        response = self.app.get('/api/v1/users/100/businesses')
         self.assertEqual(response.status_code, 404)
 
         output = json.loads(response.get_data(as_text=True))['warning']
@@ -325,7 +325,7 @@ class TestUser(unittest.TestCase):
         """
         # self.register_user()
         # self.login_user()
-        response = self.app.get('/api/v1/user/112')
+        response = self.app.get('/api/v1/users/112')
         output = json.loads(response.get_data(as_text=True))['warning']
         self.assertEqual(output, 'user does not exist')
 
