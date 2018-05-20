@@ -86,7 +86,7 @@ def existing_module(module, name):
         ).scalar():
         return True
     return False
-    
+
 def get_in_module(module, businessId):
     modules = { 'user': User, 'business': Business }
     return modules[module].query.get(businessId)

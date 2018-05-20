@@ -9,7 +9,7 @@ PUT: Updates single business
 DELETE: Delete single business
 """
 from flask import Blueprint, jsonify, request
-from versions.v2.models import Business, db, User
+from versions.v2.models import Business, User
 from versions import login_required
 from functools import wraps
 from versions.utils import existing_module, get_in_module

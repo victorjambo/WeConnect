@@ -110,8 +110,8 @@ input.form-control {
 }
 
 .navbar-brand, .navbar-right  {
-  margin-left: 0px!important;
-  margin-right: 0px!important;
+  margin-left: 0px;
+  margin-right: 0px;
 }
 
 @media only screen and (min-width: 768px) {
@@ -179,8 +179,8 @@ input.form-control {
 }
 
 .navbar-override {
-  background: rgba(0, 0, 0, 0.27058823529411763)!important;
-  color: white!important;
+  background: rgba(0, 0, 0, 0.27058823529411763);
+  color: white;
 }
 
 .link-bucket {
@@ -414,7 +414,7 @@ h1 {
 
 .input:focus {
   outline: none;
-  border-bottom-color: #5070e3 !important;
+  border-bottom-color: #5070e3 ;
 }
 
 .input:hover {
