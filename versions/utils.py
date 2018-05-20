@@ -1,81 +1,7 @@
 import re
 from flask_mail import Message
 from flask import jsonify, render_template
-from versions import user_instance, business_instance, review_instance, mail
-
-
-# User functions
-def find_user_by_name(name):
-    """Finds user in users array"""
-    for user in user_instance.users:
-        if user['username'] == name:
-            return user
-    return None
-
-
-def find_user_by_id(user_id):
-    """find current user record"""
-    for user in user_instance.users:
-        if user['id'] == user_id:
-            return user
-
-
-def find_business_by_user(user_id):
-    all_business = []
-    for business in business_instance.businesses:
-        if business['user_id'] == user_id:
-            all_business.append(business)
-    return all_business
-
-
-def check_if_name_taken(name):
-    """Check if username is taken
-    """
-    if find_user_by_name(name):
-        return True
-    return False
-
-
-def check_if_email_taken(email):
-    """Check if mail is taken
-    """
-    for user in user_instance.users:
-        if user['email'] == email:
-            return True
-    return False
-
-
-# business functions
-def find_business_by_id(businessId):
-    """find business record"""
-    for business in business_instance.businesses:
-        if business['id'] == businessId:
-            return business
-
-
-def check_if_biz_name_taken(name):
-    for business in business_instance.businesses:
-        if business['name'] == name:
-            return True
-    return False
-
-
-# reviews functions
-def find_reviews_by_business_id(businessId):
-    """find review record"""
-    all_reviews = []
-    for review in review_instance.reviews:
-        if review['business_id'] == businessId:
-            all_reviews.append(review)
-    return all_reviews
-
-
-def find_review_by_id(reviewId):
-    """find review record"""
-    for review in review_instance.reviews:
-        if review['id'] == reviewId:
-            return review
-
+from versions import mail
 
 def check_keys(args, length):
     """Check if dict keys are provided
@@ -151,19 +77,3 @@ def send_forgot_password_email(recipients, new_password):
         new_password=new_password
     )
     mail.send(msg)
-
-def find(functionType, ID):
-    """find"""
-    func = {
-        'find_user_by_id': [
-            find_user_by_id, 'user does not exist', 'user' ],
-        'find_business_by_user': [
-            find_business_by_user, 'user does not own a business', 'user' ],
-        'find_business_by_id': [
-            find_business_by_id, 'Business Not Found', 'business']
-    }
-    data = func[functionType]
-    response = data[0](ID)
-    if response:
-        return jsonify({data[2]: response}), 200
-    return jsonify({'warning': data[1]}), 404
