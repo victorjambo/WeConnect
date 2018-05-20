@@ -5,7 +5,7 @@ from versions import login_required
 mod = Blueprint('notification_v2', __name__)
 
 
-@mod.route('/notifications', methods=['GET'])
+@mod.route('', methods=['GET'])
 @login_required
 def get_notifications(current_user):
     """Fetch all unread notifications of current user"""
