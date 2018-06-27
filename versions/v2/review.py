@@ -117,9 +117,11 @@ def delete_review(current_user, businessId, reviewId):
     """Delete a Review given a review ID and business ID
     confirms if current_user is owner of review
     """
+    title = ''
     review = Review.query.get(reviewId)
-    title = review.title
-    review.delete()
+    if review:
+        title = review.title
+        review.delete()
 
     if not db.session.query(
         db.exists().where(Review.title == title)
