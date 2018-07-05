@@ -35,3 +35,33 @@ def get_notifications(current_user):
             ]}), 200
 
     return jsonify({'warning': 'user has no notifications'}), 200
+
+@mod.route('/all', methods=['GET'])
+@login_required
+def get_all_notifications(current_user):
+    """Fetch all unread notifications of current user"""
+    all_notifications = db.session.query(Notification).join(User).filter(
+        User.id==current_user
+    ).all()
+
+    if all_notifications:
+        for notification in all_notifications:
+            notification.read_at = db.func.current_timestamp()
+            notification.save()
+
+        return jsonify({'notifications': [
+                {
+                    'id': notification.id,
+                    'recipient_id': notification.recipient.username,
+                    'actor': notification.actor,
+                    'business_id': notification.business_id,
+                    'review_id': notification.review_id,
+                    'action': notification.action,
+                    'created_at': notification.created_at,
+                    'read_at': notification.read_at,
+                    'act': notification.actor + notification.action,
+                    'url': '/business/{}#review-{}'.format(notification.business_id, notification.review_id)
+                } for notification in all_notifications
+            ]}), 200
+
+    return jsonify({'warning': 'No New Notifications'}), 200
