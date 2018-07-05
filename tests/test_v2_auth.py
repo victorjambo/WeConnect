@@ -342,7 +342,7 @@ class TestAuth(unittest.TestCase):
             '/api/v2/auth/verify?key=123&name=victorjambo',
             content_type='application/json'
         )
-        self.assertIn('invalid key error', str(response.data))
+        self.assertIn(response.status_code, 301)
 
     def register(self):
         return self.app_client.post(
