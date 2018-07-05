@@ -34,4 +34,4 @@ def get_notifications(current_user):
                 } for notification in unread
             ]}), 200
 
-    return jsonify({'warning': 'user has no notifications'}), 404
+    return jsonify({'warning': 'user has no notifications'}), 200

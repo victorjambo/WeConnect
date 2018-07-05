@@ -46,7 +46,7 @@ class TestBusinessV2(unittest.TestCase):
         """Test what happens when no businesses
         """
         response = self.app.get('/api/v2/businesses/')
-        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.status_code, 200)
         self.assertIn('No Businesses, create one first', str(response.data))
 
     def test_create_business(self):
