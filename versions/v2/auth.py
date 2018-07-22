@@ -24,7 +24,7 @@ GET: verify/Activate email
     After user registrations an email is sent to new user
 app.url_map
 """
-from flask import Blueprint, jsonify, request, session
+from flask import Blueprint, jsonify, request, session, redirect
 from versions.v2.models import User, db, AuthToken
 from versions.utils import check_keys, send_email, send_forgot_password_email
 from versions.utils import username_regex, email_regex, password_regex
@@ -241,11 +241,4 @@ def verify():
     if user.hash_key == hash_key:
         user.activate = True
         user.save()
-        return jsonify(
-            {
-                'success': 'Account Activated',
-                'Activated': user.activate
-            }
-        ), 200
-
-    return jsonify({'warning': 'invalid key error'}), 401
+    return redirect(os.getenv("DESTINATION_URL")), 301

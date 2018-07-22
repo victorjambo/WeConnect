@@ -107,7 +107,7 @@ def read_review(businessId):
             } for review in business.reviews
         ]}), 200
 
-    return jsonify({'warning': 'Business has no reviews'}), 404
+    return jsonify({'warning': 'Business has no reviews'}), 200
 
 
 @mod.route('/<businessId>/reviews/<reviewId>', methods=['DELETE'])
@@ -149,7 +149,7 @@ def read_all_reviews(current_user):
             } for review in reviews
         ]}), 200
 
-    return jsonify({'warning': 'No Review, create one first'}), 404
+    return jsonify({'warning': 'No Review, create one first'}), 200
 
 
 @mod.route('/<businessId>/reviews/<reviewId>', methods=['PUT'])
