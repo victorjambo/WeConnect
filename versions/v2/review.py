@@ -107,7 +107,7 @@ def read_review(businessId):
             } for review in business.reviews
         ]}), 200
 
-    return jsonify({'warning': 'Business has no reviews'}), 404
+    return jsonify({'warning': 'Business has no reviews'}), 200
 
 
 @mod.route('/<businessId>/reviews/<reviewId>', methods=['DELETE'])
@@ -117,9 +117,11 @@ def delete_review(current_user, businessId, reviewId):
     """Delete a Review given a review ID and business ID
     confirms if current_user is owner of review
     """
+    title = ''
     review = Review.query.get(reviewId)
-    title = review.title
-    review.delete()
+    if review:
+        title = review.title
+        review.delete()
 
     if not db.session.query(
         db.exists().where(Review.title == title)
@@ -147,7 +149,7 @@ def read_all_reviews(current_user):
             } for review in reviews
         ]}), 200
 
-    return jsonify({'warning': 'No Review, create one first'}), 404
+    return jsonify({'warning': 'No Review, create one first'}), 200
 
 
 @mod.route('/<businessId>/reviews/<reviewId>', methods=['PUT'])

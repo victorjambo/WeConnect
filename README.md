@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/victorjambo/WeConnect-React.svg?branch=master)](https://travis-ci.org/victorjambo/WeConnect-React)
+[![Build Status](https://travis-ci.org/victorjambo/WeConnect.svg?branch=master)](https://travis-ci.org/victorjambo/WeConnect)
 [![Coverage Status](https://coveralls.io/repos/github/victorjambo/WeConnect/badge.svg?branch=master)](https://coveralls.io/github/victorjambo/WeConnect?branch=master)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/dfd1f513767a4227aa2202c14a7f4c59)](https://www.codacy.com/app/victorjambo/WeConnect?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=victorjambo/WeConnect&amp;utm_campaign=Badge_Grade)
 

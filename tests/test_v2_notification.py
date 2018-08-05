@@ -33,7 +33,7 @@ class TestNotification(unittest.TestCase):
                 "x-access-token": token
             }
         )
-        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.status_code, 200)
         warning = json.loads(response.get_data(as_text=True))['warning']
         self.assertEqual('user has no notifications', warning)
 

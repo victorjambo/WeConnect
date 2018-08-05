@@ -67,7 +67,7 @@ def read_all_businesses():
                 } for business in businesses
             ]
         }), 200
-    return jsonify({'warning': 'No Businesses, create one first'}), 404
+    return jsonify({'warning': 'No Businesses, create one first'}), 200
 
 
 @mod.route('/', methods=['POST'])

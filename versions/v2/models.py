@@ -213,7 +213,7 @@ class Notification(db.Model):
         self.business_id = business_id
         self.review_id = review_id
         self.read_at = read_at
-        self.action = ' has reviewed your business'
+        self.action = ' reviewed one of your businesses'
 
     def save(self):
         """Save a review to the database"""

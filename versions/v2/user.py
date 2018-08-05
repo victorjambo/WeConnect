@@ -30,7 +30,7 @@ def get_all_users():
                 } for user in users
             ]
         ), 200
-    return jsonify({'warning': 'No Users'}), 404
+    return jsonify({'warning': 'No Users'}), 200
 
 
 @mod.route('/<user_id>', methods=['GET'])
@@ -69,4 +69,4 @@ def read_user_businesses(user_id):
             ] if user.businesses else None
         ), 200
 
-    return jsonify({'warning': 'user does not own a business'}), 404
+    return jsonify({'warning': 'user does not own a business'}), 200

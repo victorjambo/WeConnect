@@ -65,7 +65,7 @@ class TestUser(unittest.TestCase):
         self.register()
         self.login()
         response = self.app.get('/api/v2/users/100/businesses')
-        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.status_code, 200)
 
         output = json.loads(response.get_data(as_text=True))['warning']
         self.assertEqual(output, 'user does not own a business')
