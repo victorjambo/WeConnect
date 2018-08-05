@@ -26,7 +26,7 @@ app.url_map
 """
 from flask import Blueprint, jsonify, request, session, redirect
 from versions.v2.models import User, db, AuthToken
-from versions.utils import check_keys, send_email, send_forgot_password_email
+from versions.utils import check_keys, send_email, send_forgot_password_email, send_confirm_reset_password_email
 from versions.utils import username_regex, email_regex, password_regex
 from passlib.hash import sha256_crypt
 import datetime
@@ -196,6 +196,7 @@ def reset_password(current_user):
     if sha256_crypt.verify(data['old_password'], user.password):
         user.password = sha256_crypt.encrypt(str(data['password']))
         user.save()
+        send_confirm_reset_password_email([user.email], user.hash_key, user.username, os.getenv("DESTINATION_URL"))
         return jsonify({'success': 'password updated'}), 200
 
     return jsonify({'warning': 'old password does not match'}), 403
@@ -242,3 +243,18 @@ def verify():
         user.activate = True
         user.save()
     return redirect(os.getenv("DESTINATION_URL")), 301
+
+
+@mod.route("/confirm-reset-password/", methods=['POST'])
+def confirm_reset_password():
+    """Verify email activation"""
+    hash_key = request.args.get('key', type=str)
+    name = request.args.get('name', type=str)
+    data = request.get_json()
+    if hash_key and name:
+        user = User.query.filter_by(username=name).first()
+        if user.hash_key == hash_key:
+            user.password = sha256_crypt.encrypt(str(data['password']))
+            user.save()
+            return jsonify({'success': 'password changed'}), 200
+    return jsonify({'warning': 'Invalid token URL!'}), 401

@@ -79,13 +79,32 @@ def send_forgot_password_email(recipients, new_password):
     )
     mail.send(msg)
 
+
+def send_confirm_reset_password_email(recipients, hash_key, name, path):
+    """Send email with to reset password
+    """
+    msg = Message(
+        'Reset Password',
+        sender='victormutaijambo@gmail.com',
+        recipients=recipients
+    )
+    msg.html = render_template(
+        'resetpasswordemail.html',
+        hash_key=hash_key,
+        name=name,
+        path=path
+    )
+    mail.send(msg)
+
+
 def existing_module(module, name):
-    modules = { 'user': User, 'business': Business }
+    modules = {'user': User, 'business': Business}
     if db.session.query(
             db.exists().where(modules[module].name == name)
         ).scalar():
         return True
     return False
+
 
 def get_in_module(module, businessId):
     modules = { 'user': User, 'business': Business }
