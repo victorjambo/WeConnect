@@ -108,30 +108,30 @@ class Business(db.Model):
         if _query or location or category:
             if location and _query and not category:
                 return self.query.filter(
-                    Business.location == location,
+                    Business.location.ilike('%' + location + '%'),
                     Business.name.ilike('%' + _query + '%')
                 ).paginate(page, limit, error_out=False).items
 
             if category and _query and not location:
                 return self.query.filter(
-                    Business.category == category,
+                    Business.category.ilike('%' + category + '%'),
                     Business.name.ilike('%' + _query + '%')
                 ).paginate(page, limit, error_out=False).items
 
             if category and location and not _query:
                 return self.query.filter(
-                    Business.location == location,
-                    Business.category == category
+                    Business.location.ilike('%' + location + '%'),
+                    Business.category.ilike('%' + category + '%')
                 ).paginate(page, limit, error_out=False).items
 
             if location and not _query and not category:
                 return self.query.filter(
-                    Business.location == location
+                    Business.location.ilike('%' + location + '%')
                 ).paginate(page, limit, error_out=False).items
 
             if category and not _query and not location:
                 return self.query.filter(
-                    Business.category == category
+                    Business.category.ilike('%' + category + '%')
                 ).paginate(page, limit, error_out=False).items
 
             return self.query.filter(
