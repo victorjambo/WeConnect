@@ -42,4 +42,4 @@ six==1.11.0
 SQLAlchemy==1.2.5
 urllib3==1.22
 webargs==2.0.0
-Werkzeug==0.14.1
+Werkzeug==0.15.3
