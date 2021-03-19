@@ -19,7 +19,7 @@ Flask-SQLAlchemy==2.3.2
 gunicorn==19.7.1
 idna==2.6
 itsdangerous==0.24
-Jinja2==2.10
+Jinja2==2.11.3
 jsonify==0.5
 jsonschema==2.6.0
 Mako==1.0.7
