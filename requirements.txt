@@ -22,7 +22,7 @@ itsdangerous==0.24
 Jinja2==2.10
 jsonify==0.5
 jsonschema==2.6.0
-Mako==1.0.7
+Mako==1.2.2
 Markdown==2.6.11
 MarkupSafe==1.0
 marshmallow==2.15.0
